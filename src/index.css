@@ -1,4 +1,4 @@
-:root {
+/* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -11,50 +11,89 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
+} */
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+  body {
+    margin: 30px;
+    color: black;
+  }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+  }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
+  .btn {
+    margin: 20px 0;
+    width: 150px;
+  }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
+  .flex {
+    display: flex;
+  }
 
-@media (prefers-color-scheme: light) {
+  .btn-frame {
+    text-align: center;
+  }
+
+  .px-small {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .minute {
+    width: 1px;
+    height: 40px;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .graph-wrapper {
+    position: relative;
+    height: 40px; /* minute heightに合わせる */
+    width: 1020px; /* 1px * 1020minutes */
+  }
+
+  .minute.work {
+    background-color: #4CAF50;
+  }
+
+  .minute.break {
+    background-color: #FFC107;
+  }
+
+  .minute.none {
+    background-color: #E0E0E0;
+  }
+
+  .timeline-layer,
+  .graph-layer {
+    position: absolute;
+  }
+
+  .timeline-layer .minute {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1px;
+    height: 40px; /* minute heightに合わせる */
+  }
+
+  .timeLineValue {
+    font-size: 8px;
+    background-color: gray;
+    opacity: 0.15;
+  }
+
+  .timeClockValue {
+    font-weight: bold;
+    font-size: 10px;
+  }
+
+/* @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
@@ -65,4 +104,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */
