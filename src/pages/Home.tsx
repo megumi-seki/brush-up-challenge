@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type Employee = {
   id: string;
@@ -9,6 +9,7 @@ type Employee = {
 
 const Home = () => {
   const [employeees, setEmployees] = useState<Employee[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedData = localStorage.getItem("employees");
@@ -26,29 +27,34 @@ const Home = () => {
   }, []);
 
   const pageContent = (
-    <div>
-      <div>
+    <div className="container">
+      <div className="flex gap-small">
         <span>事業所名称:</span>
         <span>開発用テスト事業所</span>
       </div>
       <div>
-        <h3>従業員一覧</h3>
-        <div className="btn-frame">
-          <Link to="/logs">本日のタイムレコーダー履歴</Link>
+        <div className="flex justify-between align-center">
+          <h3>従業員一覧</h3>
+          <div className="btn-frame">
+            <Link to="/logs">本日のタイムレコーダー履歴</Link>
+          </div>
         </div>
-        <div></div>
         <table border={1}>
           <thead>
-            <th>従業員番号</th>
-            <th>名前</th>
-            <th>役職</th>
+            <tr>
+              <th>従業員番号</th>
+              <th>名前</th>
+              <th>役職</th>
+            </tr>
           </thead>
           <tbody>
             {employeees.map((emp) => (
-              <tr>
-                <td>
-                  <Link to={`/detail/${emp.id}/2025-08-11/0`}>{emp.id}</Link>
-                </td>
+              <tr
+                className="tr-with-hover"
+                key={emp.id}
+                onClick={() => navigate(`/detail/${emp.id}/2025-08-11/0`)}
+              >
+                <td>{emp.id}</td>
                 <td>{emp.name}</td>
                 <td>{emp.roles}</td>
               </tr>
