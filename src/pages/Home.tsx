@@ -47,7 +47,7 @@ const Home = () => {
             {employeees.map((emp) => (
               <tr>
                 <td>
-                  <Link to={`/detail?empId=${emp.id}`}>{emp.id}</Link>
+                  <Link to={`/detail/${emp.id}/2025-08-11/0`}>{emp.id}</Link>
                 </td>
                 <td>{emp.name}</td>
                 <td>{emp.roles}</td>

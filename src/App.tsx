@@ -10,7 +10,7 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/detail" element={<Detail />} />
+        <Route path="/detail/:empId/:weekStart/:compare" element={<Detail />} />
         <Route path="/logs" element={<ClockLogs />} />
       </Routes>
     </div>
