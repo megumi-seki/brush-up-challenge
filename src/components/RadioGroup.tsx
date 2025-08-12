@@ -5,6 +5,7 @@ type RadioGroupProps = {
   options: Option[];
   selectedValue: string;
   onChange: (selectedValue: string) => void;
+  text?: string;
 };
 
 const RadioGroup = ({
@@ -12,8 +13,9 @@ const RadioGroup = ({
   options,
   selectedValue,
   onChange,
+  text,
 }: RadioGroupProps) => (
-  <div className="flex justify-around">
+  <div className="flex gap-learge align-baseline">
     {options.map((option) => (
       <label
         key={option.value}
@@ -31,6 +33,7 @@ const RadioGroup = ({
         {option.label}
       </label>
     ))}
+    {text && <span className="type-text">{text}</span>}
   </div>
 );
 

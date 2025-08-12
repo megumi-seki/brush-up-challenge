@@ -72,12 +72,20 @@ th {
     align-items: center;
   }
 
+  .align-baseline {
+    align-items: baseline;
+  }
+
   .gap-small {
     gap: 0.5rem;
   }
 
-    .gap-medium {
+  .gap-medium {
     gap: 1rem;
+  }
+
+  .gap-learge {
+    gap: 3rem;
   }
 
   .border {
@@ -221,4 +229,8 @@ th {
 
 .radio-label input[type="radio"] {
   display: none;
+}
+
+.type-text {
+  font-size: 0.75rem;
 }

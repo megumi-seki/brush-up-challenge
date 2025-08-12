@@ -41,6 +41,14 @@ const getTypeOptions = (lastType: string | null) => {
   }
 };
 
+const typeTexts: Record<string, string> = {
+  clock_in: "として業務を開始する",
+  role_change: "に業務を切り替える",
+  break_begin: "",
+  break_end: "として業務を再開する",
+  clock_out: "",
+};
+
 const defaultRoleOptions = [
   { value: "oven", label: "釜" },
   { value: "dough", label: "仕込み" },
@@ -141,7 +149,11 @@ const TimeRecorderForm = ({ empId }: Props) => {
   };
 
   return (
-    <form action="" className="flex-col gap-small" onSubmit={handleSubmit}>
+    <form
+      action=""
+      className="flex-col align-center gap-small"
+      onSubmit={handleSubmit}
+    >
       <div className="flex-col align-center">
         <span className="time-big">{formatTime(now)}</span>
         <span>{formatDate(now)}</span>
@@ -158,6 +170,7 @@ const TimeRecorderForm = ({ empId }: Props) => {
           options={roleOptions}
           selectedValue={selectedRole}
           onChange={setSelectedRole}
+          text={typeTexts[selectedType]}
         />
       )}
       <div className="note-frame">
