@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import formatTime from "../hooks/formatTime";
 import formatDate from "../hooks/formatDate";
 import RadioGroup from "./RadioGroup";
+import getRecordsById from "../hooks/getRecordsById";
 
 type Props = {
   empId: string | undefined;
@@ -9,19 +10,40 @@ type Props = {
 
 type timeRecorderType = {
   emp_id: string;
-  target_datetime: string;
-  target_role: string;
-  target_type: string;
+  datetime: string;
+  role: string;
+  type: string;
   note?: string;
 };
 
-const typeOptions = [
-  { value: "clock_in", label: "出勤" },
-  { value: "break_begin", label: "休憩開始" },
-  { value: "break_end", label: "休憩終了" },
-  { value: "clock_out", label: "退勤" },
-  { value: "role_change", label: "担当切替" },
-];
+const getLastType = (empId: string | undefined): string | null => {
+  if (!empId) return null;
+  const records = getRecordsById(empId);
+  if (records.length === 0) return null;
+  return records[records.length - 1].type;
+};
+
+const getTypeOptions = (lastType: string | null) => {
+  switch (lastType) {
+    case "clock_in":
+    case "role_change":
+      return [
+        { value: "break_begin", label: "休憩開始" },
+        { value: "role_change", label: "担当切替" },
+        { value: "clock_out", label: "退勤" },
+      ];
+    case "break_begin":
+      return [{ value: "break_end", label: "休憩終了" }];
+    case "break_end":
+      return [
+        { value: "role_change", label: "担当切替" },
+        { value: "clock_out", label: "退勤" },
+      ];
+    case "clock_out":
+    default:
+      return [{ value: "clock_in", label: "出勤" }];
+  }
+};
 
 const roleOptions = [
   { value: "sandwitch", label: "サンド" },
@@ -31,7 +53,9 @@ const roleOptions = [
 ];
 
 const TimeRecorderForm = ({ empId }: Props) => {
-  const [selectedType, setSelectedType] = useState("clock_in");
+  const [lastType, setLastType] = useState<string | null>(null);
+  const typeOptions = getTypeOptions(lastType);
+  const [selectedType, setSelectedType] = useState(typeOptions[0].value);
   const [selectedRole, setSelectedRole] = useState("sandwitch");
   const [note, setNote] = useState("");
   const [now, setNow] = useState(new Date());
@@ -50,28 +74,31 @@ const TimeRecorderForm = ({ empId }: Props) => {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    setLastType(getLastType(empId));
+  }, [empId]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!empId) return;
 
     const newRecord: timeRecorderType = {
       emp_id: empId,
-      target_datetime: now.toISOString(),
-      target_role: selectedRole,
-      target_type: selectedType,
+      datetime: now.toISOString(),
+      role: selectedRole,
+      type: selectedType,
       note: note.trim(),
     };
 
     const key = `${empId}_time_records`;
-    const storedData = localStorage.getItem(key);
-    console.log("storedData", storedData);
-    const records: timeRecorderType[] = storedData
-      ? JSON.parse(storedData)
-      : [];
+    const records = getRecordsById(empId);
     records.push(newRecord);
     localStorage.setItem(key, JSON.stringify(records));
     setNote("");
+    const newLastType = selectedType;
+    const newTypeOptions = getTypeOptions(newLastType);
+    setLastType(newLastType);
+    setSelectedType(newTypeOptions[0].value);
   };
 
   return (
