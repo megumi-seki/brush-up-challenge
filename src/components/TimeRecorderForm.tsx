@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import formatTime from "../hooks/formatTime";
 import formatDate from "../hooks/formatDate";
 import RadioGroup from "./RadioGroup";
@@ -11,6 +11,12 @@ const getLastType = (empId: string | undefined): string | null => {
   const records = getRecordsById(empId);
   if (records.length === 0) return null;
   return records[records.length - 1].type;
+};
+
+const getLastRole = (empId: string): string | null => {
+  const records = getRecordsById(empId);
+  if (records.length === 0) return null;
+  return records[records.length - 1].role;
 };
 
 const getTypeOptions = (lastType: string | null) => {
@@ -44,31 +50,41 @@ const defaultRoleOptions = [
   { value: "sales", label: "販売" },
 ];
 
-const getRoleOptions = (empId: string | undefined, selectedType: string) => {
-  if (!empId) return [];
+const getRoleOptions = (empId: string, selectedType: string) => {
   if (selectedType === "break_begin" || selectedType === "clock_out") return [];
   const employee = getEmployeeById(empId);
-  if (!employee || !employee.roles || employee.roles.length === 0) return [];
-  return defaultRoleOptions.filter((option) =>
-    employee.roles.includes(option.value)
-  );
+  if (!employee) return [];
+  return selectedType === "break_end" || selectedType === "clock_in"
+    ? defaultRoleOptions.filter((option) =>
+        employee.roles.includes(option.value)
+      )
+    : defaultRoleOptions.filter(
+        (option) =>
+          employee.roles.includes(option.value) &&
+          getLastRole(empId) !== option.value
+      );
 };
 
 type Props = {
-  empId: string | undefined;
+  empId: string;
 };
 
 const TimeRecorderForm = ({ empId }: Props) => {
   const [lastType, setLastType] = useState<string | null>(null);
-  const typeOptions = getTypeOptions(lastType);
-  const [selectedType, setSelectedType] = useState(typeOptions[0].value);
-  const roleOptions = getRoleOptions(empId, selectedType);
-  const [selectedRole, setSelectedRole] = useState(
-    roleOptions.length > 0 ? roleOptions[0].value : undefined
+  const [lastRole, setLastRole] = useState<string | null>(null);
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedRole, setSelectedRole] = useState<string | undefined>(
+    undefined
   );
   const [note, setNote] = useState("");
   const [now, setNow] = useState(new Date());
   const prevMinuteRef = useRef(now.getMinutes());
+
+  const typeOptions = useMemo(() => getTypeOptions(lastType), [lastType]);
+  const roleOptions = useMemo(
+    () => getRoleOptions(empId, selectedType),
+    [empId, selectedType]
+  );
 
   // 分単位で時刻を更新
   useEffect(() => {
@@ -79,22 +95,35 @@ const TimeRecorderForm = ({ empId }: Props) => {
         prevMinuteRef.current = current.getMinutes();
       }
     }, 1000);
-
     return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
     setLastType(getLastType(empId));
+    setLastRole(getLastRole(empId));
   }, [empId]);
+
+  useEffect(() => {
+    if (typeOptions.length > 0) {
+      setSelectedType(typeOptions[0].value);
+    }
+  }, [typeOptions]);
+
+  useEffect(() => {
+    if (roleOptions.length > 0) {
+      setSelectedRole(roleOptions[0].value);
+    } else {
+      setSelectedRole(undefined);
+    }
+  }, [roleOptions]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!empId) return;
 
     const newRecord: TimeRecorderType = {
       emp_id: empId,
       datetime: now.toISOString(),
-      role: selectedRole,
+      role: selectedRole ? selectedRole : lastRole,
       type: selectedType,
       note: note.trim(),
     };
@@ -103,11 +132,12 @@ const TimeRecorderForm = ({ empId }: Props) => {
     const records = getRecordsById(empId);
     records.push(newRecord);
     localStorage.setItem(key, JSON.stringify(records));
+
     setNote("");
     const newLastType = selectedType;
-    const newTypeOptions = getTypeOptions(newLastType);
     setLastType(newLastType);
-    setSelectedType(newTypeOptions[0].value);
+    const newLastRole = selectedRole ? selectedRole : lastRole;
+    setLastRole(newLastRole);
   };
 
   return (

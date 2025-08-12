@@ -7,7 +7,7 @@ export type Employee = {
 export type TimeRecorderType = {
   emp_id: string;
   datetime: string;
-  role?: string;
+  role: string | null;
   type: string;
   note?: string;
 };
