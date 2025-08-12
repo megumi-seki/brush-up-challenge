@@ -1,19 +1,13 @@
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import formatTime from "../hooks/formatTime";
 import formatDate from "../hooks/formatDate";
 import RadioGroup from "./RadioGroup";
 import getRecordsById from "../hooks/getRecordsById";
+import type { timeRecorderType } from "../types";
+import getEmployeeById from "../hooks/getEmployeeById";
 
 type Props = {
   empId: string | undefined;
-};
-
-type timeRecorderType = {
-  emp_id: string;
-  datetime: string;
-  role: string;
-  type: string;
-  note?: string;
 };
 
 const getLastType = (empId: string | undefined): string | null => {
@@ -45,18 +39,30 @@ const getTypeOptions = (lastType: string | null) => {
   }
 };
 
-const roleOptions = [
-  { value: "sandwitch", label: "サンド" },
-  { value: "bake", label: "釜" },
-  { value: "make", label: "麺台" },
-  { value: "sell", label: "販売" },
+const defaultRoleOptions = [
+  { value: "oven", label: "釜" },
+  { value: "dough", label: "仕込み" },
+  { value: "cafe", label: "品カフェ" },
+  { value: "shaping", label: "麺台" },
+  { value: "sandwich", label: "サンド" },
+  { value: "sales", label: "販売" },
 ];
+
+const getRoleOptions = (empId: string | undefined) => {
+  if (!empId) return [];
+  const employee = getEmployeeById(empId);
+  if (!employee || !employee.roles || employee.roles.length === 0) return [];
+  return defaultRoleOptions.filter((option) =>
+    employee.roles.includes(option.value)
+  );
+};
 
 const TimeRecorderForm = ({ empId }: Props) => {
   const [lastType, setLastType] = useState<string | null>(null);
   const typeOptions = getTypeOptions(lastType);
+  const roleOptions = getRoleOptions(empId);
   const [selectedType, setSelectedType] = useState(typeOptions[0].value);
-  const [selectedRole, setSelectedRole] = useState("sandwitch");
+  const [selectedRole, setSelectedRole] = useState(roleOptions[0].value);
   const [note, setNote] = useState("");
   const [now, setNow] = useState(new Date());
   const prevMinuteRef = useRef(now.getMinutes());

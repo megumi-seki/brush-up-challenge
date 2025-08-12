@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import TimeRecorderForm from "../components/TimeRecorderForm";
+import type { Employee } from "../types";
 
 //TODO time recorderを機能させる
 // 1: 登録種別の項目追加（担当切替）✓
@@ -10,12 +11,6 @@ import TimeRecorderForm from "../components/TimeRecorderForm";
 // 5: 登録種別による表示切替（出勤→〇〇として業務開始する、
 // 休憩終了→〇〇として業務再開する、担当切替→〇〇から〇〇に業務担当を切り替える）
 // 6:submitでlocalStorageに保存できるようにする ✓
-
-type Employee = {
-  id: string;
-  name: string;
-  roles: string[];
-};
 
 const Detail = () => {
   const { empId, weekStart, compare } = useParams();

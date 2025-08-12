@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-type Employee = {
-  id: string;
-  name: string;
-  roles: string[];
-};
+import type { Employee } from "../types";
 
 const Home = () => {
   const [employeees, setEmployees] = useState<Employee[]>([]);
@@ -18,8 +13,8 @@ const Home = () => {
     } else {
       // デモ用に、初期データがない場合はダミーデータを保存
       const initialData: Employee[] = [
-        { id: "001", name: "田中太郎", roles: ["釜番"] },
-        { id: "002", name: "山田花子", roles: ["サンドイッチ", "麺台"] },
+        { id: "001", name: "田中太郎", roles: ["oven"] },
+        { id: "002", name: "山田花子", roles: ["sandwich", "shaping"] },
       ];
       localStorage.setItem("employees", JSON.stringify(initialData));
       setEmployees(initialData);
