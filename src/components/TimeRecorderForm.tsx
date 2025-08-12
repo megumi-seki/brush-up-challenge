@@ -3,7 +3,7 @@ import formatTime from "../hooks/formatTime";
 import formatDate from "../hooks/formatDate";
 import RadioGroup from "./RadioGroup";
 import getRecordsById from "../hooks/getRecordsById";
-import type { TimeRecorderType } from "../types";
+import type { Employee, TimeRecorderType } from "../types";
 import getEmployeeById from "../hooks/getEmployeeById";
 
 const getLastType = (empId: string | undefined): string | null => {
@@ -32,9 +32,27 @@ const getTypeOptions = (lastType: string | null) => {
       return [{ value: "break_end", label: "休憩終了" }];
     case "break_end":
       return [
+        { value: "clock_out", label: "退勤" },
         { value: "role_change", label: "担当切替" },
+      ];
+    case "clock_out":
+    default:
+      return [{ value: "clock_in", label: "出勤" }];
+  }
+};
+
+const getTypeOptionsWithoutRoleChange = (lastType: string | null) => {
+  switch (lastType) {
+    case "clock_in":
+    case "role_change":
+      return [
+        { value: "break_begin", label: "休憩開始" },
         { value: "clock_out", label: "退勤" },
       ];
+    case "break_begin":
+      return [{ value: "break_end", label: "休憩終了" }];
+    case "break_end":
+      return [{ value: "clock_out", label: "退勤" }];
     case "clock_out":
     default:
       return [{ value: "clock_in", label: "出勤" }];
@@ -58,10 +76,10 @@ const defaultRoleOptions = [
   { value: "sales", label: "販売" },
 ];
 
-const getRoleOptions = (empId: string, selectedType: string) => {
+const getRoleOptions = (employee: Employee, selectedType: string) => {
   if (selectedType === "break_begin" || selectedType === "clock_out") return [];
-  const employee = getEmployeeById(empId);
   if (!employee) return [];
+  if (employee.roles.length === 1) return [];
   return selectedType === "break_end" || selectedType === "clock_in"
     ? defaultRoleOptions.filter((option) =>
         employee.roles.includes(option.value)
@@ -69,7 +87,7 @@ const getRoleOptions = (empId: string, selectedType: string) => {
     : defaultRoleOptions.filter(
         (option) =>
           employee.roles.includes(option.value) &&
-          getLastRole(empId) !== option.value
+          getLastRole(employee.id) !== option.value
       );
 };
 
@@ -78,6 +96,10 @@ type Props = {
 };
 
 const TimeRecorderForm = ({ empId }: Props) => {
+  const employee = getEmployeeById(empId);
+  if (!employee) {
+    return <div>従業員が見つかりません</div>;
+  }
   const [lastType, setLastType] = useState<string | null>(null);
   const [lastRole, setLastRole] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState("");
@@ -88,9 +110,15 @@ const TimeRecorderForm = ({ empId }: Props) => {
   const [now, setNow] = useState(new Date());
   const prevMinuteRef = useRef(now.getMinutes());
 
-  const typeOptions = useMemo(() => getTypeOptions(lastType), [lastType]);
+  const typeOptions = useMemo(
+    () =>
+      employee.roles.length > 1
+        ? getTypeOptions(lastType)
+        : getTypeOptionsWithoutRoleChange(lastType),
+    [lastType]
+  );
   const roleOptions = useMemo(
-    () => getRoleOptions(empId, selectedType),
+    () => getRoleOptions(employee, selectedType),
     [empId, selectedType]
   );
 
@@ -131,7 +159,7 @@ const TimeRecorderForm = ({ empId }: Props) => {
     const newRecord: TimeRecorderType = {
       emp_id: empId,
       datetime: now.toISOString(),
-      role: selectedRole ? selectedRole : lastRole,
+      role: selectedRole ? selectedRole : lastRole ?? employee.roles[0],
       type: selectedType,
       note: note.trim(),
     };
