@@ -3,12 +3,8 @@ import formatTime from "../hooks/formatTime";
 import formatDate from "../hooks/formatDate";
 import RadioGroup from "./RadioGroup";
 import getRecordsById from "../hooks/getRecordsById";
-import type { timeRecorderType } from "../types";
+import type { TimeRecorderType } from "../types";
 import getEmployeeById from "../hooks/getEmployeeById";
-
-type Props = {
-  empId: string | undefined;
-};
 
 const getLastType = (empId: string | undefined): string | null => {
   if (!empId) return null;
@@ -48,8 +44,9 @@ const defaultRoleOptions = [
   { value: "sales", label: "販売" },
 ];
 
-const getRoleOptions = (empId: string | undefined) => {
+const getRoleOptions = (empId: string | undefined, selectedType: string) => {
   if (!empId) return [];
+  if (selectedType === "break_begin" || selectedType === "clock_out") return [];
   const employee = getEmployeeById(empId);
   if (!employee || !employee.roles || employee.roles.length === 0) return [];
   return defaultRoleOptions.filter((option) =>
@@ -57,12 +54,18 @@ const getRoleOptions = (empId: string | undefined) => {
   );
 };
 
+type Props = {
+  empId: string | undefined;
+};
+
 const TimeRecorderForm = ({ empId }: Props) => {
   const [lastType, setLastType] = useState<string | null>(null);
   const typeOptions = getTypeOptions(lastType);
-  const roleOptions = getRoleOptions(empId);
   const [selectedType, setSelectedType] = useState(typeOptions[0].value);
-  const [selectedRole, setSelectedRole] = useState(roleOptions[0].value);
+  const roleOptions = getRoleOptions(empId, selectedType);
+  const [selectedRole, setSelectedRole] = useState(
+    roleOptions.length > 0 ? roleOptions[0].value : undefined
+  );
   const [note, setNote] = useState("");
   const [now, setNow] = useState(new Date());
   const prevMinuteRef = useRef(now.getMinutes());
@@ -88,7 +91,7 @@ const TimeRecorderForm = ({ empId }: Props) => {
     e.preventDefault();
     if (!empId) return;
 
-    const newRecord: timeRecorderType = {
+    const newRecord: TimeRecorderType = {
       emp_id: empId,
       datetime: now.toISOString(),
       role: selectedRole,
@@ -119,12 +122,14 @@ const TimeRecorderForm = ({ empId }: Props) => {
         selectedValue={selectedType}
         onChange={setSelectedType}
       />
-      <RadioGroup
-        name="target_role"
-        options={roleOptions}
-        selectedValue={selectedRole}
-        onChange={setSelectedRole}
-      />
+      {roleOptions.length > 0 && selectedRole && (
+        <RadioGroup
+          name="target_role"
+          options={roleOptions}
+          selectedValue={selectedRole}
+          onChange={setSelectedRole}
+        />
+      )}
       <div className="note-frame">
         <label htmlFor="note" className="hidden">
           メモ

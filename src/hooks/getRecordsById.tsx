@@ -1,15 +1,9 @@
-type timeRecorderType = {
-  emp_id: string;
-  datetime: string;
-  role: string;
-  type: string;
-  note?: string;
-};
+import type { TimeRecorderType } from "../types";
 
-const getRecordsById = (empId: string): timeRecorderType[] => {
+const getRecordsById = (empId: string): TimeRecorderType[] => {
   const key = `${empId}_time_records`;
   const storedData = localStorage.getItem(key);
-  const records: timeRecorderType[] = storedData ? JSON.parse(storedData) : [];
+  const records: TimeRecorderType[] = storedData ? JSON.parse(storedData) : [];
   return records;
 };
 

@@ -4,10 +4,10 @@ export type Employee = {
   roles: string[];
 };
 
-export type timeRecorderType = {
+export type TimeRecorderType = {
   emp_id: string;
   datetime: string;
-  role: string;
+  role?: string;
   type: string;
   note?: string;
 };
