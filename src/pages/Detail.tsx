@@ -3,17 +3,6 @@ import { useParams } from "react-router-dom";
 import TimeRecorderForm from "../components/TimeRecorderForm";
 import type { Employee } from "../types";
 
-//TODO time recorderを機能させる
-// 1: 登録種別の項目追加（担当切替）✓
-// 2: 登録種別の条件分岐 (出勤→休憩開始/担当切替/退勤、休憩開始→休憩終了、休憩終了→担当切替/退勤、担当切替→休憩開始/担当切替/退勤、退勤→出勤)✓
-// 3: 個人情報による担当の条件分岐　✓
-// 4: 登録種別による担当の条件分岐（休憩開始、退勤のときは表示しない）✓
-//    前回担当による担当の条件分岐 ✓
-// 5: 登録種別による表示切替（出勤→〇〇として業務を開始する、
-// 休憩終了→〇〇として業務を再開する、担当切替→〇〇に業務を切り替える）✓
-// 6:submitでlocalStorageに保存できるようにする ✓
-// 7: 従業員が一つの担当しかないときは、担当表示しない
-
 const Detail = () => {
   const { empId, weekStart, compare } = useParams();
   const [employeee, setEmployee] = useState<Employee | null>(null);
