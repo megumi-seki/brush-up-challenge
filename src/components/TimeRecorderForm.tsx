@@ -165,13 +165,16 @@ const TimeRecorderForm = ({ empId }: Props) => {
         onChange={setSelectedType}
       />
       {roleOptions.length > 0 && selectedRole && (
-        <RadioGroup
-          name="target_role"
-          options={roleOptions}
-          selectedValue={selectedRole}
-          onChange={setSelectedRole}
-          text={typeTexts[selectedType]}
-        />
+        <>
+          <div className="divider"></div>
+          <RadioGroup
+            name="target_role"
+            options={roleOptions}
+            selectedValue={selectedRole}
+            onChange={setSelectedRole}
+            text={typeTexts[selectedType]}
+          />
+        </>
       )}
       <div className="note-frame">
         <label htmlFor="note" className="hidden">
