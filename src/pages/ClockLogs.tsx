@@ -3,6 +3,8 @@ import formatDate from "../hooks/formatDate";
 import unformatDate from "../hooks/unformatDate";
 import getRecordsByDate from "../hooks/getRecordsByDate";
 import type { TimeRecorderType } from "../types";
+import groupRecordsById from "../hooks/groupRecordsById";
+import formatTime from "../hooks/formatTime";
 
 type GroupedTimeRecorderType = [
   { emp_id: TimeRecorderType[] },
@@ -19,69 +21,38 @@ const ClockLogs = () => {
   const recordsOfDate = getRecordsByDate(unformattedDate);
 
   function getProccesedTimeRecorderByDateToGraph() {
-    const data = recordsOfDate;
-    const grouped = {}; // グループ化 { empId: [打刻1, 打刻2, ...] }
+    const groupedRecords = groupRecordsById(recordsOfDate);
 
-    data.forEach(({ emp_id, datetime, type }) => {
-      if (!grouped.emp_id) grouped[emp_id] = [];
-      grouped[emp_id].push({ type, datetime });
-    });
-
+    //TODO ここから下グラフ化のためのデータを加工を何とか頑張る。
     const processedData = [];
 
     const GRAPH_START_HOUR = 7;
     const GRAPH_END_HOUR = 24;
     const GRAPH_TOTAL_MINUTES = (GRAPH_END_HOUR - GRAPH_START_HOUR) * 60; // 1020分 分単位でグラフ化
 
-    for (const emp_id in grouped) {
-      const records = grouped[emp_id].sort((a, b) => a.datetime - b.datetime);
+      const getMinutes = (datetime: Date) => ((datetime.getHours() - GRAPH_START_HOUR) * 60 + datetime.getMinutes())
+      
 
-      let startTime = null;
-      let endTime = null;
-      let breakStartTime = null;
-      let breakEndTime = null;
-
-      records.forEach(({ datetime, type }) => {
-        if (type === "出勤") {
-          startTime = datetime;
-        } else if (type === "退勤") {
-          endTime = datetime;
-        } else if (type === "休憩開始") {
-          breakStartTime = datetime;
-        } else if (type === "休憩終了" && breakStartTime) {
-          breakEndTime = datetime;
-        }
-      });
-
-      if (!startTime || !endTime) continue; // 必須データがなければスキップ
-
-      const totalBreakMillis = breakEndTime - breakStartTime;
-      const workDurationMillis = endTime - startTime - totalBreakMillis;
-
-      const getMinuteIndex = (datetime) =>
-        (datetime.getHours() - GRAPH_START_HOUR) * 60 + datetime.getMinutes();
-
-      const startMin = getMinuteIndex(startTime);
-      const endMin = getMinuteIndex(endTime);
+      groupedRecords.map((record) => {
+        {} = record;
+      const startMin = record.clock_in.datetime ? getMinutes(record.clock_in.datetime) : null;
+      const endMin = getMinutes(endTime);
       const breakStartMin = breakStartTime
-        ? getMinuteIndex(breakStartTime)
+        ? getMinutes(breakStartTime)
         : null;
-      const breakEndMin = breakEndTime ? getMinuteIndex(breakEndTime) : null;
+      const breakEndMin = breakEndTime ? getMinutes(breakEndTime) : null;
 
       const breakMap = new Array(GRAPH_TOTAL_MINUTES).fill(false);
       if (breakStartTime && breakEndTime) {
-        const breakFrom = Math.max(0, getMinuteIndex(breakStartTime));
+        const breakFrom = Math.max(0, getMinutes(breakStartTime));
         const breakTo = Math.min(
           GRAPH_TOTAL_MINUTES,
-          getMinuteIndex(breakEndTime)
+          getMinutes(breakEndTime)
         );
         for (let i = breakFrom; i < breakTo; i++) {
           breakMap[i] = true;
         }
       }
-
-      const formatDatetime = (datetime) =>
-        datetime ? Utilities.formatDate(datetime, "Asia/Tokyo", "HH:mm") : null;
 
       let graphBar = [];
       let graphTimelineBar = [];
@@ -99,22 +70,22 @@ const ClockLogs = () => {
         if (i == startMin) {
           graphTimelineBar.push({
             type: "timeClockValue",
-            time: formatDatetime(startTime),
+            time: formatTime(startTime),
           });
         } else if (i == endMin) {
           graphTimelineBar.push({
             type: "timeClockValue",
-            time: formatDatetime(endTime),
+            time: formatTime(endTime),
           });
         } else if (i == breakStartMin) {
           graphTimelineBar.push({
             type: "timeClockValue",
-            time: formatDatetime(breakStartTime),
+            time: formatTime(breakStartTime),
           });
         } else if (i == breakEndMin) {
           graphTimelineBar.push({
             type: "timeClockValue",
-            time: formatDatetime(breakEndTime),
+            time: formatTime(breakEndTime),
           });
         } else if (i % 30 === 0) {
           const totalMinutesFromStart = i;
@@ -143,12 +114,6 @@ const ClockLogs = () => {
           return `<span class="minute ${className}">${status.time}</span>`;
         })
         .join("");
-
-      const formatTime = (millis) => {
-        const h = Math.floor(millis / (1000 * 60 * 60));
-        const m = Math.floor((millis / (1000 * 60)) % 60);
-        return `${h}:${m.toString().padStart(2, "0")}`;
-      };
 
       processedData.push({
         emp_id,
