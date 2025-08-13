@@ -5,6 +5,7 @@ import type { Employee } from "../types";
 const Home = () => {
   const [employeees, setEmployees] = useState<Employee[]>([]);
   const navigate = useNavigate();
+  const today = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
     const storedData = localStorage.getItem("employees");
@@ -47,7 +48,7 @@ const Home = () => {
               <tr
                 className="tr-with-hover"
                 key={emp.id}
-                onClick={() => navigate(`/detail/${emp.id}/2025-08-11/0`)}
+                onClick={() => navigate(`/detail/${emp.id}/${today}/0`)}
               >
                 <td>{emp.id}</td>
                 <td>{emp.name}</td>

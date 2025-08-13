@@ -164,10 +164,13 @@ const TimeRecorderForm = ({ empId }: Props) => {
       note: note.trim(),
     };
 
-    const key = `${empId}_time_records`;
-    const records = getRecordsById(empId);
-    records.push(newRecord);
-    localStorage.setItem(key, JSON.stringify(records));
+    const key = "time_records";
+    const records = localStorage.getItem(key);
+    const parsedRecords: TimeRecorderType[] = records
+      ? JSON.parse(records)
+      : [];
+    parsedRecords.push(newRecord);
+    localStorage.setItem(key, JSON.stringify(parsedRecords));
 
     setNote("");
     const newLastType = selectedType;
