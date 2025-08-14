@@ -244,3 +244,28 @@ th {
   border-bottom: 0.8px dashed #a49e9a;
   width: 80%;
 }
+
+/* TODO 各担当色指定 */
+.minute.work.role-oven {
+  background-color: #4CAF50;
+}
+
+.minute.work.role-dough {
+  background-color: #4CAF50;
+}
+
+.minute.work.role-cafe {
+  background-color: #4CAF50;
+}
+
+.minute.work.role-shaping {
+  background-color: #4CAF50;
+}
+
+.minute.work.role-sandwich {
+  background-color: #4CAF50;
+}
+
+.minute.work.role-sales {
+  background-color: #4CAF50;
+}

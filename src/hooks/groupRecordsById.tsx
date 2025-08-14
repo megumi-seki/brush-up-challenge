@@ -17,7 +17,7 @@ const groupRecordsById = (
         clock_out: { role: null, datetime: null },
         work_duration_millis: null,
         break_duration_millis: null,
-        role_change: [],
+        role_changes: [],
       };
     }
 
@@ -41,7 +41,7 @@ const groupRecordsById = (
         group.clock_out.datetime = record.datetime;
         break;
       case "role_change":
-        group.role_change.push({
+        group.role_changes.push({
           role: record.role || null,
           datetime: record.datetime,
         });
