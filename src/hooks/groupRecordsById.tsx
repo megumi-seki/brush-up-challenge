@@ -12,8 +12,8 @@ type GroupedTimeRecorderType = {
   break_begin: RoleTimeType;
   break_end: RoleTimeType;
   clock_out: RoleTimeType;
-  work_duration: number; // ミリ秒単位
-  break_duration: number; // ミリ秒単位
+  work_duration_millis: number; // ミリ秒単位
+  break_duration_millis: number; // ミリ秒単位
   role_change: RoleTimeType[];
 };
 
@@ -32,8 +32,8 @@ const groupRecordsById = (
         break_begin: { role: null, datetime: null },
         break_end: { role: null, datetime: null },
         clock_out: { role: null, datetime: null },
-        work_duration: 0,
-        break_duration: 0,
+        work_duration_millis: 0,
+        break_duration_millis: 0,
         role_change: [],
       };
     }
@@ -78,11 +78,11 @@ const groupRecordsById = (
     const breakEnd = parse(group.clock_out.datetime);
 
     if (start && end) {
-      group.work_duration = end.getTime() - start.getTime();
+      group.work_duration_millis = end.getTime() - start.getTime();
     }
     if (breakStart && breakEnd) {
-      group.break_duration = breakEnd.getTime() - breakStart.getTime();
-      group.work_duration -= group.break_duration;
+      group.break_duration_millis = breakEnd.getTime() - breakStart.getTime();
+      group.work_duration_millis -= group.break_duration_millis;
     }
   });
 

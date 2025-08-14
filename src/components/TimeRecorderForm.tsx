@@ -186,8 +186,8 @@ const TimeRecorderForm = ({ empId }: Props) => {
       onSubmit={handleSubmit}
     >
       <div className="flex-col align-center">
-        <span className="time-big">{formatTime(now)}</span>
-        <span>{formatDate(now)}</span>
+        <span className="time-big">{formatTime(now.toISOString())}</span>
+        <span>{formatDate(now.toISOString())}</span>
       </div>
       <RadioGroup
         name="target_type"

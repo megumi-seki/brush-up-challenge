@@ -2,16 +2,19 @@ import { useParams } from "react-router-dom";
 import formatDate from "../hooks/formatDate";
 import unformatDate from "../hooks/unformatDate";
 import getRecordsByDate from "../hooks/getRecordsByDate";
-import type { TimeRecorderType } from "../types";
 import groupRecordsById from "../hooks/groupRecordsById";
 import formatTime from "../hooks/formatTime";
+import formatTimeFromMillis from "../hooks/formatTimeFromMillis";
 
-type GroupedTimeRecorderType = [
-  { emp_id: TimeRecorderType[] },
-  { emp_id: TimeRecorderType[] },
-  { emp_id: TimeRecorderType[] },
-  { emp_id: TimeRecorderType[] }
-];
+type ProcessedDataType = {
+  emp_id: string;
+  startTime: string;
+  endTime: string;
+  totalRestTime: string;
+  totalWorkTime: string;
+  graph: string;
+  graphTimeline: string;
+};
 
 const ClockLogs = () => {
   const { date } = useParams();
@@ -30,25 +33,43 @@ const ClockLogs = () => {
     const GRAPH_END_HOUR = 24;
     const GRAPH_TOTAL_MINUTES = (GRAPH_END_HOUR - GRAPH_START_HOUR) * 60; // 1020分 分単位でグラフ化
 
-      const getMinutes = (datetime: Date) => ((datetime.getHours() - GRAPH_START_HOUR) * 60 + datetime.getMinutes())
-      
+    const getMinutes = (datetimeString: string) => {
+      const datetime = new Date(datetimeString);
+      const minutes =
+        (datetime.getHours() - GRAPH_START_HOUR) * 60 + datetime.getMinutes();
+      return minutes;
+    };
 
-      groupedRecords.map((record) => {
-        {} = record;
-      const startMin = record.clock_in.datetime ? getMinutes(record.clock_in.datetime) : null;
-      const endMin = getMinutes(endTime);
-      const breakStartMin = breakStartTime
-        ? getMinutes(breakStartTime)
+    groupedRecords.map((record) => {
+      const {
+        emp_id,
+        clock_in,
+        clock_out,
+        break_begin,
+        break_end,
+        work_duration_millis,
+        break_duration_millis,
+        role_change,
+      } = record;
+      const clockInDatetime = clock_in.datetime;
+      if (clockInDatetime === null) return;
+      const clockOutDatetime = clock_out.datetime;
+      const breakBeginDatetime = break_begin.datetime;
+      const breakEndDatetime = break_end.datetime;
+
+      const startMin = getMinutes(clockInDatetime);
+      const endMin = clockOutDatetime ? getMinutes(clockOutDatetime) : startMin; // nullにしないため、datetimeがnullの場合はtotal minutes範囲外の値をセット
+      const breakBeginMin = breakBeginDatetime
+        ? getMinutes(breakBeginDatetime)
         : null;
-      const breakEndMin = breakEndTime ? getMinutes(breakEndTime) : null;
+      const breakEndMin = breakEndDatetime
+        ? getMinutes(breakEndDatetime)
+        : breakBeginMin;
 
       const breakMap = new Array(GRAPH_TOTAL_MINUTES).fill(false);
-      if (breakStartTime && breakEndTime) {
-        const breakFrom = Math.max(0, getMinutes(breakStartTime));
-        const breakTo = Math.min(
-          GRAPH_TOTAL_MINUTES,
-          getMinutes(breakEndTime)
-        );
+      if (breakBeginMin && breakEndMin) {
+        const breakFrom = Math.max(0, breakBeginMin);
+        const breakTo = Math.min(GRAPH_TOTAL_MINUTES, breakEndMin);
         for (let i = breakFrom; i < breakTo; i++) {
           breakMap[i] = true;
         }
@@ -57,8 +78,7 @@ const ClockLogs = () => {
       let graphBar = [];
       let graphTimelineBar = [];
       for (let i = 0; i <= GRAPH_TOTAL_MINUTES; i++) {
-        // graphBarに値をセット
-        if (i < startMin || i >= endMin) {
+        if (i < startMin || endMin < i) {
           graphBar.push("none"); // 非労働時間
         } else if (breakMap[i]) {
           graphBar.push("break"); // 休憩中
@@ -70,22 +90,22 @@ const ClockLogs = () => {
         if (i == startMin) {
           graphTimelineBar.push({
             type: "timeClockValue",
-            time: formatTime(startTime),
+            time: formatTime(clockInDatetime),
           });
-        } else if (i == endMin) {
+        } else if (clockOutDatetime && i == endMin) {
           graphTimelineBar.push({
             type: "timeClockValue",
-            time: formatTime(endTime),
+            time: formatTime(clockOutDatetime),
           });
-        } else if (i == breakStartMin) {
+        } else if (breakBeginDatetime && i == breakBeginMin) {
           graphTimelineBar.push({
             type: "timeClockValue",
-            time: formatTime(breakStartTime),
+            time: formatTime(breakBeginDatetime),
           });
-        } else if (i == breakEndMin) {
+        } else if (breakEndDatetime && i == breakEndMin) {
           graphTimelineBar.push({
             type: "timeClockValue",
-            time: formatTime(breakEndTime),
+            time: formatTime(breakEndDatetime),
           });
         } else if (i % 30 === 0) {
           const totalMinutesFromStart = i;
@@ -117,14 +137,14 @@ const ClockLogs = () => {
 
       processedData.push({
         emp_id,
-        startTime: formatDatetime(startTime),
-        endTime: formatDatetime(endTime),
-        totalRestTime: formatTime(totalBreakMillis),
-        totalWorkTime: formatTime(workDurationMillis),
+        startTime: formatDate(clockInDatetime),
+        endTime: clockOutDatetime ? formatDate(clockOutDatetime) : "-",
+        totalRestTime: formatTimeFromMillis(break_duration_millis),
+        totalWorkTime: formatTimeFromMillis(work_duration_millis),
         graph: graphHtml,
         graphTimeline: graphTimelineHtml,
       });
-    }
+    });
 
     return processedData;
   }
