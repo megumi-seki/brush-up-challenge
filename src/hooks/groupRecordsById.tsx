@@ -53,7 +53,7 @@ const groupRecordsById = (
     return acc;
   }, {} as Record<string, GroupedTimeRecorderType>);
 
-  Object.values(groupedMap).forEach((group, index) => {
+  Object.values(groupedMap).forEach((group) => {
     const parse = (datetime: string | null) =>
       datetime ? new Date(datetime) : null;
 

@@ -1,4 +1,5 @@
-const formatTimeFromMillis = (millis: number) => {
+const formatTimeFromMillis = (millis: number | null) => {
+  if (!millis) return "-";
   const hour = Math.floor(millis / (1000 * 60 * 60));
   const minutes = Math.floor((millis / (1000 * 60)) % 60);
   return `${hour}時間${minutes.toString()}分`;
