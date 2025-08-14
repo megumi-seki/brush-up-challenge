@@ -151,6 +151,7 @@ th {
     margin-bottom: 0;
   }
 
+  /* clock logs page */
   .minute {
     width: 1px;
     height: 40px;
@@ -171,12 +172,38 @@ th {
   }
 
   .minute.break {
-    background-color: #FFC107;
+    background-color: #FFE082;
   }
 
   .minute.none {
-    background-color: #E0E0E0;
+    background-color: #F0F0F0;
   }
+
+  .minute.work.role-oven {
+  background-color: #FFAB91;
+}
+
+.minute.work.role-dough {
+  background-color: #C5E1A5;
+}
+
+.minute.work.role-cafe {
+  background-color: #B3E5FC;
+}
+
+.minute.work.role-shaping {
+  background-color: #CE93D8;
+}
+
+.minute.work.role-sandwich {
+  background-color: #F48FB1;
+}
+
+.minute.work.role-sales {
+  background-color: #FFF59D;
+}
+
+
 
   .timeline-layer,
   .graph-layer {
@@ -243,29 +270,4 @@ th {
 .divider {
   border-bottom: 0.8px dashed #a49e9a;
   width: 80%;
-}
-
-/* TODO 各担当色指定 */
-.minute.work.role-oven {
-  background-color: #4CAF50;
-}
-
-.minute.work.role-dough {
-  background-color: #4CAF50;
-}
-
-.minute.work.role-cafe {
-  background-color: #4CAF50;
-}
-
-.minute.work.role-shaping {
-  background-color: #4CAF50;
-}
-
-.minute.work.role-sandwich {
-  background-color: #4CAF50;
-}
-
-.minute.work.role-sales {
-  background-color: #4CAF50;
 }

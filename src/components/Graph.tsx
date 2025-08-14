@@ -48,7 +48,7 @@ const Graph = ({ record }: props) => {
     const next = sortedRoleChanges[i + 1];
 
     const fromMin = getMinutes(current.datetime!);
-    const toMin = next ? getMinutes(next.datetime!) : endMin;
+    const toMin = next ? getMinutes(next.datetime!) : endMin + 1;
 
     if (current.role) {
       roleRanges.push({
@@ -76,7 +76,7 @@ const Graph = ({ record }: props) => {
     if (i < startMin || (endMin && endMin < i)) {
       minuteDataForGraph.push("none"); // 非労働時間
     } else if (breakMap[i]) {
-      minuteDataForGraph.push("break"); // 休憩中
+      minuteDataForGraph.push(`break ${roleClassName}`); // 休憩中
     } else {
       minuteDataForGraph.push(`work ${roleClassName}`); // 勤務中
     }

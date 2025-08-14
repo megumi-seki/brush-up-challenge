@@ -29,7 +29,7 @@ const ClockLogs = () => {
             <th>終了時間</th>
             <th>総労働時間</th>
             <th>総休憩時間</th>
-            <th>勤怠グラフ</th>
+            <th>タイムレコーダーグラフ</th>
           </tr>
         </thead>
         <tbody>
