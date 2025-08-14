@@ -15,8 +15,6 @@ const ClockLogs = () => {
 
   const recordsOfDate = getRecordsByDate(date);
   const groupedRecords = groupRecordsById(recordsOfDate);
-  console.log(recordsOfDate);
-  console.log(groupedRecords);
 
   const pageContent = (
     <div className="container-large">
@@ -66,5 +64,3 @@ const ClockLogs = () => {
 };
 
 export default ClockLogs;
-
-// TODO １日のタイムレコーダー記録とグラフを表示する
