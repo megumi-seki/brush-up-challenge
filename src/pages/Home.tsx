@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import type { Employee } from "../types";
+import type { Employee, TimeRecorderType } from "../types";
 
 const Home = () => {
   const [employeees, setEmployees] = useState<Employee[]>([]);
@@ -19,6 +19,71 @@ const Home = () => {
       ];
       localStorage.setItem("employees", JSON.stringify(initialData));
       setEmployees(initialData);
+    }
+  }, []);
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("time_records");
+    if (!storedData) {
+      const initialData: TimeRecorderType[] = [
+        {
+          emp_id: "001",
+          datetime: "2025-08-14T05:03:32.780Z",
+          role: null,
+          type: "clock_in",
+          note: "",
+        },
+        {
+          emp_id: "001",
+          datetime: "2025-08-14T08:03:32.780Z",
+          role: null,
+          type: "break_begin",
+          note: "",
+        },
+        {
+          emp_id: "001",
+          datetime: "2025-08-14T08:30:32.780Z",
+          role: null,
+          type: "break_end",
+          note: "",
+        },
+        {
+          emp_id: "001",
+          datetime: "2025-08-14T14:00:32.780Z",
+          role: null,
+          type: "clock_out",
+          note: "",
+        },
+        {
+          emp_id: "002",
+          datetime: "2025-08-14T06:03:32.780Z",
+          role: null,
+          type: "clock_in",
+          note: "",
+        },
+        {
+          emp_id: "002",
+          datetime: "2025-08-14T08:15:32.780Z",
+          role: null,
+          type: "break_begin",
+          note: "",
+        },
+        {
+          emp_id: "002",
+          datetime: "2025-08-14T08:30:32.780Z",
+          role: null,
+          type: "break_end",
+          note: "",
+        },
+        {
+          emp_id: "002",
+          datetime: "2025-08-14T14:00:32.780Z",
+          role: null,
+          type: "clock_out",
+          note: "",
+        },
+      ];
+      localStorage.setItem("time_records", JSON.stringify(initialData));
     }
   }, []);
 

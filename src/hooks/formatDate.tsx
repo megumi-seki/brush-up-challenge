@@ -1,4 +1,5 @@
-const formatDate = (datetimeString: string) => {
+const formatDate = (datetimeString: string | null) => {
+  if (!datetimeString) return "-";
   const datetime = new Date(datetimeString);
   const formattedDate = `${datetime.getFullYear().toString()}/${(
     datetime.getMonth() + 1

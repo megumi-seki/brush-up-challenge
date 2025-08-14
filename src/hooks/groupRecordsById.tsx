@@ -1,21 +1,4 @@
-import type { TimeRecorderType } from "../types";
-
-type RoleTimeType = {
-  role: string | null;
-  datetime: string | null;
-};
-
-type GroupedTimeRecorderType = {
-  emp_id: string;
-  date: string;
-  clock_in: RoleTimeType;
-  break_begin: RoleTimeType;
-  break_end: RoleTimeType;
-  clock_out: RoleTimeType;
-  work_duration_millis: number; // ミリ秒単位
-  break_duration_millis: number; // ミリ秒単位
-  role_change: RoleTimeType[];
-};
+import type { GroupedTimeRecorderType, TimeRecorderType } from "../types";
 
 const groupRecordsById = (
   records: TimeRecorderType[]
