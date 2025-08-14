@@ -15,8 +15,8 @@ const groupRecordsById = (
         break_begin: { role: null, datetime: null },
         break_end: { role: null, datetime: null },
         clock_out: { role: null, datetime: null },
-        work_duration_millis: 0,
-        break_duration_millis: 0,
+        work_duration_millis: null,
+        break_duration_millis: null,
         role_change: [],
       };
     }
@@ -46,24 +46,26 @@ const groupRecordsById = (
           datetime: record.datetime,
         });
         break;
+      default:
+        throw Error("不正な登録種別");
     }
 
     return acc;
   }, {} as Record<string, GroupedTimeRecorderType>);
 
-  Object.values(groupedMap).forEach((group) => {
+  Object.values(groupedMap).forEach((group, index) => {
     const parse = (datetime: string | null) =>
       datetime ? new Date(datetime) : null;
 
     const start = parse(group.clock_in.datetime);
-    const end = parse(group.break_begin.datetime);
-    const breakStart = parse(group.break_end.datetime);
-    const breakEnd = parse(group.clock_out.datetime);
+    const end = parse(group.clock_out.datetime);
+    const breakStart = parse(group.break_begin.datetime);
+    const breakEnd = parse(group.break_end.datetime);
 
     if (start && end) {
       group.work_duration_millis = end.getTime() - start.getTime();
     }
-    if (breakStart && breakEnd) {
+    if (breakStart && breakEnd && group.work_duration_millis) {
       group.break_duration_millis = breakEnd.getTime() - breakStart.getTime();
       group.work_duration_millis -= group.break_duration_millis;
     }

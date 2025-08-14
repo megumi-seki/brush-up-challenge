@@ -43,8 +43,8 @@ const Graph = ({ record }: props) => {
     }
   }
 
-  const content = graphBar.map((status) => (
-    <span className={`minute ${status}`}></span>
+  const content = graphBar.map((status, index) => (
+    <span className={`minute ${status}`} key={index}></span>
   ));
 
   return <>{content}</>;

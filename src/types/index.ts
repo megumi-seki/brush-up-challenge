@@ -24,7 +24,7 @@ export type GroupedTimeRecorderType = {
   break_begin: RoleTimeType;
   break_end: RoleTimeType;
   clock_out: RoleTimeType;
-  work_duration_millis: number; // ミリ秒単位
-  break_duration_millis: number; // ミリ秒単位
+  work_duration_millis: number | null; // ミリ秒単位
+  break_duration_millis: number | null; // ミリ秒単位
   role_change: RoleTimeType[];
 };

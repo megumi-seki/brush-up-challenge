@@ -59,12 +59,16 @@ const GraphTimeLine = ({ record }: props) => {
     }
   }
 
-  const content = graphTimelineBar.map((status) => {
+  const content = graphTimelineBar.map((status, index) => {
     let className = "";
     if (status.type == "timeClockValue") className = "timeClockValue";
     if (status.type == "timeLineValue") className = "timeLineValue";
 
-    return <span className={`minute ${className}`}>{status.time}</span>;
+    return (
+      <span className={`minute ${className}`} key={index}>
+        {status.time}
+      </span>
+    );
   });
 
   return <>{content}</>;
