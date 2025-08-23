@@ -15,6 +15,13 @@ const GraphTimeLine = ({ record }: props) => {
   const breakBeginDatetime = break_begin.datetime;
   const breakEndDatetime = break_end.datetime;
 
+  const isDataEnough =
+    (clockInDatetime &&
+      breakBeginDatetime &&
+      breakEndDatetime &&
+      clockOutDatetime) ||
+    (!breakBeginDatetime && clockInDatetime && clockOutDatetime);
+
   const startMin = getMinutes(clockInDatetime);
   const endMin = clockOutDatetime ? getMinutes(clockOutDatetime) : startMin; // nullにしないため、datetimeがnullの場合はtotal minutes範囲外の値をセット
   const breakBeginMin = breakBeginDatetime
@@ -27,22 +34,22 @@ const GraphTimeLine = ({ record }: props) => {
   let graphTimelineBar = [];
   for (let i = 0; i <= GRAPH_TOTAL_MINUTES; i++) {
     // graphTimelineBarには30分刻みで時刻をセット。それ以外は""
-    if (i == startMin) {
+    if (isDataEnough && i == startMin) {
       graphTimelineBar.push({
         type: "timeClockValue",
         time: formatTime(clockInDatetime),
       });
-    } else if (clockOutDatetime && i == endMin) {
+    } else if (isDataEnough && clockOutDatetime && i == endMin) {
       graphTimelineBar.push({
         type: "timeClockValue",
         time: formatTime(clockOutDatetime),
       });
-    } else if (breakBeginDatetime && i == breakBeginMin) {
+    } else if (isDataEnough && breakBeginDatetime && i == breakBeginMin) {
       graphTimelineBar.push({
         type: "timeClockValue",
         time: formatTime(breakBeginDatetime),
       });
-    } else if (breakEndDatetime && i == breakEndMin) {
+    } else if (isDataEnough && breakEndDatetime && i == breakEndMin) {
       graphTimelineBar.push({
         type: "timeClockValue",
         time: formatTime(breakEndDatetime),

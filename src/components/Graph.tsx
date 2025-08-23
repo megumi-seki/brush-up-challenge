@@ -8,30 +8,45 @@ type props = {
 
 const Graph = ({ record }: props) => {
   const { clock_in, clock_out, break_begin, break_end, role_changes } = record;
+
   const clockInDatetime = clock_in.datetime;
-  if (clockInDatetime === null) return <></>;
   const clockOutDatetime = clock_out.datetime;
   const breakBeginDatetime = break_begin.datetime;
   const breakEndDatetime = break_end.datetime;
-  const sortedRoleChanges =
-    clockOutDatetime || (clockOutDatetime && break_begin && break_end)
-      ? [...role_changes, clock_in, clock_out, break_begin, break_end].sort(
-          (a, b) =>
-            new Date(a.datetime!).getTime() - new Date(b.datetime!).getTime()
-        )
-      : []; //TODO: ここのsortedRoleChanges怪しいからより良い書き方ないか見直す
-  const now = new Date();
+  const isDataEnough =
+    (clockInDatetime &&
+      breakBeginDatetime &&
+      breakEndDatetime &&
+      clockOutDatetime) ||
+    (!breakBeginDatetime && clockInDatetime && clockOutDatetime);
+  if (!isDataEnough) {
+    let lack = "退勤";
+    if (clockInDatetime && breakBeginDatetime && !breakEndDatetime)
+      lack = "休憩終了";
+    return (
+      <span className="incomplete-graph">
+        打刻データが不足しています。不足打刻：{lack}
+      </span>
+    );
+  }
+
+  const eventsWithDatetime = [
+    clock_in,
+    clock_out,
+    break_begin,
+    break_end,
+    ...role_changes,
+  ].filter((e) => e?.datetime);
+  const sortedRoleChanges = eventsWithDatetime.sort(
+    (a, b) => new Date(a.datetime!).getTime() - new Date(b.datetime!).getTime()
+  );
 
   const startMin = getMinutes(clockInDatetime);
   const breakBeginMin = breakBeginDatetime
     ? getMinutes(breakBeginDatetime)
     : null;
-  const breakEndMin = breakEndDatetime
-    ? getMinutes(breakEndDatetime)
-    : getMinutes(now.toISOString()); //TODO: 日付によって条件分岐
-  const endMin = clockOutDatetime
-    ? getMinutes(clockOutDatetime)
-    : getMinutes(now.toISOString()); //TODO: 日付によって条件分岐
+  const breakEndMin = breakEndDatetime ? getMinutes(breakEndDatetime) : null;
+  const endMin = getMinutes(clockOutDatetime);
 
   const breakMap = new Array(GRAPH_TOTAL_MINUTES).fill(false);
   if (breakBeginMin && breakEndMin) {
