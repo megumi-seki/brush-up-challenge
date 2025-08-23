@@ -134,10 +134,12 @@ th {
     border: none;
     font-weight: bold;
     font-size: 1em;
+    border-bottom: 1.3px solid #a05a2cc5;
   }
 
   .small-btn:disabled {
      color: #dbc5b5;
+     border-bottom: 1.3px solid #dbc5b5;
   }
 
   .note-input {

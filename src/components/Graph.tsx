@@ -4,9 +4,10 @@ import type { GroupedTimeRecorderType } from "../types";
 
 type props = {
   record: GroupedTimeRecorderType;
+  showRoleWithColor: boolean;
 };
 
-const Graph = ({ record }: props) => {
+const Graph = ({ record, showRoleWithColor }: props) => {
   const { clock_in, clock_out, break_begin, break_end, role_changes } = record;
 
   const clockInDatetime = clock_in.datetime;
@@ -91,9 +92,9 @@ const Graph = ({ record }: props) => {
     if (i < startMin || (endMin && endMin < i)) {
       minuteDataForGraph.push("none"); // 非労働時間
     } else if (breakMap[i]) {
-      minuteDataForGraph.push(`break ${roleClassName}`); // 休憩中
+      minuteDataForGraph.push(`break`); // 休憩中
     } else {
-      minuteDataForGraph.push(`work ${roleClassName}`); // 勤務中
+      minuteDataForGraph.push(`work ${showRoleWithColor && roleClassName}`); // 勤務中
     }
   }
 

@@ -1,5 +1,4 @@
-import { Navigate, useNavigate, useParams } from "react-router-dom";
-import formatDate from "../hooks/formatDate";
+import { useNavigate } from "react-router-dom";
 import getRecordsByDate from "../hooks/getRecordsByDate";
 import groupRecordsById from "../hooks/groupRecordsById";
 import formatTime from "../hooks/formatTime";
@@ -11,13 +10,14 @@ import { useState } from "react";
 const ClockLogs = () => {
   const today = new Date();
   const navigate = useNavigate();
-  // feature-enable-dateselect: TODO 日付変更できるようにする。
+  // feature-colored-roles: TODO　担当別配色オンオフできるようにする
 
   const [selectedDateString, setSelectedDateString] = useState(
     today.toISOString().split("T")[0]
   );
   const recordsOfDate = getRecordsByDate(selectedDateString);
   const groupedRecords = groupRecordsById(recordsOfDate);
+  const [showRoleWithColor, setShowRoleWithColor] = useState(true);
 
   const handleOnClick = (type: "previous" | "next") => {
     const selectedDate = new Date(selectedDateString);
@@ -35,37 +35,45 @@ const ClockLogs = () => {
 
   const pageContent = (
     <div className="container-large">
-      <div className="flex gap-medium align-center">
-        <div className="flex gap-small align-center">
-          <label htmlFor="selectedDate" className="hidden">
-            日付を選択
-          </label>
-          <input
-            type="date"
-            id="selectedDate"
-            value={selectedDateString}
-            className="selected-date"
-            onChange={(e) => setSelectedDateString(e.target.value)}
-          />
-          <h3>のタイムレコーダー履歴</h3>
+      <div className="flex gap-learge align-center">
+        <div className="flex gap-medium align-center">
+          <div className="flex gap-small align-center">
+            <label htmlFor="selectedDate" className="hidden">
+              日付を選択
+            </label>
+            <input
+              type="date"
+              id="selectedDate"
+              value={selectedDateString}
+              className="selected-date"
+              onChange={(e) => setSelectedDateString(e.target.value)}
+            />
+            <h3>のタイムレコーダー履歴</h3>
+          </div>
+          <div className="flex gap-small">
+            <button
+              type="button"
+              className="small-btn"
+              onClick={() => handleOnClick("previous")}
+            >
+              前日
+            </button>
+            <button
+              type="button"
+              className="small-btn"
+              onClick={() => handleOnClick("next")}
+              disabled={isCurrentSelectedDateToday}
+            >
+              翌日
+            </button>
+          </div>
         </div>
-        <div className="flex gap-small">
-          <button
-            type="button"
-            className="small-btn"
-            onClick={() => handleOnClick("previous")}
-          >
-            前日
-          </button>
-          <button
-            type="button"
-            className="small-btn"
-            onClick={() => handleOnClick("next")}
-            disabled={isCurrentSelectedDateToday}
-          >
-            翌日
-          </button>
-        </div>
+        <button
+          className="small-btn"
+          onClick={() => setShowRoleWithColor(!showRoleWithColor)}
+        >
+          担当別配色 {showRoleWithColor ? "ON" : "OFF"}
+        </button>
       </div>
       <table border={1}>
         <thead>
@@ -89,7 +97,10 @@ const ClockLogs = () => {
               <td className="px-small">
                 <div className="graph-wrapper">
                   <div className="flex graph-layer">
-                    <Graph record={record} />
+                    <Graph
+                      record={record}
+                      showRoleWithColor={showRoleWithColor}
+                    />
                   </div>
                   <div className="flex timeline-layer">
                     <GraphTimeLine record={record} />
