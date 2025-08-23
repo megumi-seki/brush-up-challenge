@@ -47,7 +47,7 @@ const ClockLogs = () => {
             className="selected-date"
             onChange={(e) => setSelectedDateString(e.target.value)}
           />
-          <h3>の勤怠記録</h3>
+          <h3>のタイムレコーダー履歴</h3>
         </div>
         <div className="flex gap-small">
           <button
