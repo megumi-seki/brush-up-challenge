@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import formatDate from "../hooks/formatDate";
 import getRecordsByDate from "../hooks/getRecordsByDate";
 import groupRecordsById from "../hooks/groupRecordsById";
@@ -6,20 +6,66 @@ import formatTime from "../hooks/formatTime";
 import formatTimeFromMillis from "../hooks/formatTimeFromMillis";
 import Graph from "../components/Graph";
 import GraphTimeLine from "../components/GraphTimeLine";
+import { useState } from "react";
 
 const ClockLogs = () => {
-  const { date } = useParams();
-  if (date === undefined) {
-    return <span>日付が選択されていません</span>;
-  }
+  const today = new Date();
+  const navigate = useNavigate();
+  // feature-enable-dateselect: TODO 日付変更できるようにする。
 
-  const recordsOfDate = getRecordsByDate(date);
+  const [selectedDateString, setSelectedDateString] = useState(
+    today.toISOString().split("T")[0]
+  );
+  const recordsOfDate = getRecordsByDate(selectedDateString);
   const groupedRecords = groupRecordsById(recordsOfDate);
+
+  const handleOnClick = (type: "previous" | "next") => {
+    const selectedDate = new Date(selectedDateString);
+    if (type === "next") {
+      selectedDate.setDate(selectedDate.getDate() + 1);
+    } else {
+      selectedDate.setDate(selectedDate.getDate() - 1);
+    }
+    const newSelectedDateString = selectedDate.toISOString().split("T")[0];
+    setSelectedDateString(newSelectedDateString);
+  };
+
+  const isCurrentSelectedDateToday =
+    selectedDateString === today.toISOString().split("T")[0];
 
   const pageContent = (
     <div className="container-large">
-      <div>
-        <h3>{formatDate(date)}の勤怠記録</h3>
+      <div className="flex gap-medium align-center">
+        <div className="flex gap-small align-center">
+          <label htmlFor="selectedDate" className="hidden">
+            日付を選択
+          </label>
+          <input
+            type="date"
+            id="selectedDate"
+            value={selectedDateString}
+            className="selected-date"
+            onChange={(e) => setSelectedDateString(e.target.value)}
+          />
+          <h3>の勤怠記録</h3>
+        </div>
+        <div className="flex gap-small">
+          <button
+            type="button"
+            className="small-btn"
+            onClick={() => handleOnClick("previous")}
+          >
+            前日
+          </button>
+          <button
+            type="button"
+            className="small-btn"
+            onClick={() => handleOnClick("next")}
+            disabled={isCurrentSelectedDateToday}
+          >
+            翌日
+          </button>
+        </div>
       </div>
       <table border={1}>
         <thead>
@@ -54,9 +100,9 @@ const ClockLogs = () => {
           ))}
         </tbody>
       </table>
-      <div className="btn-frame">
-        <a href="<?= getAppUrl() ?>">ホーム画面に戻る</a>
-      </div>
+      <button className="btn" onClick={() => navigate("/")}>
+        ホーム画面に戻る
+      </button>
     </div>
   );
 

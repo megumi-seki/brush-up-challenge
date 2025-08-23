@@ -103,9 +103,9 @@ const Home = () => {
       <div>
         <div className="flex justify-between align-center">
           <h3>従業員一覧</h3>
-          <div className="btn-frame">
-            <Link to="/logs">本日のタイムレコーダー履歴</Link>
-          </div>
+          <button className="btn" onClick={() => navigate(`/logs`)}>
+            タイムレコーダー履歴
+          </button>
         </div>
         <table border={1}>
           <thead>

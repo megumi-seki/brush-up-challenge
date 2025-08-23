@@ -96,26 +96,22 @@ th {
     border: 0.5px dashed #d8d8d8;
   }
 
-  .btn-frame {
+  .btn {
     display: inline-block;
     border-radius: 20px;
     font-weight: bold;
     cursor: pointer;
     border: none;
+    background: #fddbaf;
+    color: #a05a2c;
+    padding: 7px 10px;
+    transition: background 0.2s, color 0.2s;
+    width: 180px;
   }
 
-.btn-frame a {
-  background: #fddbaf;
-  color: #a05a2c;
-  padding: 7px 20px;
-  border-radius: 20px;
-  text-decoration: none;
-  transition: background 0.2s, color 0.2s;
-}
-
-.btn-frame a:hover {
-  background: #fdd197;
-}
+  .btn:hover {
+    background: #fdd197;
+  }
 
   .submit-btn {
     background: #a96a3f;
@@ -124,6 +120,24 @@ th {
     font-size: 1rem;
     width: 80%;
     margin: 5px auto;
+  }
+
+  .submit-btn:hover {
+    background: #a96a3f;
+  }
+
+  .small-btn {
+    border: none;
+    background: #fff8f0;
+    color: #a05a2c;
+    cursor: pointer;
+    border: none;
+    font-weight: bold;
+    font-size: 1em;
+  }
+
+  .small-btn:disabled {
+     color: #dbc5b5;
   }
 
   .note-input {
@@ -270,4 +284,16 @@ th {
 .divider {
   border-bottom: 0.8px dashed #a49e9a;
   width: 80%;
+}
+
+.selected-date {
+  font-family: 'Noto Sans JP', 'Yu Gothic', sans-serif;
+    padding: 8px;
+    color: #a05a2c;
+    letter-spacing: 1px;
+    font-weight: bold;
+    font-size: 1.17em;
+    height: 1em;
+    border: 1.5px solid black;
+    width: 9.3rem;
 }

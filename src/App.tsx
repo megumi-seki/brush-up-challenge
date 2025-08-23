@@ -11,7 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/detail/:empId/:weekStart/:compare" element={<Detail />} />
-        <Route path="/logs/:date" element={<ClockLogs />} />
+        <Route path="/logs" element={<ClockLogs />} />
       </Routes>
     </div>
   );
