@@ -220,7 +220,7 @@ const TimeRecorderForm = ({ empId }: Props) => {
           onChange={(e) => setNote(e.target.value)}
         />
       </div>
-      <button className="btn-frame submit-btn" type="submit">
+      <button className="btn submit-btn" type="submit">
         登録
       </button>
     </form>
