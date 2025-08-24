@@ -125,9 +125,9 @@ const Home = () => {
         <table border={1}>
           <thead>
             <tr>
-              <th>従業員番号</th>
-              <th>名前</th>
-              <th>役職</th>
+              <th className="home-th">従業員番号</th>
+              <th className="home-th">名前</th>
+              <th className="home-th">役職</th>
             </tr>
           </thead>
           <tbody>
@@ -137,9 +137,9 @@ const Home = () => {
                 key={emp.id}
                 onClick={() => navigate(`/detail/${emp.id}/${today}/0`)}
               >
-                <td>{emp.id}</td>
-                <td>{emp.name}</td>
-                <td>{emp.roles}</td>
+                <td className="home-td">{emp.id}</td>
+                <td className="home-td">{emp.name}</td>
+                <td className="home-td">{emp.roles}</td>
               </tr>
             ))}
           </tbody>

@@ -30,16 +30,20 @@ table {
   border-spacing: 0;
   background: #fff;
   border-radius: 5px;
-}
-
-th, td {
-  padding: 10px 15px;
   text-align: center;
 }
 
 th {
   background: #ffe5c2;
   color: #a05a2c;
+}
+
+.home-th, .home-td {
+  padding: 10px 15px;
+}
+
+.logs-th {
+  padding: 10px 5px;
 }
 
 .tr-with-hover {
@@ -305,3 +309,4 @@ th {
     border: 1.5px solid black;
     width: 9.3rem;
 }
+

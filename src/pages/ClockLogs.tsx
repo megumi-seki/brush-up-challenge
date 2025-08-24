@@ -11,7 +11,24 @@ import RoleColorExplanation from "../components/RoleColorExplanation";
 const ClockLogs = () => {
   const today = new Date();
   const navigate = useNavigate();
-  // feature-show-rolechange-time: TODO 担当別配色オンの時のみ、担当切替の時間も表示する。→GraphTimeLine
+  // feature-finish-clocklogs-style: TODO タイムレコーダー履歴画面のスタイルを直す
+  // 1.  グラフ自体のpaddingなど
+  // 2.  エラーメッセージの配置
+  // 3.  ホーム画面に戻るボタンの配置
+  // 4.  スタッフIDのとこ名前が表示されるようにする
+  // 5.  ホーム画面みたいに、クリックしたら個人ページ行けるようにする
+
+  // TODO:　オプション版とうまいことつなげれないか見てみる
+
+  // 別ブランチ TODO: 個人ページ: タイムレコーダー→〇日のタイムレコーダー履歴（文字）＋ グラフ
+  //                                           →シフトとの差異
+
+  // 別ブランチ TODO: タイムレコーダー履歴ページ：シフトとの差異表示オンオフ付け加える。
+  // 1. 担当別配色はテーブルの中とかに移す
+  // 2. シフトとの差異表示オンのとき、差異があるところが赤でグラフに加えられる（ロジックは休憩時間示すときなどと同じ）
+  // 2. それぞれにカーソール合わせると、内容が表示されるようにする
+
+  // 別ブランチ TODO: 打刻が足りない場合でも、日をまたげばタイムレコーダーは出勤から始まるようにする
 
   const [selectedDateString, setSelectedDateString] = useState(
     today.toISOString().split("T")[0]
@@ -82,12 +99,12 @@ const ClockLogs = () => {
       <table border={1}>
         <thead>
           <tr>
-            <th>スタッフID</th>
+            <th className="logs-th">スタッフID</th>
             {/* <th>開始時間</th>
             <th>終了時間</th> */}
-            <th>総労働時間</th>
-            <th>総休憩時間</th>
-            <th>タイムレコーダーグラフ</th>
+            <th className="logs-th">総労働時間</th>
+            <th className="logs-th">総休憩時間</th>
+            <th className="logs-th">タイムレコーダーグラフ</th>
           </tr>
         </thead>
         <tbody>
