@@ -7,7 +7,7 @@ import Graph from "../components/Graph";
 import GraphTimeLine from "../components/GraphTimeLine";
 import { useState } from "react";
 import RoleColorExplanation from "../components/RoleColorExplanation";
-import type { GroupedTimeRecorderType } from "../types";
+import getEmpNameById from "../hooks/getEmpNameById";
 
 const ClockLogs = () => {
   const today = new Date();
@@ -16,7 +16,7 @@ const ClockLogs = () => {
   // 1.  グラフ自体のpaddingなど　✓
   // 2.  エラーメッセージの配置   ✓
   // 3.  ホーム画面に戻るボタンの配置  ✓
-  // 4.  スタッフIDのとこ名前が表示されるようにする
+  // 4.  スタッフIDのとこ名前が表示されるようにする  ✓
   // 5.  ホーム画面みたいに、クリックしたら個人ページ行けるようにする
 
   // TODO:　オプション版とうまいことつなげれないか見てみる
@@ -99,7 +99,7 @@ const ClockLogs = () => {
       <table border={1}>
         <thead>
           <tr>
-            <th className="logs-th">スタッフID</th>
+            <th className="logs-th">名前</th>
             {/* <th>開始時間</th>
             <th>終了時間</th> */}
             <th className="logs-th">総労働時間</th>
@@ -115,7 +115,7 @@ const ClockLogs = () => {
         <tbody>
           {groupedRecords.map((record) => (
             <tr key={record.emp_id}>
-              <td>{record.emp_id}</td>
+              <td>{getEmpNameById(record.emp_id)}</td>
               {/* <td>{formatTime(record.clock_in.datetime)}</td>
               <td>{formatTime(record.clock_out.datetime)}</td> */}
               <td>{formatTimeFromMillis(record.work_duration_millis)}</td>
