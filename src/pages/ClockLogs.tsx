@@ -7,14 +7,15 @@ import Graph from "../components/Graph";
 import GraphTimeLine from "../components/GraphTimeLine";
 import { useState } from "react";
 import RoleColorExplanation from "../components/RoleColorExplanation";
+import type { GroupedTimeRecorderType } from "../types";
 
 const ClockLogs = () => {
   const today = new Date();
   const navigate = useNavigate();
   // feature-finish-clocklogs-style: TODO タイムレコーダー履歴画面のスタイルを直す
-  // 1.  グラフ自体のpaddingなど
-  // 2.  エラーメッセージの配置
-  // 3.  ホーム画面に戻るボタンの配置
+  // 1.  グラフ自体のpaddingなど　✓
+  // 2.  エラーメッセージの配置   ✓
+  // 3.  ホーム画面に戻るボタンの配置  ✓
   // 4.  スタッフIDのとこ名前が表示されるようにする
   // 5.  ホーム画面みたいに、クリックしたら個人ページ行けるようにする
 
@@ -93,7 +94,6 @@ const ClockLogs = () => {
           >
             担当別配色 {showRoleWithColor ? "OFF" : "ON"}
           </button>
-          <RoleColorExplanation showRoleWithColor={showRoleWithColor} />
         </div>
       </div>
       <table border={1}>
@@ -104,7 +104,12 @@ const ClockLogs = () => {
             <th>終了時間</th> */}
             <th className="logs-th">総労働時間</th>
             <th className="logs-th">総休憩時間</th>
-            <th className="logs-th">タイムレコーダーグラフ</th>
+            <th className="logs-th">
+              <div className="grid grid-cols-2">
+                <span>タイムレコーダーグラフ</span>
+                <RoleColorExplanation showRoleWithColor={showRoleWithColor} />
+              </div>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -117,25 +122,21 @@ const ClockLogs = () => {
               <td>{formatTimeFromMillis(record.break_duration_millis)}</td>
               <td className="px-small">
                 <div className="graph-wrapper">
-                  <div className="flex graph-layer">
-                    <Graph
-                      record={record}
-                      showRoleWithColor={showRoleWithColor}
-                    />
-                  </div>
-                  <div className="flex timeline-layer">
-                    <GraphTimeLine
-                      record={record}
-                      showRoleWithColor={showRoleWithColor}
-                    />
-                  </div>
+                  <Graph
+                    record={record}
+                    showRoleWithColor={showRoleWithColor}
+                  />
+                  <GraphTimeLine
+                    record={record}
+                    showRoleWithColor={showRoleWithColor}
+                  />
                 </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <button className="btn" onClick={() => navigate("/")}>
+      <button className="btn ml-auto" onClick={() => navigate("/")}>
         ホーム画面に戻る
       </button>
     </div>

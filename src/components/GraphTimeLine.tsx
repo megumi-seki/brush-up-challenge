@@ -1,6 +1,7 @@
 import { GRAPH_START_HOUR, GRAPH_TOTAL_MINUTES } from "../constants/appConfig";
 import formatTime from "../hooks/formatTime";
 import getMinutes from "../hooks/getMinutes";
+import isDataEnough from "../hooks/isDataEnough";
 import type { GroupedTimeRecorderType } from "../types";
 
 type GraphTimeLineProps = {
@@ -11,7 +12,6 @@ type GraphTimeLineProps = {
 const GraphTimeLine = ({ record, showRoleWithColor }: GraphTimeLineProps) => {
   const { clock_in, clock_out, break_begin, break_end, role_changes } = record;
   const clockInDatetime = clock_in.datetime;
-  if (clockInDatetime === null) return <></>;
   const clockOutDatetime = clock_out.datetime;
   const breakBeginDatetime = break_begin.datetime;
   const breakEndDatetime = break_end.datetime;
@@ -19,14 +19,11 @@ const GraphTimeLine = ({ record, showRoleWithColor }: GraphTimeLineProps) => {
     .map((roleChange) => roleChange.datetime)
     .filter((datetime) => datetime !== null);
 
-  const isDataEnough =
-    (clockInDatetime &&
-      breakBeginDatetime &&
-      breakEndDatetime &&
-      clockOutDatetime) ||
-    (!breakBeginDatetime && clockInDatetime && clockOutDatetime);
+  if (!isDataEnough(record)) {
+    return <></>;
+  }
 
-  const startMin = getMinutes(clockInDatetime);
+  const startMin = getMinutes(clockInDatetime!); //isDataEnoughのチェックによりclockInDatetimeは必ずstring
   const endMin = clockOutDatetime ? getMinutes(clockOutDatetime) : startMin; // nullにしないため、datetimeがnullの場合はtotal minutes範囲外の値をセット
   const breakBeginMin = breakBeginDatetime
     ? getMinutes(breakBeginDatetime)
@@ -41,31 +38,27 @@ const GraphTimeLine = ({ record, showRoleWithColor }: GraphTimeLineProps) => {
   let graphTimelineBar = [];
   for (let i = 0; i <= GRAPH_TOTAL_MINUTES; i++) {
     // graphTimelineBarには30分刻みで時刻をセット。それ以外は""
-    if (isDataEnough && i == startMin) {
+    if (i == startMin) {
       graphTimelineBar.push({
         type: "timeClockValue",
         time: formatTime(clockInDatetime),
       });
-    } else if (isDataEnough && clockOutDatetime && i == endMin) {
+    } else if (clockOutDatetime && i == endMin) {
       graphTimelineBar.push({
         type: "timeClockValue",
         time: formatTime(clockOutDatetime),
       });
-    } else if (isDataEnough && breakBeginDatetime && i == breakBeginMin) {
+    } else if (breakBeginDatetime && i == breakBeginMin) {
       graphTimelineBar.push({
         type: "timeClockValue",
         time: formatTime(breakBeginDatetime),
       });
-    } else if (isDataEnough && breakEndDatetime && i == breakEndMin) {
+    } else if (breakEndDatetime && i == breakEndMin) {
       graphTimelineBar.push({
         type: "timeClockValue",
         time: formatTime(breakEndDatetime),
       });
-    } else if (
-      isDataEnough &&
-      showRoleWithColor &&
-      roleChangeMins.includes(i)
-    ) {
+    } else if (showRoleWithColor && roleChangeMins.includes(i)) {
       roleChangeMins.forEach((roleChangeMin, index) => {
         if (i === roleChangeMin) {
           graphTimelineBar.push({
@@ -98,7 +91,7 @@ const GraphTimeLine = ({ record, showRoleWithColor }: GraphTimeLineProps) => {
     );
   });
 
-  return <>{content}</>;
+  return <div className="flex timeline-layer">{content}</div>;
 };
 
 export default GraphTimeLine;

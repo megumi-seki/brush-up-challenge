@@ -44,6 +44,7 @@ th {
 
 .logs-th {
   padding: 10px 5px;
+  height: 100%;
 }
 
 .tr-with-hover {
@@ -64,6 +65,18 @@ th {
     flex-direction: column;
   }
 
+  .grid {
+    display: grid;
+  }
+
+  .grid-cols-2 {
+     grid-template-columns: 6fr 7fr; 
+  }
+
+  .ml-auto {
+    margin-left: auto;
+  }
+
   .justify-between {
     justify-content: space-between;
   }
@@ -71,10 +84,6 @@ th {
   .justify-around {
     justify-content: space-around;
   }
-
-  /* .justify-center {
-    justify-content: center;
-  } */
 
   .align-center {
     align-items: center;
@@ -228,12 +237,23 @@ th {
 .color-explain {
   padding: 0px 10px;
   border-radius: 20px;
+  color: black;
+  font-weight: normal;
+  font-size: 15px;
+  margin-right: 5px;
 }
 
 
   .timeline-layer,
   .graph-layer {
     position: absolute;
+  }
+
+  .incomplete-graph {
+    height: 40px; /* minute heightに合わせる */
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .timeline-layer .minute {

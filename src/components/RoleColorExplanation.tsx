@@ -24,11 +24,11 @@ const RoleColorExplanation = ({
   }
 
   return (
-    <>
+    <span className="ml-auto">
       {colors.map((role) => (
         <span className={`color-explain ${role.value}`}>{role.label}</span>
       ))}
-    </>
+    </span>
   );
 };
 

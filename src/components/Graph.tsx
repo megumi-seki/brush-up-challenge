@@ -1,5 +1,6 @@
 import { GRAPH_TOTAL_MINUTES } from "../constants/appConfig";
 import getMinutes from "../hooks/getMinutes";
+import isDataEnough from "../hooks/isDataEnough";
 import type { GroupedTimeRecorderType } from "../types";
 
 type props = {
@@ -14,20 +15,15 @@ const Graph = ({ record, showRoleWithColor }: props) => {
   const clockOutDatetime = clock_out.datetime;
   const breakBeginDatetime = break_begin.datetime;
   const breakEndDatetime = break_end.datetime;
-  const isDataEnough =
-    (clockInDatetime &&
-      breakBeginDatetime &&
-      breakEndDatetime &&
-      clockOutDatetime) ||
-    (!breakBeginDatetime && clockInDatetime && clockOutDatetime);
-  if (!isDataEnough) {
+
+  if (!isDataEnough(record)) {
     let lack = "退勤";
     if (clockInDatetime && breakBeginDatetime && !breakEndDatetime)
       lack = "休憩終了";
     return (
-      <span className="incomplete-graph">
+      <div className="incomplete-graph">
         打刻データが不足しています。不足打刻：{lack}
-      </span>
+      </div>
     );
   }
 
@@ -42,12 +38,12 @@ const Graph = ({ record, showRoleWithColor }: props) => {
     (a, b) => new Date(a.datetime!).getTime() - new Date(b.datetime!).getTime()
   );
 
-  const startMin = getMinutes(clockInDatetime);
+  const startMin = getMinutes(clockInDatetime!); //isDataEnoughのチェックによりclockInDatetimeは必ずstring
   const breakBeginMin = breakBeginDatetime
     ? getMinutes(breakBeginDatetime)
     : null;
   const breakEndMin = breakEndDatetime ? getMinutes(breakEndDatetime) : null;
-  const endMin = getMinutes(clockOutDatetime);
+  const endMin = getMinutes(clockOutDatetime!); //isDataEnoughのチェックによりclockOutDatetimeは必ずstring
 
   const breakMap = new Array(GRAPH_TOTAL_MINUTES).fill(false);
   if (breakBeginMin && breakEndMin) {
@@ -102,7 +98,7 @@ const Graph = ({ record, showRoleWithColor }: props) => {
     <span className={`minute ${status}`} key={index}></span>
   ));
 
-  return <>{content}</>;
+  return <div className="flex graph-layer">{content}</div>;
 };
 
 export default Graph;
