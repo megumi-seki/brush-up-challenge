@@ -47,11 +47,11 @@ th {
   height: 100%;
 }
 
-.tr-with-hover {
+.with-hover {
   transition: background 0.2s;
 }
 
-.tr-with-hover:hover {
+.with-hover:hover {
   background: #fff3e0;
   cursor: pointer;
 }
@@ -206,7 +206,7 @@ th {
   }
 
   .none {
-    background-color: #F0F0F0;
+    background-color: white;
   }
 
     /* 担当別配色 */

@@ -8,16 +8,18 @@ import GraphTimeLine from "../components/GraphTimeLine";
 import { useState } from "react";
 import RoleColorExplanation from "../components/RoleColorExplanation";
 import getEmpNameById from "../hooks/getEmpNameById";
+import formatDate from "../hooks/formatDate";
 
 const ClockLogs = () => {
   const today = new Date();
+  const formattedToday = new Date(today).toISOString().split("T")[0];
   const navigate = useNavigate();
   // feature-finish-clocklogs-style: TODO タイムレコーダー履歴画面のスタイルを直す
   // 1.  グラフ自体のpaddingなど　✓
   // 2.  エラーメッセージの配置   ✓
   // 3.  ホーム画面に戻るボタンの配置  ✓
   // 4.  スタッフIDのとこ名前が表示されるようにする  ✓
-  // 5.  ホーム画面みたいに、クリックしたら個人ページ行けるようにする
+  // 5.  ホーム画面みたいに、クリックしたら個人ページ行けるようにする  ✓
 
   // TODO:　オプション版とうまいことつなげれないか見てみる
 
@@ -100,8 +102,6 @@ const ClockLogs = () => {
         <thead>
           <tr>
             <th className="logs-th">名前</th>
-            {/* <th>開始時間</th>
-            <th>終了時間</th> */}
             <th className="logs-th">総労働時間</th>
             <th className="logs-th">総休憩時間</th>
             <th className="logs-th">
@@ -115,9 +115,14 @@ const ClockLogs = () => {
         <tbody>
           {groupedRecords.map((record) => (
             <tr key={record.emp_id}>
-              <td>{getEmpNameById(record.emp_id)}</td>
-              {/* <td>{formatTime(record.clock_in.datetime)}</td>
-              <td>{formatTime(record.clock_out.datetime)}</td> */}
+              <td
+                className="with-hover"
+                onClick={() =>
+                  navigate(`/detail/${record.emp_id}/${formattedToday}`)
+                }
+              >
+                {getEmpNameById(record.emp_id)}
+              </td>
               <td>{formatTimeFromMillis(record.work_duration_millis)}</td>
               <td>{formatTimeFromMillis(record.break_duration_millis)}</td>
               <td className="px-small">

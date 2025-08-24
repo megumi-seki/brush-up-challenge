@@ -133,9 +133,9 @@ const Home = () => {
           <tbody>
             {employeees.map((emp) => (
               <tr
-                className="tr-with-hover"
+                className="with-hover"
                 key={emp.id}
-                onClick={() => navigate(`/detail/${emp.id}/${today}/0`)}
+                onClick={() => navigate(`/detail/${emp.id}/${today}`)}
               >
                 <td className="home-td">{emp.id}</td>
                 <td className="home-td">{emp.name}</td>
