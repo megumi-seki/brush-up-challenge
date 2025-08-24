@@ -14,8 +14,9 @@ const Home = () => {
     } else {
       // デモ用に、初期データがない場合はダミーデータを保存
       const initialData: Employee[] = [
-        { id: "001", name: "田中太郎", roles: ["oven"] },
+        { id: "001", name: "田中太郎", roles: ["oven", "sandwich", "dough"] },
         { id: "002", name: "山田花子", roles: ["sandwich", "shaping"] },
+        { id: "003", name: "freee次郎", roles: ["sales"] },
       ];
       localStorage.setItem("employees", JSON.stringify(initialData));
       setEmployees(initialData);
@@ -35,7 +36,7 @@ const Home = () => {
         },
         {
           emp_id: "001",
-          datetime: "2025-08-14T05:13:32.780Z",
+          datetime: "2025-08-14T06:14:32.780Z",
           role: "dough",
           type: "role_change",
           note: "",
@@ -49,15 +50,22 @@ const Home = () => {
         },
         {
           emp_id: "001",
-          datetime: "2025-08-14T08:30:32.780Z",
+          datetime: "2025-08-14T09:05:32.780Z",
           role: "oven",
           type: "break_end",
           note: "",
         },
         {
           emp_id: "001",
+          datetime: "2025-08-14T13:05:32.780Z",
+          role: "sandwich",
+          type: "role_change",
+          note: "",
+        },
+        {
+          emp_id: "001",
           datetime: "2025-08-14T14:00:32.780Z",
-          role: "oven",
+          role: "sandwich",
           type: "clock_out",
           note: "",
         },
@@ -70,7 +78,7 @@ const Home = () => {
         },
         {
           emp_id: "002",
-          datetime: "2025-08-14T08:15:32.780Z",
+          datetime: "2025-08-14T07:50:32.780Z",
           role: "oven",
           type: "break_begin",
           note: "",
@@ -87,6 +95,13 @@ const Home = () => {
           datetime: "2025-08-14T14:00:32.780Z",
           role: "oven",
           type: "clock_out",
+          note: "",
+        },
+        {
+          emp_id: "003",
+          datetime: "2025-08-14T06:03:32.780Z",
+          role: "sales",
+          type: "clock_in",
           note: "",
         },
       ];

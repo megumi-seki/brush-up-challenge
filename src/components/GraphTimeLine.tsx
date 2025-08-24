@@ -3,17 +3,21 @@ import formatTime from "../hooks/formatTime";
 import getMinutes from "../hooks/getMinutes";
 import type { GroupedTimeRecorderType } from "../types";
 
-type props = {
+type GraphTimeLineProps = {
   record: GroupedTimeRecorderType;
+  showRoleWithColor: boolean;
 };
 
-const GraphTimeLine = ({ record }: props) => {
-  const { clock_in, clock_out, break_begin, break_end } = record;
+const GraphTimeLine = ({ record, showRoleWithColor }: GraphTimeLineProps) => {
+  const { clock_in, clock_out, break_begin, break_end, role_changes } = record;
   const clockInDatetime = clock_in.datetime;
   if (clockInDatetime === null) return <></>;
   const clockOutDatetime = clock_out.datetime;
   const breakBeginDatetime = break_begin.datetime;
   const breakEndDatetime = break_end.datetime;
+  const roleChangeDatetimes = role_changes
+    .map((roleChange) => roleChange.datetime)
+    .filter((datetime) => datetime !== null);
 
   const isDataEnough =
     (clockInDatetime &&
@@ -30,6 +34,9 @@ const GraphTimeLine = ({ record }: props) => {
   const breakEndMin = breakEndDatetime
     ? getMinutes(breakEndDatetime)
     : breakBeginMin;
+  const roleChangeMins = roleChangeDatetimes.map((datetime) =>
+    getMinutes(datetime)
+  );
 
   let graphTimelineBar = [];
   for (let i = 0; i <= GRAPH_TOTAL_MINUTES; i++) {
@@ -53,6 +60,19 @@ const GraphTimeLine = ({ record }: props) => {
       graphTimelineBar.push({
         type: "timeClockValue",
         time: formatTime(breakEndDatetime),
+      });
+    } else if (
+      isDataEnough &&
+      showRoleWithColor &&
+      roleChangeMins.includes(i)
+    ) {
+      roleChangeMins.forEach((roleChangeMin, index) => {
+        if (i === roleChangeMin) {
+          graphTimelineBar.push({
+            type: "timeClockValue",
+            time: formatTime(roleChangeDatetimes[index]),
+          });
+        }
       });
     } else if (i % 30 === 0) {
       const totalMinutesFromStart = i;

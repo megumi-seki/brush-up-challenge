@@ -11,7 +11,7 @@ import RoleColorExplanation from "../components/RoleColorExplanation";
 const ClockLogs = () => {
   const today = new Date();
   const navigate = useNavigate();
-  // feature-colored-roles: TODO　担当別配色オンオフに応じて、色説明も切り替える (RoleColorExplanationChange)
+  // feature-show-rolechange-time: TODO 担当別配色オンの時のみ、担当切替の時間も表示する。→GraphTimeLine
 
   const [selectedDateString, setSelectedDateString] = useState(
     today.toISOString().split("T")[0]
@@ -83,8 +83,8 @@ const ClockLogs = () => {
         <thead>
           <tr>
             <th>スタッフID</th>
-            <th>開始時間</th>
-            <th>終了時間</th>
+            {/* <th>開始時間</th>
+            <th>終了時間</th> */}
             <th>総労働時間</th>
             <th>総休憩時間</th>
             <th>タイムレコーダーグラフ</th>
@@ -94,8 +94,8 @@ const ClockLogs = () => {
           {groupedRecords.map((record) => (
             <tr key={record.emp_id}>
               <td>{record.emp_id}</td>
-              <td>{formatTime(record.clock_in.datetime)}</td>
-              <td>{formatTime(record.clock_out.datetime)}</td>
+              {/* <td>{formatTime(record.clock_in.datetime)}</td>
+              <td>{formatTime(record.clock_out.datetime)}</td> */}
               <td>{formatTimeFromMillis(record.work_duration_millis)}</td>
               <td>{formatTimeFromMillis(record.break_duration_millis)}</td>
               <td className="px-small">
@@ -107,7 +107,10 @@ const ClockLogs = () => {
                     />
                   </div>
                   <div className="flex timeline-layer">
-                    <GraphTimeLine record={record} />
+                    <GraphTimeLine
+                      record={record}
+                      showRoleWithColor={showRoleWithColor}
+                    />
                   </div>
                 </div>
               </td>
