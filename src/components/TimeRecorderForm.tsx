@@ -67,7 +67,7 @@ const typeTexts: Record<string, string> = {
   clock_out: "",
 };
 
-const defaultRoleOptions = [
+export const defaultRoleOptions = [
   { value: "oven", label: "釜" },
   { value: "dough", label: "仕込み" },
   { value: "cafe", label: "品カフェ" },
@@ -91,11 +91,11 @@ const getRoleOptions = (employee: Employee, selectedType: string) => {
       );
 };
 
-type Props = {
+type TimeRecorderFormProps = {
   empId: string;
 };
 
-const TimeRecorderForm = ({ empId }: Props) => {
+const TimeRecorderForm = ({ empId }: TimeRecorderFormProps) => {
   const employee = getEmployeeById(empId);
   if (!employee) {
     return <div>従業員が見つかりません</div>;

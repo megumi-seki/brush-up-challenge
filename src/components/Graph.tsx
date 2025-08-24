@@ -87,7 +87,7 @@ const Graph = ({ record, showRoleWithColor }: props) => {
   let minuteDataForGraph = [];
   for (let i = 0; i <= GRAPH_TOTAL_MINUTES; i++) {
     const role = getRoleForMinute(i);
-    const roleClassName = role ? `role-${role}` : "";
+    const roleClassName = role ? role : "";
 
     if (i < startMin || (endMin && endMin < i)) {
       minuteDataForGraph.push("none"); // 非労働時間

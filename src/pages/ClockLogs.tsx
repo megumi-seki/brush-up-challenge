@@ -6,18 +6,19 @@ import formatTimeFromMillis from "../hooks/formatTimeFromMillis";
 import Graph from "../components/Graph";
 import GraphTimeLine from "../components/GraphTimeLine";
 import { useState } from "react";
+import RoleColorExplanation from "../components/RoleColorExplanation";
 
 const ClockLogs = () => {
   const today = new Date();
   const navigate = useNavigate();
-  // feature-colored-roles: TODO　担当別配色オンオフできるようにする
+  // feature-colored-roles: TODO　担当別配色オンオフに応じて、色説明も切り替える (RoleColorExplanationChange)
 
   const [selectedDateString, setSelectedDateString] = useState(
     today.toISOString().split("T")[0]
   );
   const recordsOfDate = getRecordsByDate(selectedDateString);
   const groupedRecords = groupRecordsById(recordsOfDate);
-  const [showRoleWithColor, setShowRoleWithColor] = useState(true);
+  const [showRoleWithColor, setShowRoleWithColor] = useState(false);
 
   const handleOnClick = (type: "previous" | "next") => {
     const selectedDate = new Date(selectedDateString);
@@ -35,7 +36,7 @@ const ClockLogs = () => {
 
   const pageContent = (
     <div className="container-large">
-      <div className="flex gap-learge align-center">
+      <div className="flex justify-between align-center">
         <div className="flex gap-medium align-center">
           <div className="flex gap-small align-center">
             <label htmlFor="selectedDate" className="hidden">
@@ -68,12 +69,15 @@ const ClockLogs = () => {
             </button>
           </div>
         </div>
-        <button
-          className="small-btn"
-          onClick={() => setShowRoleWithColor(!showRoleWithColor)}
-        >
-          担当別配色 {showRoleWithColor ? "ON" : "OFF"}
-        </button>
+        <div className="flex gap-small">
+          <button
+            className="small-btn"
+            onClick={() => setShowRoleWithColor(!showRoleWithColor)}
+          >
+            担当別配色 {showRoleWithColor ? "OFF" : "ON"}
+          </button>
+          <RoleColorExplanation showRoleWithColor={showRoleWithColor} />
+        </div>
       </div>
       <table border={1}>
         <thead>

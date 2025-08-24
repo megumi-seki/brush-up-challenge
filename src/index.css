@@ -183,42 +183,48 @@ th {
     width: 1020px; /* 1px * 1020minutes */
   }
 
-  .minute.work {
+  /* デフォルト配色 */
+  .work {
     background-color: #4CAF50;
   }
 
-  .minute.break {
-    background-color: #FFE082;
+  .break {
+    background-color: #fcdc86;
   }
 
-  .minute.none {
+  .none {
     background-color: #F0F0F0;
   }
 
-  .minute.work.role-oven {
+    /* 担当別配色 */
+  .oven {
   background-color: #FFAB91;
 }
 
-.minute.work.role-dough {
+.dough {
   background-color: #C5E1A5;
 }
 
-.minute.work.role-cafe {
+.cafe {
   background-color: #B3E5FC;
 }
 
-.minute.work.role-shaping {
+.shaping {
   background-color: #CE93D8;
 }
 
-.minute.work.role-sandwich {
+.sandwich {
   background-color: #F48FB1;
 }
 
-.minute.work.role-sales {
+.sales {
   background-color: #FFF59D;
 }
 
+.color-explain {
+  padding: 0px 10px;
+  border-radius: 20px;
+}
 
 
   .timeline-layer,
