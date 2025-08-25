@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import type { Employee, TimeRecorderType } from "../types";
+import { useNavigate } from "react-router-dom";
+import type { Employee } from "../types";
 
 type HomeProps = {
   employees: Employee[];

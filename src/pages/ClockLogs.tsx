@@ -1,14 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import getRecordsByDate from "../hooks/getRecordsByDate";
 import groupRecordsById from "../hooks/groupRecordsById";
-import formatTime from "../hooks/formatTime";
 import formatTimeFromMillis from "../hooks/formatTimeFromMillis";
 import Graph from "../components/Graph";
 import GraphTimeLine from "../components/GraphTimeLine";
 import { useState } from "react";
 import RoleColorExplanation from "../components/RoleColorExplanation";
 import getEmpNameById from "../hooks/getEmpNameById";
-import formatDate from "../hooks/formatDate";
 
 const ClockLogs = () => {
   const today = new Date();
@@ -18,7 +16,7 @@ const ClockLogs = () => {
   //                                           →シフトとの差異
 
   // 別ブランチ TODO: タイムレコーダー履歴ページ：シフトとの差異表示オンオフ付け加える。
-  // 1. 担当別配色はテーブルの中とかに移す
+  // 1. 担当別配色はテーブルの中とかに移す  ✓
   // 2. シフトとの差異表示オンのとき、差異があるところが赤でグラフに加えられる（ロジックは休憩時間示すときなどと同じ）
   // 2. それぞれにカーソール合わせると、内容が表示されるようにする
 
