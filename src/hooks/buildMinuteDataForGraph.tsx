@@ -1,17 +1,24 @@
+import { defaultRoleOptions } from "../components/TimeRecorderForm";
 import { GRAPH_TOTAL_MINUTES } from "../constants/appConfig";
 import type { GroupedTimeRecorderType } from "../types";
 import getMinutes from "./getMinutes";
 
 type buildMinuteDataForGraphProps = {
-  record: GroupedTimeRecorderType;
-  showRoleWithColor: boolean;
+  data: GroupedTimeRecorderType;
+  showRoleWithColor?: boolean;
+  showDiffs?: boolean;
+  shiftMinuteDataForGraph?:
+    | { className: string; label: string; diffText: string | null }[]
+    | undefined;
 };
 
 const buildMinuteDataForGraph = ({
-  record,
+  data,
   showRoleWithColor,
+  shiftMinuteDataForGraph,
+  showDiffs,
 }: buildMinuteDataForGraphProps) => {
-  const { clock_in, clock_out, break_begin, break_end, role_changes } = record;
+  const { clock_in, clock_out, break_begin, break_end, role_changes } = data;
 
   const eventsWithDatetime = [
     clock_in,
@@ -67,17 +74,47 @@ const buildMinuteDataForGraph = ({
     return null;
   };
 
-  let minuteDataForGraph = [];
+  let minuteDataForGraph: {
+    className: string;
+    label: string;
+    diffText: string | null;
+  }[] = [];
   for (let i = 0; i <= GRAPH_TOTAL_MINUTES; i++) {
     const role = getRoleForMinute(i);
     const roleClassName = role ? role : "";
+    const roleLabel = defaultRoleOptions.find(
+      (role) => role.value === roleClassName
+    )?.label;
 
     if (i < startMin || (endMin && endMin < i)) {
-      minuteDataForGraph.push("none"); // 非労働時間
+      minuteDataForGraph.push({
+        className: "none",
+        label: "労働時間外",
+        diffText: null,
+      }); // 非労働時間
     } else if (breakMap[i]) {
-      minuteDataForGraph.push(`break`); // 休憩中
+      minuteDataForGraph.push({
+        className: "break",
+        label: "休憩",
+        diffText: null,
+      }); // 休憩中
     } else {
-      minuteDataForGraph.push(`work ${showRoleWithColor && roleClassName}`); // 勤務中
+      minuteDataForGraph.push({
+        className: `work${showRoleWithColor ? ` ${roleClassName}` : ""}`,
+        label: `${roleLabel}として勤務`,
+        diffText: null,
+      }); // 勤務中
+    }
+
+    if (
+      showDiffs &&
+      shiftMinuteDataForGraph &&
+      shiftMinuteDataForGraph[i].label !== minuteDataForGraph[i].label
+    ) {
+      minuteDataForGraph[
+        i
+      ].diffText = `シフト：${shiftMinuteDataForGraph[i].label}  タイムレコーダー：${minuteDataForGraph[i].label}`;
+      minuteDataForGraph[i].className += " diff";
     }
   }
 

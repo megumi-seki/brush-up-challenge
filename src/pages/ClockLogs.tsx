@@ -31,6 +31,7 @@ const ClockLogs = () => {
   });
   const groupedRecords = groupRecordsById(recordsOfDate);
   const [showRoleWithColor, setShowRoleWithColor] = useState(false);
+  const [showDiffs, setShowDiffs] = useState(false);
 
   const shiftOfDate = getRecordsByDate({
     datetimeString: selectedDateString,
@@ -87,12 +88,18 @@ const ClockLogs = () => {
             </button>
           </div>
         </div>
-        <div className="flex gap-small">
+        <div className="flex gap-medium">
           <button
             className="small-btn"
             onClick={() => setShowRoleWithColor(!showRoleWithColor)}
           >
             担当別配色 {showRoleWithColor ? "OFF" : "ON"}
+          </button>
+          <button
+            className="small-btn"
+            onClick={() => setShowDiffs(!showDiffs)}
+          >
+            シフトとの差異表示 {showDiffs ? "OFF" : "ON"}
           </button>
         </div>
       </div>
@@ -127,8 +134,9 @@ const ClockLogs = () => {
                 <div className="graph-wrapper">
                   <Graph
                     record={record}
+                    groupedShiftOfDate={groupedshift}
                     showRoleWithColor={showRoleWithColor}
-                    groupedshiftOfDate={groupedshift}
+                    showDiffs={showDiffs}
                   />
                   <GraphTimeLine
                     record={record}

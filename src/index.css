@@ -234,6 +234,16 @@ th {
   background-color: #FFF59D;
 }
 
+.diff {
+   background-image: repeating-linear-gradient(
+    to bottom,       /* 縦方向に繰り返す */
+    red,            /* 赤 */
+    red 1px,        /* 1px分赤 */
+    transparent 1px, /* 透明 */
+    transparent 5px /* 5pxで1セット終了 */
+  );
+}
+
 .color-explain {
   padding: 0px 10px;
   border-radius: 20px;
@@ -245,8 +255,21 @@ th {
 
 
   .timeline-layer,
-  .graph-layer {
+  .color-graph-layer, .title-graph-layer {
     position: absolute;
+    pointer-events: auto;
+  }
+
+  .color-graph-layer {
+    z-index: 0;
+  }
+
+  .timeline-layer {
+    z-index: 1;
+  }
+
+  .title-graph-layer {
+    z-index: 2;
   }
 
   .incomplete-graph {

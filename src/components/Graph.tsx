@@ -4,11 +4,17 @@ import type { GroupedTimeRecorderType } from "../types";
 
 type props = {
   record: GroupedTimeRecorderType;
-  showRoleWithColor: boolean;
   groupedShiftOfDate: GroupedTimeRecorderType[];
+  showRoleWithColor: boolean;
+  showDiffs: boolean;
 };
 
-const Graph = ({ record, showRoleWithColor, groupedShiftOfDate }: props) => {
+const Graph = ({
+  record,
+  showRoleWithColor,
+  groupedShiftOfDate,
+  showDiffs,
+}: props) => {
   const { emp_id, clock_in, break_begin, break_end } = record;
 
   if (!isDataEnough(record)) {
@@ -22,21 +28,37 @@ const Graph = ({ record, showRoleWithColor, groupedShiftOfDate }: props) => {
     );
   }
 
-  const clockLogMinuteDataForGraph = buildMinuteDataForGraph({
-    record,
-    showRoleWithColor,
-  });
-
   const matchedShift = groupedShiftOfDate.find(
     (shift) => shift.emp_id === emp_id
   );
-  if (!matchedShift) console.error("該当従業員のシフトが見つかりません");
+  const shiftMinuteDataForGraph = matchedShift
+    ? buildMinuteDataForGraph({
+        data: matchedShift,
+        showRoleWithColor: true,
+      })
+    : undefined;
 
-  const content = clockLogMinuteDataForGraph.map((status, index) => (
-    <span className={`minute ${status}`} key={index}></span>
+  const clockLogMinuteDataForGraph = buildMinuteDataForGraph({
+    data: record,
+    showRoleWithColor,
+    shiftMinuteDataForGraph,
+    showDiffs,
+  });
+
+  const graphWithColor = clockLogMinuteDataForGraph.map((status, index) => (
+    <span className={`minute ${status.className}`} key={index}></span>
   ));
 
-  return <div className="flex graph-layer">{content}</div>;
+  const graphWithTitle = clockLogMinuteDataForGraph.map((status, index) => (
+    <span className="minute" key={index} title={status.diffText ?? ""}></span>
+  ));
+
+  return (
+    <>
+      <div className="flex color-graph-layer">{graphWithColor}</div>
+      <div className="flex title-graph-layer">{graphWithTitle}</div>
+    </>
+  );
 };
 
 export default Graph;
