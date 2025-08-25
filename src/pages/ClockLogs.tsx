@@ -25,9 +25,18 @@ const ClockLogs = () => {
   const [selectedDateString, setSelectedDateString] = useState(
     today.toISOString().split("T")[0]
   );
-  const recordsOfDate = getRecordsByDate(selectedDateString);
+  const recordsOfDate = getRecordsByDate({
+    datetimeString: selectedDateString,
+    key: "time_records",
+  });
   const groupedRecords = groupRecordsById(recordsOfDate);
   const [showRoleWithColor, setShowRoleWithColor] = useState(false);
+
+  const shiftOfDate = getRecordsByDate({
+    datetimeString: selectedDateString,
+    key: "shift",
+  });
+  const groupedshift = groupRecordsById(shiftOfDate);
 
   const handleOnClick = (type: "previous" | "next") => {
     const selectedDate = new Date(selectedDateString);
@@ -119,6 +128,7 @@ const ClockLogs = () => {
                   <Graph
                     record={record}
                     showRoleWithColor={showRoleWithColor}
+                    groupedshiftOfDate={groupedshift}
                   />
                   <GraphTimeLine
                     record={record}

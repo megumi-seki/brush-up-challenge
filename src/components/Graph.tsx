@@ -5,10 +5,11 @@ import type { GroupedTimeRecorderType } from "../types";
 type props = {
   record: GroupedTimeRecorderType;
   showRoleWithColor: boolean;
+  groupedShiftOfDate: GroupedTimeRecorderType[];
 };
 
-const Graph = ({ record, showRoleWithColor }: props) => {
-  const { clock_in, break_begin, break_end } = record;
+const Graph = ({ record, showRoleWithColor, groupedShiftOfDate }: props) => {
+  const { emp_id, clock_in, break_begin, break_end } = record;
 
   if (!isDataEnough(record)) {
     let lack = "退勤";
@@ -21,12 +22,17 @@ const Graph = ({ record, showRoleWithColor }: props) => {
     );
   }
 
-  const minuteDataForGraph = buildMinuteDataForGraph({
+  const clockLogMinuteDataForGraph = buildMinuteDataForGraph({
     record,
     showRoleWithColor,
   });
 
-  const content = minuteDataForGraph.map((status, index) => (
+  const matchedShift = groupedShiftOfDate.find(
+    (shift) => shift.emp_id === emp_id
+  );
+  if (!matchedShift) console.error("該当従業員のシフトが見つかりません");
+
+  const content = clockLogMinuteDataForGraph.map((status, index) => (
     <span className={`minute ${status}`} key={index}></span>
   ));
 
