@@ -14,15 +14,6 @@ const ClockLogs = () => {
   const today = new Date();
   const formattedToday = new Date(today).toISOString().split("T")[0];
   const navigate = useNavigate();
-  // feature-finish-clocklogs-style: TODO タイムレコーダー履歴画面のスタイルを直す
-  // 1.  グラフ自体のpaddingなど　✓
-  // 2.  エラーメッセージの配置   ✓
-  // 3.  ホーム画面に戻るボタンの配置  ✓
-  // 4.  スタッフIDのとこ名前が表示されるようにする  ✓
-  // 5.  ホーム画面みたいに、クリックしたら個人ページ行けるようにする  ✓
-
-  // TODO:　オプション版とうまいことつなげれないか見てみる
-
   // 別ブランチ TODO: 個人ページ: タイムレコーダー→〇日のタイムレコーダー履歴（文字）＋ グラフ
   //                                           →シフトとの差異
 

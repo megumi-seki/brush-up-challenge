@@ -12,6 +12,13 @@ export type TimeRecorderType = {
   note?: string;
 };
 
+export type ShiftType = {
+  emp_id: string;
+  datetime: string;
+  role: string | null;
+  type: string;
+};
+
 type RoleTimeType = {
   role: string | null;
   datetime: string | null;
