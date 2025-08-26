@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import TimeRecorderForm from "../components/TimeRecorderForm";
 import type { Employee } from "../types";
+import ClockLogTableTitle from "../components/ClockLogTableTitle";
+import ClockLogTable from "../components/ClockLogTable";
+import getRecordsByDate from "../hooks/getRecordsByDate";
+import groupRecordsById from "../hooks/groupRecordsById";
 
 const Detail = () => {
   const { empId, weekStart, compare } = useParams();
@@ -20,8 +24,25 @@ const Detail = () => {
     }
   }, [empId]);
 
+  const today = new Date();
+  const [showRoleWithColor, setShowRoleWithColor] = useState(false);
+  const [showDiffs, setShowDiffs] = useState(false);
+  const [selectedDateString, setSelectedDateString] = useState(
+    today.toISOString().split("T")[0]
+  );
+
+  const recordsOfSelectedDate = getRecordsByDate({
+    datetimeString: selectedDateString,
+    key: "time_records",
+  });
+  const filteredRecords = recordsOfSelectedDate.filter(
+    (record) => record.emp_id === empId
+  );
+  const groupedRecord = groupRecordsById(filteredRecords);
+  console.log(groupedRecord);
+
   const pageContent = (
-    <div className="container">
+    <div className="container-large">
       <div className="flex gap-medium">
         <span>従業員番号: {empId}</span>
         <span>名前: {employeee?.name}</span>
@@ -33,13 +54,21 @@ const Detail = () => {
         <TimeRecorderForm empId={empId} />
       </div>
       <div>
-        <div className="flex gap-medium align-center">
-          <h3>週のタイムレコーダー履歴</h3>
-          <span>前週</span>
-          <span>次週</span>
-        </div>
-        <div>グラフ</div>
-        <div>シフトと比較</div>
+        <ClockLogTableTitle
+          selectedDateString={selectedDateString}
+          setSelectedDateString={setSelectedDateString}
+          showRoleWithColor={showRoleWithColor}
+          setShowRoleWithColor={setShowRoleWithColor}
+          showDiffs={showDiffs}
+          setShowDiffs={setShowDiffs}
+        />
+        <ClockLogTable
+          groupedRecords={groupedRecord}
+          selectedDateString={selectedDateString}
+          showRoleWithColor={showRoleWithColor}
+          showDiffs={showDiffs}
+          withName={false}
+        />
       </div>
       <div>
         <h3>警告</h3>
