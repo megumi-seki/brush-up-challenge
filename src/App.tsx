@@ -8,7 +8,8 @@ import type { Employee, ShiftType, TimeRecorderType } from "./types";
 
 function App() {
   const [employeees, setEmployees] = useState<Employee[]>([]);
-  const today = new Date().toISOString().split("T")[0];
+  const yesterday = new Date().setDate(new Date().getDate() - 1);
+  const formattedYesterday = new Date(yesterday).toISOString().split("T")[0];
 
   useEffect(() => {}, []);
 
@@ -32,77 +33,77 @@ function App() {
       const initialData: TimeRecorderType[] = [
         {
           emp_id: "001",
-          datetime: `${today}T05:03:32.780Z`,
+          datetime: `${formattedYesterday}T05:03:32.780Z`,
           role: "oven",
           type: "clock_in",
           note: "",
         },
         {
           emp_id: "001",
-          datetime: `${today}T06:14:32.780Z`,
+          datetime: `${formattedYesterday}T06:14:32.780Z`,
           role: "dough",
           type: "role_change",
           note: "",
         },
         {
           emp_id: "001",
-          datetime: `${today}T08:03:32.780Z`,
+          datetime: `${formattedYesterday}T08:03:32.780Z`,
           role: "dough",
           type: "break_begin",
           note: "",
         },
         {
           emp_id: "001",
-          datetime: `${today}T09:05:32.780Z`,
+          datetime: `${formattedYesterday}T09:05:32.780Z`,
           role: "oven",
           type: "break_end",
           note: "",
         },
         {
           emp_id: "001",
-          datetime: `${today}T13:05:32.780Z`,
+          datetime: `${formattedYesterday}T13:05:32.780Z`,
           role: "sandwich",
           type: "role_change",
           note: "",
         },
         {
           emp_id: "001",
-          datetime: `${today}T14:00:32.780Z`,
+          datetime: `${formattedYesterday}T14:00:32.780Z`,
           role: "sandwich",
           type: "clock_out",
           note: "",
         },
         {
           emp_id: "002",
-          datetime: `${today}T06:03:32.780Z`,
+          datetime: `${formattedYesterday}T06:03:32.780Z`,
           role: "oven",
           type: "clock_in",
           note: "",
         },
         {
           emp_id: "002",
-          datetime: `${today}T07:50:32.780Z`,
+          datetime: `${formattedYesterday}T07:50:32.780Z`,
           role: "oven",
           type: "break_begin",
           note: "",
         },
         {
           emp_id: "002",
-          datetime: `${today}T08:30:32.780Z`,
+          datetime: `${formattedYesterday}T08:30:32.780Z`,
           role: "oven",
           type: "break_end",
           note: "",
         },
         {
           emp_id: "002",
-          datetime: `${today}T14:00:32.780Z`,
+          datetime: `${formattedYesterday}T14:00:32.780Z`,
           role: "oven",
           type: "clock_out",
           note: "",
         },
         {
           emp_id: "003",
-          datetime: `${today}T06:03:32.780Z`,
+          datetime: `${formattedYesterday}T06:03:32.780Z`,
           role: "sales",
           type: "clock_in",
           note: "",
@@ -116,67 +117,67 @@ function App() {
       const initialData: ShiftType[] = [
         {
           emp_id: "001",
-          datetime: `${today}T05:00:32.780Z`,
+          datetime: `${formattedYesterday}T05:00:32.780Z`,
           role: "oven",
           type: "clock_in",
         },
         {
           emp_id: "001",
-          datetime: `${today}T06:30:32.780Z`,
+          datetime: `${formattedYesterday}T06:30:32.780Z`,
           role: "dough",
           type: "role_change",
         },
         {
           emp_id: "001",
-          datetime: `${today}T08:00:32.780Z`,
+          datetime: `${formattedYesterday}T08:00:32.780Z`,
           role: "dough",
           type: "break_begin",
         },
         {
           emp_id: "001",
-          datetime: `${today}T09:00:32.780Z`,
+          datetime: `${formattedYesterday}T09:00:32.780Z`,
           role: "oven",
           type: "break_end",
         },
         {
           emp_id: "001",
-          datetime: `${today}T13:00:32.780Z`,
+          datetime: `${formattedYesterday}T13:00:32.780Z`,
           role: "sandwich",
           type: "role_change",
         },
         {
           emp_id: "001",
-          datetime: `${today}T14:00:32.780Z`,
+          datetime: `${formattedYesterday}T14:00:32.780Z`,
           role: "sandwich",
           type: "clock_out",
         },
         {
           emp_id: "002",
-          datetime: `${today}T06:00:32.780Z`,
+          datetime: `${formattedYesterday}T06:00:32.780Z`,
           role: "oven",
           type: "clock_in",
         },
         {
           emp_id: "002",
-          datetime: `${today}T08:00:32.780Z`,
+          datetime: `${formattedYesterday}T08:00:32.780Z`,
           role: "oven",
           type: "break_begin",
         },
         {
           emp_id: "002",
-          datetime: `${today}T09:00:32.780Z`,
+          datetime: `${formattedYesterday}T09:00:32.780Z`,
           role: "oven",
           type: "break_end",
         },
         {
           emp_id: "002",
-          datetime: `${today}T14:00:32.780Z`,
+          datetime: `${formattedYesterday}T14:00:32.780Z`,
           role: "oven",
           type: "clock_out",
         },
         {
           emp_id: "003",
-          datetime: `${today}T06:00:32.780Z`,
+          datetime: `${formattedYesterday}T06:00:32.780Z`,
           role: "sales",
           type: "clock_in",
         },

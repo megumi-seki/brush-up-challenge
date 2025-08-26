@@ -6,6 +6,17 @@ import getRecordsById from "../hooks/getRecordsById";
 import type { Employee, TimeRecorderType } from "../types";
 import getEmployeeById from "../hooks/getEmployeeById";
 
+const isLastRecordToday = (empId: string) => {
+  if (!empId) return null;
+  const records = getRecordsById(empId);
+  if (records.length === 0) return null;
+  const lastRecordDate = new Date(
+    records[records.length - 1].datetime
+  ).getDate();
+  const today = new Date().getDate();
+  return lastRecordDate === today;
+};
+
 const getLastType = (empId: string | undefined): string | null => {
   if (!empId) return null;
   const records = getRecordsById(empId);
@@ -135,8 +146,10 @@ const TimeRecorderForm = ({ empId }: TimeRecorderFormProps) => {
   }, []);
 
   useEffect(() => {
-    setLastType(getLastType(empId));
-    setLastRole(getLastRole(empId));
+    if (isLastRecordToday(empId)) {
+      setLastType(getLastType(empId));
+      setLastRole(getLastRole(empId));
+    }
   }, [empId]);
 
   useEffect(() => {
