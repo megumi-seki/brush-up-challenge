@@ -7,6 +7,19 @@ import ClockLogTable from "../components/ClockLogTable";
 import getRecordsByDate from "../hooks/getRecordsByDate";
 import groupRecordsById from "../hooks/groupRecordsById";
 
+// 別ブランチ feature-detail-page TODO: 個人ページ: タイムレコーダー→〇日のタイムレコーダー履歴（文字 メモも表示）＋ グラフ
+//                                           →シフトとの差異　（優先度高）
+// 1. タイムレコーダー表示　✓
+// 2. グラフの真下に打刻履歴詳細テーブルを追加、noteなど含め（登録種別、担当、メモ、時間、（シフトとの差異））すべて表示→それも日ごとで、選択された日付に対応させるように
+// 3. シフトとの差異オンの時に、打刻履歴詳細にも（？？）できれば　getMinutesなどを使って、シフトよりも〇分遅い/早いなど表示できるのでは
+// 4. 新たに打刻された際に、グラフや詳細情報も自動で更新されるようにしたい(useEffect?)
+
+// 別ブランチ　TODO: カレンダー　当日より後は開けないようにする（優先度低）
+
+// 別ブランチ  TODO: clocklogspage　表示順のソート（優先度低）
+
+// 別ブランチ　TODO: そう休憩時間と総労働時間、再表示オフでも表示されるから直す（優先度中） ✓
+
 const Detail = () => {
   const { empId, weekStart, compare } = useParams();
   const [employeee, setEmployee] = useState<Employee | null>(null);

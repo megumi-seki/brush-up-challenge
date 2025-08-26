@@ -7,14 +7,6 @@ import ClockLogTable from "../components/ClockLogTable";
 
 const ClockLogs = () => {
   const navigate = useNavigate();
-  // 別ブランチ feature-detail-page TODO: 個人ページ: タイムレコーダー→〇日のタイムレコーダー履歴（文字 メモも表示）＋ グラフ
-  //                                           →シフトとの差異　（優先度高）
-
-  // 別ブランチ　TODO: カレンダー　当日より後は開けないようにする（優先度低）
-
-  // 別ブランチ  TODO: clocklogspage　表示順のソート（優先度低）
-
-  // 別ブランチ　TODO: そう休憩時間と総労働時間、再表示オフでも表示されるから直す（優先度中） ✓
   const today = new Date();
   const [showRoleWithColor, setShowRoleWithColor] = useState(false);
   const [showDiffs, setShowDiffs] = useState(false);
