@@ -4,7 +4,7 @@ import type { GroupedTimeRecorderType } from "../types";
 
 type props = {
   record: GroupedTimeRecorderType;
-  groupedShiftOfDate: GroupedTimeRecorderType[];
+  matchedShift: GroupedTimeRecorderType | undefined;
   showRoleWithColor: boolean;
   showDiffs: boolean;
 };
@@ -12,7 +12,7 @@ type props = {
 const Graph = ({
   record,
   showRoleWithColor,
-  groupedShiftOfDate,
+  matchedShift,
   showDiffs,
 }: props) => {
   const { emp_id, clock_in, break_begin, break_end } = record;
@@ -28,9 +28,6 @@ const Graph = ({
     );
   }
 
-  const matchedShift = groupedShiftOfDate.find(
-    (shift) => shift.emp_id === emp_id
-  );
   const shiftMinuteDataForGraph = matchedShift
     ? buildMinuteDataForGraph({
         data: matchedShift,

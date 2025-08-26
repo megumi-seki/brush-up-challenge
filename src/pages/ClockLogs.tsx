@@ -19,7 +19,7 @@ const ClockLogs = () => {
   // 1. 担当別配色はテーブルの中とかに移す  ✓
   // 2. シフトとの差異表示オンのとき、差異があるところが赤でグラフに加えられる（ロジックは休憩時間示すときなどと同じ） ✓
   // 3. それぞれにカーソール合わせると、内容が表示されるようにする　✓
-  // 4. 総労働時間と総休憩時間についても、差異ボタンオンの時に差異があれば表示されるようにする
+  // 4. 総労働時間と総休憩時間についても、差異ボタンオンの時に差異があれば表示されるようにする  ✓
 
   // 別ブランチ TODO: 打刻が足りない場合でも、日をまたげばタイムレコーダーは出勤から始まるようにする
 
@@ -55,6 +55,28 @@ const ClockLogs = () => {
 
   const isCurrentSelectedDateToday =
     selectedDateString === today.toISOString().split("T")[0];
+
+  const matchedShift = (emp_id: string) =>
+    groupedshift.find((shift) => shift.emp_id === emp_id);
+
+  const getDiffsTitleFromMillis = (
+    emp_id: string,
+    recordDurationMillis: number | null,
+    key: "work_duration_millis" | "break_duration_millis"
+  ) => {
+    const shiftDurationMillis = matchedShift(emp_id)?.[key];
+    if (!shiftDurationMillis || !recordDurationMillis) return;
+    const diffs = shiftDurationMillis - recordDurationMillis;
+    if (diffs === 0) return;
+    else if (diffs < 0) {
+      const millis = Math.abs(diffs);
+      const formattedTime = formatTimeFromMillis(millis);
+      return `シフトよりも${formattedTime}長い`;
+    } else {
+      const formattedTime = formatTimeFromMillis(diffs);
+      return `シフトよりも${formattedTime}短い`;
+    }
+  };
 
   const pageContent = (
     <div className="container-large">
@@ -131,13 +153,49 @@ const ClockLogs = () => {
               >
                 {getEmpNameById(record.emp_id)}
               </td>
-              <td>{formatTimeFromMillis(record.work_duration_millis)}</td>
-              <td>{formatTimeFromMillis(record.break_duration_millis)}</td>
+              <td
+                title={getDiffsTitleFromMillis(
+                  record.emp_id,
+                  record.work_duration_millis,
+                  "work_duration_millis"
+                )}
+                className={
+                  showDiffs &&
+                  getDiffsTitleFromMillis(
+                    record.emp_id,
+                    record.work_duration_millis,
+                    "work_duration_millis"
+                  )
+                    ? "diff"
+                    : ""
+                }
+              >
+                {formatTimeFromMillis(record.work_duration_millis)}
+              </td>
+              <td
+                title={getDiffsTitleFromMillis(
+                  record.emp_id,
+                  record.break_duration_millis,
+                  "break_duration_millis"
+                )}
+                className={
+                  showDiffs &&
+                  getDiffsTitleFromMillis(
+                    record.emp_id,
+                    record.break_duration_millis,
+                    "break_duration_millis"
+                  )
+                    ? "diff"
+                    : ""
+                }
+              >
+                {formatTimeFromMillis(record.break_duration_millis)}
+              </td>
               <td className="px-small">
                 <div className="graph-wrapper">
                   <Graph
                     record={record}
-                    groupedShiftOfDate={groupedshift}
+                    matchedShift={matchedShift(record.emp_id)}
                     showRoleWithColor={showRoleWithColor}
                     showDiffs={showDiffs}
                   />
