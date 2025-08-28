@@ -30,6 +30,14 @@ const getLastRole = (empId: string): string | null => {
   return records[records.length - 1].role;
 };
 
+export const defaultTypeOptions = [
+  { value: "clock_in", label: "出勤" },
+  { value: "clock_out", label: "退勤" },
+  { value: "break_begin", label: "休憩開始" },
+  { value: "break_end", label: "休憩終了" },
+  { value: "role_change", label: "担当切替" },
+];
+
 const getTypeOptions = (lastType: string | null) => {
   switch (lastType) {
     case "clock_in":
