@@ -14,7 +14,7 @@ import getMinutes from "../hooks/getMinutes";
 import getMatchedShift from "../hooks/getMatchedShift";
 import formatTimeFromMillis from "../hooks/formatTimeFromMillis";
 
-// TODO:feature-auto-update-clocklogs 新たに打刻された際に、グラフや詳細情報も自動で更新されるようにしたい(useEffect?)
+// TODO:feature-auto-update-clocklogs 新たに打刻された際に、グラフや詳細情報も自動で更新されるようにしたい(useEffect?)  ✓
 
 // 別ブランチ TODO: 差異表示、差異が10分以上だとboldになるようにする　（優先度低）
 // 別ブランチ TODO: 差異表示、担当が違う→時刻と同じように表示、登録種別が違う→シフトを実際に見比べることをお勧めするメッセージを表示（優先度中）
@@ -25,12 +25,18 @@ import formatTimeFromMillis from "../hooks/formatTimeFromMillis";
 
 // 別ブランチ　TODO: getMatchedShiftとgetGroupedMatchedShiftを整理する（優先度低）
 
+// 別ブランチ　TODO: home, detail, clocklogの見た目ある程度直す
+
+// TODO: 休憩や担当切替の回数や扱いの制限どこまでにしてるか確認する（優先度中）
+
 const Detail = () => {
   const { empId, weekStart, compare } = useParams();
   const [employeee, setEmployee] = useState<Employee | null>(null);
   if (!empId) {
     return <div>従業員が選択されていません。</div>;
   }
+  const [lastType, setLastType] = useState<string | null>(null);
+  const [lastRole, setLastRole] = useState<string | null>(null);
 
   // ページのURLが変わったときに従業員データを更新
   useEffect(() => {
@@ -48,16 +54,21 @@ const Detail = () => {
   const [selectedDateString, setSelectedDateString] = useState(
     today.toISOString().split("T")[0]
   );
+  const [recordsToShow, setRecordsToShow] = useState<TimeRecorderType[]>([]);
 
-  const recordsOfSelectedDate = getRecordsByDate({
-    datetimeString: selectedDateString,
-    key: "time_records",
-  });
-  const filteredRecords = recordsOfSelectedDate.filter(
-    (record) => record.emp_id === empId
-  );
-  const groupedRecord = groupRecordsById(filteredRecords);
-  console.log(groupedRecord);
+  useEffect(() => {
+    const recordsOfSelectedDate = getRecordsByDate({
+      datetimeString: selectedDateString,
+      key: "time_records",
+    });
+    const filteredRecords = recordsOfSelectedDate.filter(
+      (record) => record.emp_id === empId
+    );
+
+    setRecordsToShow(filteredRecords);
+  }, [lastType, lastRole, selectedDateString]);
+
+  const groupedRecord = groupRecordsById(recordsToShow);
 
   const getLabel = (record: TimeRecorderType, recordType: "type" | "role") => {
     const defaultOptions =
@@ -76,6 +87,7 @@ const Detail = () => {
   });
 
   const getDifferenceText = (recordDatetimeString: string, index: number) => {
+    if (matchedShift.length === 0) return;
     const recordMinute = getMinutes(recordDatetimeString);
     const shiftMinute = getMinutes(matchedShift[index].datetime);
     const differenceMin = shiftMinute - recordMinute;
@@ -99,7 +111,13 @@ const Detail = () => {
       </div>
       <div className="time-recorder">
         <h3 className="my-none">タイムレコーダー</h3>
-        <TimeRecorderForm empId={empId} />
+        <TimeRecorderForm
+          empId={empId}
+          lastType={lastType}
+          setLastType={setLastType}
+          lastRole={lastRole}
+          setLastRole={setLastRole}
+        />
       </div>
       <div>
         <ClockLogTableTitle
@@ -120,7 +138,7 @@ const Detail = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredRecords.map((record, index) => (
+            {recordsToShow.map((record, index) => (
               <tr key={index}>
                 <td className="home-td">{getLabel(record, "type")}</td>
                 <td className="home-td">

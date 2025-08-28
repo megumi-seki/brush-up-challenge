@@ -112,15 +112,23 @@ const getRoleOptions = (employee: Employee, selectedType: string) => {
 
 type TimeRecorderFormProps = {
   empId: string;
+  lastType: string | null;
+  setLastType: React.Dispatch<React.SetStateAction<string | null>>;
+  lastRole: string | null;
+  setLastRole: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-const TimeRecorderForm = ({ empId }: TimeRecorderFormProps) => {
+const TimeRecorderForm = ({
+  empId,
+  lastType,
+  setLastType,
+  lastRole,
+  setLastRole,
+}: TimeRecorderFormProps) => {
   const employee = getEmployeeById(empId);
   if (!employee) {
     return <div>従業員が見つかりません</div>;
   }
-  const [lastType, setLastType] = useState<string | null>(null);
-  const [lastRole, setLastRole] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState("");
   const [selectedRole, setSelectedRole] = useState<string | undefined>(
     undefined
@@ -136,9 +144,10 @@ const TimeRecorderForm = ({ empId }: TimeRecorderFormProps) => {
         : getTypeOptionsWithoutRoleChange(lastType),
     [lastType]
   );
+
   const roleOptions = useMemo(
     () => getRoleOptions(employee, selectedType),
-    [empId, selectedType]
+    [empId, selectedType, lastRole]
   );
 
   // 分単位で時刻を更新
@@ -194,10 +203,10 @@ const TimeRecorderForm = ({ empId }: TimeRecorderFormProps) => {
     localStorage.setItem(key, JSON.stringify(parsedRecords));
 
     setNote("");
-    const newLastType = selectedType;
-    setLastType(newLastType);
     const newLastRole = selectedRole ? selectedRole : lastRole;
     setLastRole(newLastRole);
+    const newLastType = selectedType;
+    setLastType(newLastType);
   };
 
   return (
