@@ -85,6 +85,10 @@ th {
     justify-content: space-around;
   }
 
+  .justify-center {
+    justify-content: center;
+  }
+
   .align-center {
     align-items: center;
   }
@@ -353,3 +357,7 @@ th {
     width: 9.3rem;
 }
 
+.differenceText {
+  font-size: 0.9rem;
+  color:  red;
+}

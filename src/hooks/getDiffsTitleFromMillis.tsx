@@ -1,5 +1,5 @@
 import formatTimeFromMillis from "./formatTimeFromMillis";
-import getMatchedShift from "./getMatchedShift";
+import getGroupedMatchedShift from "./getGroupedMatchedShift";
 
 type getDiffsTitleFromMillisProps = {
   emp_id: string;
@@ -14,7 +14,7 @@ const getDiffsTitleFromMillis = ({
   key,
   selectedDateString,
 }: getDiffsTitleFromMillisProps) => {
-  const matchedShift = getMatchedShift({
+  const matchedShift = getGroupedMatchedShift({
     emp_id: emp_id,
     selectedDateString: selectedDateString,
   });
@@ -26,10 +26,10 @@ const getDiffsTitleFromMillis = ({
   else if (diffs < 0) {
     const millis = Math.abs(diffs);
     const formattedTime = formatTimeFromMillis(millis);
-    return `シフトよりも${formattedTime}長い`;
+    return `シフトより${formattedTime}長い`;
   } else {
     const formattedTime = formatTimeFromMillis(diffs);
-    return `シフトよりも${formattedTime}短い`;
+    return `シフトより${formattedTime}短い`;
   }
 };
 

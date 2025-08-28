@@ -4,9 +4,9 @@ import getEmpNameById from "../hooks/getEmpNameById";
 import getDiffsTitleFromMillis from "../hooks/getDiffsTitleFromMillis";
 import formatTimeFromMillis from "../hooks/formatTimeFromMillis";
 import Graph from "./Graph";
-import getMatchedShift from "../hooks/getMatchedShift";
 import GraphTimeLine from "./GraphTimeLine";
 import RoleColorExplanation from "./RoleColorExplanation";
+import getGroupedMatchedShift from "../hooks/getGroupedMatchedShift";
 
 type ClockLogTableProps = {
   groupedRecords: GroupedTimeRecorderType[];
@@ -93,7 +93,7 @@ const ClockLogTable = ({
               <div className="graph-wrapper">
                 <Graph
                   record={record}
-                  matchedShift={getMatchedShift({
+                  matchedShift={getGroupedMatchedShift({
                     selectedDateString: selectedDateString,
                     emp_id: record.emp_id,
                   })}
