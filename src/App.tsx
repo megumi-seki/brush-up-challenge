@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import NavBar from "./components/NavBar";
 import ClockLogs from "./pages/ClockLogs";
 import Home from "./pages/Home";
 import Detail from "./pages/Detail";
@@ -187,14 +186,11 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<Home employees={employeees} />} />
-        <Route path="/detail/:empId/:selectedDate" element={<Detail />} />
-        <Route path="/logs" element={<ClockLogs />} />
-      </Routes>
-    </div>
+    <Routes>
+      <Route path="/" element={<Home employees={employeees} />} />
+      <Route path="/detail/:empId/:selectedDate" element={<Detail />} />
+      <Route path="/logs" element={<ClockLogs />} />
+    </Routes>
   );
 }
 

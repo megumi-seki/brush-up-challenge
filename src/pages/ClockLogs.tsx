@@ -4,6 +4,7 @@ import groupRecordsById from "../hooks/groupRecordsById";
 import { useState } from "react";
 import ClockLogTableTitle from "../components/ClockLogTableTitle";
 import ClockLogTable from "../components/ClockLogTable";
+import ButtonToHome from "../components/ButtonToHome";
 
 const ClockLogs = () => {
   const navigate = useNavigate();
@@ -36,9 +37,7 @@ const ClockLogs = () => {
         showDiffs={showDiffs}
         withName={true}
       />
-      <button className="btn ml-auto" onClick={() => navigate("/")}>
-        ホーム画面に戻る
-      </button>
+      <ButtonToHome />
     </div>
   );
 

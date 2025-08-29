@@ -13,6 +13,8 @@ import formatTime from "../hooks/formatTime";
 import getMinutes from "../hooks/getMinutes";
 import getMatchedShift from "../hooks/getMatchedShift";
 import formatTimeFromMillis from "../hooks/formatTimeFromMillis";
+import getRolesText from "../hooks/getRolesText";
+import ButtonToHome from "../components/ButtonToHome";
 
 // 別ブランチ TODO: 差異表示、差異が10分以上だとboldになるようにする　（優先度低）
 // 別ブランチ TODO: 差異表示、担当が違う→時刻と同じように表示、登録種別が違う→シフトを実際に見比べることをお勧めするメッセージを表示（優先度中）
@@ -100,11 +102,14 @@ const Detail = () => {
 
   const pageContent = (
     <div className="container-large flex flex-col gap-learge">
-      <div className="flex gap-medium">
-        <span>従業員番号: {empId}</span>
-        <span>名前: {employeee?.name}</span>
-        <span>担当: {employeee?.roles}</span>
-        <span>ステータス:</span>
+      <div className="flex justify-between">
+        <div className="flex gap-medium">
+          <span>従業員番号: {empId}</span>
+          <span>名前: {employeee?.name}</span>
+          <span>担当: {getRolesText({ roles: employeee?.roles })}</span>
+          <span>ステータス:</span>
+        </div>
+        <ButtonToHome />
       </div>
       <div className="time-recorder">
         <h3 className="my-none">タイムレコーダー</h3>
