@@ -115,10 +115,16 @@ const Detail = () => {
     if (matchedShift.length === 0) return differenceTexts;
 
     if (record.type !== matchedShift[index].type)
-      differenceTexts.typeDiff = `(シフトでは${matchedShift[index].type})`;
+      differenceTexts.typeDiff = ` (シフトでは${getLabel(
+        matchedShift[index],
+        "type"
+      )})`;
 
     if (record.role !== matchedShift[index].role)
-      differenceTexts.roleDiff = `(シフトでは${matchedShift[index].role})`;
+      differenceTexts.roleDiff = ` (シフトでは${getLabel(
+        matchedShift[index],
+        "role"
+      )})`;
 
     const recordMinute = getMinutes(record.datetime);
     const shiftMinute = getMinutes(matchedShift[index].datetime);

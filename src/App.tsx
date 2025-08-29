@@ -117,7 +117,7 @@ function App() {
         {
           emp_id: "001",
           datetime: `${formattedYesterday}T05:00:32.780Z`,
-          role: "oven",
+          role: "sandwich",
           type: "clock_in",
         },
         {
