@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import getRecordsByDate from "../hooks/getRecordsByDate";
 import groupRecordsById from "../hooks/groupRecordsById";
 import { useEffect, useState } from "react";
@@ -8,7 +7,6 @@ import ButtonToHome from "../components/ButtonToHome";
 import getMatchedShift from "../hooks/getMatchedShift";
 
 const ClockLogs = () => {
-  const navigate = useNavigate();
   const today = new Date();
   const [showRoleWithColor, setShowRoleWithColor] = useState(false);
   const [showDiffs, setShowDiffs] = useState(false);

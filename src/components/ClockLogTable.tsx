@@ -24,8 +24,6 @@ const ClockLogTable = ({
   withName,
 }: ClockLogTableProps) => {
   const navigate = useNavigate();
-  const today = new Date();
-  const formattedToday = new Date(today).toISOString().split("T")[0];
   const workDurationDifferenceTitle = (record: GroupedTimeRecorderType) =>
     getDiffsTitleFromMillis({
       emp_id: record.emp_id,
@@ -62,9 +60,7 @@ const ClockLogTable = ({
             {withName && (
               <td
                 className="with-hover"
-                onClick={() =>
-                  navigate(`/detail/${record.emp_id}/${formattedToday}`)
-                }
+                onClick={() => navigate(`/detail/${record.emp_id}`)}
               >
                 {getEmpNameById(record.emp_id)}
               </td>

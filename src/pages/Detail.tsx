@@ -15,6 +15,7 @@ import getMatchedShift from "../hooks/getMatchedShift";
 import formatTimeFromMillis from "../hooks/formatTimeFromMillis";
 import getRolesText from "../hooks/getRolesText";
 import ButtonToHome from "../components/ButtonToHome";
+import ButtonToClockLogs from "../components/ButtonToClockLogs";
 
 // 別ブランチ TODO: 差異表示、差異が10分以上だとboldになるようにする　（優先度低）
 // 別ブランチ feature-improve-show-difference-logic TODO: 差異表示、担当が違う→時刻と同じように表示、登録種別が違う→シフトを実際に見比べることをお勧めするメッセージを表示（優先度中）
@@ -151,7 +152,10 @@ const Detail = () => {
             <span>担当: {getRolesText({ roles: employeee?.roles })}</span>
             <span>ステータス:</span>
           </div>
-          <ButtonToHome />
+          <div className="flex gap-medium">
+            <ButtonToClockLogs />
+            <ButtonToHome />
+          </div>
         </div>
         <div className="time-recorder">
           <h3 className="my-none">タイムレコーダー</h3>
