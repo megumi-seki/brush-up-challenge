@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import getRecordsByDate from "../hooks/getRecordsByDate";
 import groupRecordsById from "../hooks/groupRecordsById";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ClockLogTableTitle from "../components/ClockLogTableTitle";
 import ClockLogTable from "../components/ClockLogTable";
 import ButtonToHome from "../components/ButtonToHome";
+import getMatchedShift from "../hooks/getMatchedShift";
 
 const ClockLogs = () => {
   const navigate = useNavigate();
@@ -20,6 +21,22 @@ const ClockLogs = () => {
   });
   const groupedRecords = groupRecordsById(recordsOfDate);
 
+  const matchedShift = getMatchedShift({
+    selectedDateString: selectedDateString,
+  });
+
+  const [differenceExceptionMessage, setDifferenceExceptionMessage] = useState<
+    string | null
+  >(null);
+
+  useEffect(() => {
+    if (matchedShift.length === 0) {
+      setDifferenceExceptionMessage("照合するシフトが見つかりません");
+    } else {
+      setDifferenceExceptionMessage(null);
+    }
+  }, [matchedShift]);
+
   const pageContent = (
     <div className="container-large">
       <ClockLogTableTitle
@@ -30,13 +47,20 @@ const ClockLogs = () => {
         showDiffs={showDiffs}
         setShowDiffs={setShowDiffs}
       />
-      <ClockLogTable
-        groupedRecords={groupedRecords}
-        selectedDateString={selectedDateString}
-        showRoleWithColor={showRoleWithColor}
-        showDiffs={showDiffs}
-        withName={true}
-      />
+      <div>
+        {showDiffs && differenceExceptionMessage && (
+          <div className="difference-exception-message">
+            {differenceExceptionMessage}
+          </div>
+        )}
+        <ClockLogTable
+          groupedRecords={groupedRecords}
+          selectedDateString={selectedDateString}
+          showRoleWithColor={showRoleWithColor}
+          showDiffs={showDiffs}
+          withName={true}
+        />
+      </div>
       <ButtonToHome />
     </div>
   );

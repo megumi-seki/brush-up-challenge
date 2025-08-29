@@ -27,7 +27,6 @@ const ClockLogTableTitle = ({
     const newSelectedDateString = selectedDate.toISOString().split("T")[0];
     setSelectedDateString(newSelectedDateString);
   };
-
   const isCurrentSelectedDateToday =
     selectedDateString === today.toISOString().split("T")[0];
 

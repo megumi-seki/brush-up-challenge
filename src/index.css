@@ -370,7 +370,12 @@ th {
     width: 9.3rem;
 }
 
-.differenceText {
+.differenceText, .difference-exception-message {
   font-size: 0.9rem;
   color:  red;
+}
+
+.difference-exception-message {
+  text-align: center;
+  padding-bottom: 8px;
 }

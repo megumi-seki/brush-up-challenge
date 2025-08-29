@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import TimeRecorderForm, {
   defaultRoleOptions,
@@ -83,93 +83,156 @@ const Detail = () => {
     selectedDateString: selectedDateString,
   });
 
-  const getDifferenceText = (recordDatetimeString: string, index: number) => {
-    if (matchedShift.length === 0) return;
-    const recordMinute = getMinutes(recordDatetimeString);
+  const [differenceExceptionMessage, setDifferenceExceptionMessage] = useState<
+    string | null
+  >(null);
+
+  useEffect(() => {
+    if (matchedShift.length === 0) {
+      setDifferenceExceptionMessage("照合するシフトが見つかりません");
+    } else if (matchedShift.length !== recordsToShow.length) {
+      setDifferenceExceptionMessage(
+        "シフトとタイムレコーダー記録が大幅に乖離しています。実際のシフトと照合することをお勧めします。"
+      );
+    } else {
+      setDifferenceExceptionMessage(null);
+    }
+  }, [recordsToShow]);
+
+  type differenceTextType = {
+    datetimeDiff: string | null;
+    roleDiff: string | null;
+    typeDiff: string | null;
+  };
+
+  const getDifferenceTexts = (record: TimeRecorderType, index: number) => {
+    let differenceTexts: differenceTextType = {
+      datetimeDiff: null,
+      roleDiff: null,
+      typeDiff: null,
+    };
+
+    if (matchedShift.length === 0) return differenceTexts;
+
+    if (record.type !== matchedShift[index].type)
+      differenceTexts.typeDiff = `(シフトでは${matchedShift[index].type})`;
+
+    if (record.role !== matchedShift[index].role)
+      differenceTexts.roleDiff = `(シフトでは${matchedShift[index].role})`;
+
+    const recordMinute = getMinutes(record.datetime);
     const shiftMinute = getMinutes(matchedShift[index].datetime);
     const differenceMin = shiftMinute - recordMinute;
-    if (differenceMin === 0) return null;
-    const text =
-      differenceMin > 0
-        ? `(シフトより${formatTimeFromMillis(differenceMin * 60 * 1000)}早い)`
-        : `(シフトより${formatTimeFromMillis(
-            Math.abs(differenceMin * 60 * 1000)
-          )}遅い)`;
-    return text;
+    if (differenceMin !== 0) {
+      const datetimeDiffText =
+        differenceMin > 0
+          ? `(シフトより${formatTimeFromMillis(differenceMin * 60 * 1000)}早い)`
+          : `(シフトより${formatTimeFromMillis(
+              Math.abs(differenceMin * 60 * 1000)
+            )}遅い)`;
+      differenceTexts.datetimeDiff = datetimeDiffText;
+    }
+    return differenceTexts;
   };
 
   const pageContent = (
-    <div className="container-large flex flex-col gap-learge">
-      <div className="flex justify-between">
-        <div className="flex gap-medium">
-          <span>従業員番号: {empId}</span>
-          <span>名前: {employeee?.name}</span>
-          <span>担当: {getRolesText({ roles: employeee?.roles })}</span>
-          <span>ステータス:</span>
+    <>
+      <div className="container-large flex flex-col gap-learge">
+        <div className="flex justify-between">
+          <div className="flex gap-medium">
+            <span>従業員番号: {empId}</span>
+            <span>名前: {employeee?.name}</span>
+            <span>担当: {getRolesText({ roles: employeee?.roles })}</span>
+            <span>ステータス:</span>
+          </div>
+          <ButtonToHome />
         </div>
-        <ButtonToHome />
-      </div>
-      <div className="time-recorder">
-        <h3 className="my-none">タイムレコーダー</h3>
-        <TimeRecorderForm
-          empId={empId}
-          lastType={lastType}
-          setLastType={setLastType}
-          lastRole={lastRole}
-          setLastRole={setLastRole}
-        />
-      </div>
-      <div>
-        <ClockLogTableTitle
-          selectedDateString={selectedDateString}
-          setSelectedDateString={setSelectedDateString}
-          showRoleWithColor={showRoleWithColor}
-          setShowRoleWithColor={setShowRoleWithColor}
-          showDiffs={showDiffs}
-          setShowDiffs={setShowDiffs}
-        />
-        <table border={1}>
-          <thead>
-            <tr>
-              <th className="detail-logs-th">登録種別</th>
-              <th className="detail-logs-th">担当</th>
-              <th className="detail-logs-th">時刻</th>
-              <th className="detail-logs-th">メモ</th>
-            </tr>
-          </thead>
-          <tbody>
-            {recordsToShow.map((record, index) => (
-              <tr key={index}>
-                <td className="detail-logs-td">{getLabel(record, "type")}</td>
-                <td className="detail-logs-td">
-                  {record.type !== "clock_out" && record.type !== "break_begin"
-                    ? getLabel(record, "role")
-                    : "-"}
-                </td>
-                <td className="detail-logs-td">
-                  <div className="flex gap-small justify-center align-baseline">
-                    <span>{formatTime(record.datetime)}</span>
-                    {showDiffs && (
-                      <span className="differenceText">
-                        {getDifferenceText(record.datetime, index)}
-                      </span>
-                    )}
-                  </div>
-                </td>
-                <td className="detail-logs-td">{record.note || "-"}</td>
+        <div className="time-recorder">
+          <h3 className="my-none">タイムレコーダー</h3>
+          <TimeRecorderForm
+            empId={empId}
+            lastType={lastType}
+            setLastType={setLastType}
+            lastRole={lastRole}
+            setLastRole={setLastRole}
+          />
+        </div>
+        <div>
+          <ClockLogTableTitle
+            selectedDateString={selectedDateString}
+            setSelectedDateString={setSelectedDateString}
+            showRoleWithColor={showRoleWithColor}
+            setShowRoleWithColor={setShowRoleWithColor}
+            showDiffs={showDiffs}
+            setShowDiffs={setShowDiffs}
+          />
+          {showDiffs && differenceExceptionMessage && (
+            <div className="difference-exception-message">
+              {differenceExceptionMessage}
+            </div>
+          )}
+          <table border={1}>
+            <thead>
+              <tr>
+                <th className="detail-logs-th">登録種別</th>
+                <th className="detail-logs-th">担当</th>
+                <th className="detail-logs-th">時刻</th>
+                <th className="detail-logs-th">メモ</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <ClockLogTable
-          groupedRecords={groupedRecord}
-          selectedDateString={selectedDateString}
-          showRoleWithColor={showRoleWithColor}
-          showDiffs={showDiffs}
-          withName={false}
-        />
+            </thead>
+            <tbody>
+              {recordsToShow.map((record, index) => (
+                <tr key={index}>
+                  <td className="detail-logs-td">
+                    <div>
+                      <span>{getLabel(record, "type")}</span>
+                      {showDiffs && (
+                        <span className="differenceText">
+                          {getDifferenceTexts(record, index).typeDiff}
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="detail-logs-td">
+                    {record.type !== "clock_out" &&
+                    record.type !== "break_begin" ? (
+                      <div>
+                        <span>{getLabel(record, "role")}</span>
+                        {showDiffs && (
+                          <span className="differenceText">
+                            {getDifferenceTexts(record, index).roleDiff}
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      "-"
+                    )}
+                  </td>
+                  <td className="detail-logs-td">
+                    <div className="flex gap-small justify-center align-baseline">
+                      <span>{formatTime(record.datetime)}</span>
+                      {showDiffs && (
+                        <span className="differenceText">
+                          {getDifferenceTexts(record, index).datetimeDiff}
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="detail-logs-td">{record.note || "-"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <ClockLogTable
+            groupedRecords={groupedRecord}
+            selectedDateString={selectedDateString}
+            showRoleWithColor={showRoleWithColor}
+            showDiffs={showDiffs}
+            withName={false}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 
   return pageContent;
