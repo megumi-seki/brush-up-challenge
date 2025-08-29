@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import type { Employee } from "../types";
+import { defaultRoleOptions } from "../components/TimeRecorderForm";
 
 type HomeProps = {
   employees: Employee[];
@@ -8,6 +9,13 @@ type HomeProps = {
 const Home = ({ employees }: HomeProps) => {
   const navigate = useNavigate();
   const today = new Date().toISOString().split("T")[0];
+  const getRolesText = (roles: string[]) => {
+    const rolesWithLabel = defaultRoleOptions.filter((role) =>
+      roles.includes(role.value)
+    );
+    const text = rolesWithLabel.map((role) => role.label).join(", ");
+    return text;
+  };
 
   const pageContent = (
     <div className="container">
@@ -39,7 +47,7 @@ const Home = ({ employees }: HomeProps) => {
               >
                 <td className="home-td">{emp.id}</td>
                 <td className="home-td">{emp.name}</td>
-                <td className="home-td">{emp.roles}</td>
+                <td className="home-td">{getRolesText(emp.roles)}</td>
               </tr>
             ))}
           </tbody>
