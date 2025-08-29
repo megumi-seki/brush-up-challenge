@@ -8,7 +8,6 @@ type HomeProps = {
 
 const Home = ({ employees }: HomeProps) => {
   const navigate = useNavigate();
-  const today = new Date().toISOString().split("T")[0];
 
   const pageContent = (
     <div className="container">
@@ -36,7 +35,7 @@ const Home = ({ employees }: HomeProps) => {
               <tr
                 className="with-hover"
                 key={emp.id}
-                onClick={() => navigate(`/detail/${emp.id}/${today}`)}
+                onClick={() => navigate(`/detail/${emp.id}`)}
               >
                 <td className="home-td">{emp.id}</td>
                 <td className="home-td">{emp.name}</td>

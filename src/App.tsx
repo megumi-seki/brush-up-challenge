@@ -188,7 +188,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home employees={employeees} />} />
-      <Route path="/detail/:empId/:selectedDate" element={<Detail />} />
+      <Route path="/detail/:empId/" element={<Detail />} />
       <Route path="/logs" element={<ClockLogs />} />
     </Routes>
   );
