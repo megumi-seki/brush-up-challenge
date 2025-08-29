@@ -25,7 +25,7 @@ import ButtonToHome from "../components/ButtonToHome";
 
 // 別ブランチ　TODO: getMatchedShiftとgetGroupedMatchedShiftを整理する（優先度低）
 
-// 別ブランチ　TODO: feature-improve-whole-styles home, detail, clocklogの見た目ある程度直す
+// 別ブランチ　TODO: feature-improve-whole-styles home, detail, clocklogの見た目ある程度直す  ✓
 
 // TODO: 休憩や担当切替の回数や扱いの制限どこまでにしてるか確認する（優先度中）
 
