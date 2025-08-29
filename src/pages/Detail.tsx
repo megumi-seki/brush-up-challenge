@@ -17,15 +17,13 @@ import getRolesText from "../hooks/getRolesText";
 import ButtonToHome from "../components/ButtonToHome";
 
 // 別ブランチ TODO: 差異表示、差異が10分以上だとboldになるようにする　（優先度低）
-// 別ブランチ TODO: 差異表示、担当が違う→時刻と同じように表示、登録種別が違う→シフトを実際に見比べることをお勧めするメッセージを表示（優先度中）
+// 別ブランチ feature-improve-show-difference-logic TODO: 差異表示、担当が違う→時刻と同じように表示、登録種別が違う→シフトを実際に見比べることをお勧めするメッセージを表示（優先度中）
 
 // 別ブランチ　TODO: カレンダー　当日より後は開けないようにする（優先度低）
 
 // 別ブランチ  TODO: clocklogspage　表示順のソート（優先度低）
 
 // 別ブランチ　TODO: getMatchedShiftとgetGroupedMatchedShiftを整理する（優先度低）
-
-// 別ブランチ　TODO: feature-improve-whole-styles home, detail, clocklogの見た目ある程度直す  ✓
 
 // TODO: 休憩や担当切替の回数や扱いの制限どこまでにしてるか確認する（優先度中）
 
