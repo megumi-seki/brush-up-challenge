@@ -42,9 +42,22 @@ th {
   padding: 10px 15px;
 }
 
-.logs-th {
+.logs-th, .detail-logs-th {
   padding: 10px 5px;
   height: 100%;
+  width: 81px;
+}
+
+.detail-logs-td {
+  padding: 5px 0px;
+}
+
+.detail-logs-th {
+  width: 431px;
+}
+
+.graph-th {
+  width:1050px; /* minutes * 1020 + px-small 30 */
 }
 
 .with-hover {

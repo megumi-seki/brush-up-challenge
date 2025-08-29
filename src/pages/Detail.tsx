@@ -71,7 +71,6 @@ const Detail = () => {
   const getLabel = (record: TimeRecorderType, recordType: "type" | "role") => {
     const defaultOptions =
       recordType === "type" ? defaultTypeOptions : defaultRoleOptions;
-
     const label = defaultOptions.find(
       (option) => option.value === record[recordType]
     )?.label;
@@ -129,22 +128,22 @@ const Detail = () => {
         <table border={1}>
           <thead>
             <tr>
-              <th className="home-th">登録種別</th>
-              <th className="home-th">担当</th>
-              <th className="home-th">時刻</th>
-              <th className="home-th">メモ</th>
+              <th className="detail-logs-th">登録種別</th>
+              <th className="detail-logs-th">担当</th>
+              <th className="detail-logs-th">時刻</th>
+              <th className="detail-logs-th">メモ</th>
             </tr>
           </thead>
           <tbody>
             {recordsToShow.map((record, index) => (
               <tr key={index}>
-                <td className="home-td">{getLabel(record, "type")}</td>
-                <td className="home-td">
+                <td className="detail-logs-td">{getLabel(record, "type")}</td>
+                <td className="detail-logs-td">
                   {record.type !== "clock_out" && record.type !== "break_begin"
                     ? getLabel(record, "role")
                     : "-"}
                 </td>
-                <td className="home-td">
+                <td className="detail-logs-td">
                   <div className="flex gap-small justify-center align-baseline">
                     <span>{formatTime(record.datetime)}</span>
                     {showDiffs && (
@@ -154,7 +153,7 @@ const Detail = () => {
                     )}
                   </div>
                 </td>
-                <td className="home-td">{record.note || "-"}</td>
+                <td className="detail-logs-td">{record.note || "-"}</td>
               </tr>
             ))}
           </tbody>
@@ -166,10 +165,6 @@ const Detail = () => {
           showDiffs={showDiffs}
           withName={false}
         />
-      </div>
-      <div>
-        <h3>警告</h3>
-        <p>働きすぎ！</p>
       </div>
     </div>
   );

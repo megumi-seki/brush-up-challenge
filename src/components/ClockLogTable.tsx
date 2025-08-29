@@ -48,7 +48,7 @@ const ClockLogTable = ({
           {withName && <th className="logs-th">名前</th>}
           <th className="logs-th">総労働時間</th>
           <th className="logs-th">総休憩時間</th>
-          <th className="logs-th">
+          <th className="logs-th graph-th">
             <div className="grid grid-cols-2">
               <span>タイムレコーダーグラフ</span>
               <RoleColorExplanation showRoleWithColor={showRoleWithColor} />
