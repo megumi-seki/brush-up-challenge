@@ -89,7 +89,8 @@ const typeTexts: Record<string, string> = {
 export const defaultRoleOptions = [
   { value: "oven", label: "釜" },
   { value: "dough", label: "仕込み" },
-  { value: "cafe", label: "品カフェ" },
+  { value: "wrapping", label: "品ド" },
+  { value: "cafe", label: "カフェ" },
   { value: "shaping", label: "麺台" },
   { value: "sandwich", label: "サンド" },
   { value: "sales", label: "販売" },
