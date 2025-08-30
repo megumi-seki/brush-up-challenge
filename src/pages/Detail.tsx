@@ -18,6 +18,7 @@ import ButtonToHome from "../components/ButtonToHome";
 import ButtonToClockLogs from "../components/ButtonToClockLogs";
 
 // 別ブランチ TODO: 差異表示、差異が10分以上だとboldになるようにする　（優先度低）
+// 別ブランチ  TODO: 全体のタイムレコーダー記録再表示　総時間の際は（）書きに変更する（優先度高）
 
 // 別ブランチ　TODO: カレンダー　当日より後は開けないようにする（優先度低）
 
@@ -27,8 +28,8 @@ import ButtonToClockLogs from "../components/ButtonToClockLogs";
 
 // TODO: 休憩や担当切替の回数や扱いの制限どこまでにしてるか確認する（優先度中）
 
-// TODO: feature-demo-data デモデータを充実させる
-// TODO: 企画書書き換える（コピーして新しいファイルから！！）
+// TODO: feature-demo-data デモデータを充実させる  ✓
+// TODO: 企画書書き換える（コピーして新しいファイルから！！）　（優先度高）
 
 const Detail = () => {
   const { empId, weekStart, compare } = useParams();
@@ -91,9 +92,16 @@ const Detail = () => {
   >(null);
 
   useEffect(() => {
+    const matchedShiftTypes = matchedShift.map((shift) => shift.type);
+    const recordsToShowTypes = recordsToShow.map((record) => record.type);
+    const areTypesEqual =
+      matchedShiftTypes.length === recordsToShowTypes.length &&
+      matchedShiftTypes.every(
+        (type, index) => type === recordsToShowTypes[index]
+      );
     if (matchedShift.length === 0) {
       setDifferenceExceptionMessage("照合するシフトが見つかりません");
-    } else if (matchedShift.length !== recordsToShow.length) {
+    } else if (!areTypesEqual) {
       setDifferenceExceptionMessage(
         "シフトとタイムレコーダー記録が大幅に乖離しています。実際のシフトと照合することをお勧めします。"
       );
@@ -117,11 +125,12 @@ const Detail = () => {
 
     if (matchedShift.length === 0) return differenceTexts;
 
-    if (record.type !== matchedShift[index].type)
+    if (record.type !== matchedShift[index].type) {
       differenceTexts.typeDiff = ` (シフトでは${getLabel(
         matchedShift[index],
         "type"
       )})`;
+    }
 
     if (record.role !== matchedShift[index].role)
       differenceTexts.roleDiff = ` (シフトでは${getLabel(
