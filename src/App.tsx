@@ -9,6 +9,7 @@ import {
   SHIFT_DEMO_DATA,
   TIME_RECORDER_DEMO_DATA,
 } from "./constants/appConfig";
+import Correction from "./pages/Correction";
 
 function App() {
   const [employeees, setEmployees] = useState<Employee[]>([]);
@@ -43,6 +44,10 @@ function App() {
     <Routes>
       <Route path="/" element={<Home employees={employeees} />} />
       <Route path="/detail/:empId/" element={<Detail />} />
+      <Route
+        path="/correction/:empId/:selectedDateString"
+        element={<Correction />}
+      />
       <Route path="/logs" element={<ClockLogs />} />
     </Routes>
   );

@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import TimeRecorderForm, {
   defaultRoleOptions,
   defaultTypeOptions,
@@ -16,6 +16,7 @@ import formatTimeFromMillis from "../hooks/formatTimeFromMillis";
 import getRolesText from "../hooks/getRolesText";
 import ButtonToHome from "../components/ButtonToHome";
 import ButtonToClockLogs from "../components/ButtonToClockLogs";
+import getLabel from "../hooks/getLabel";
 
 // 別ブランチ TODO: 差異表示、差異が10分以上だとboldになるようにする　（優先度低）
 // 別ブランチ  TODO: 全体のタイムレコーダー記録再表示　総時間の際は（）書きに変更する（優先度高）
@@ -28,17 +29,17 @@ import ButtonToClockLogs from "../components/ButtonToClockLogs";
 
 // TODO: 休憩や担当切替の回数や扱いの制限どこまでにしてるか確認する（優先度中）
 
-// TODO: feature-demo-data デモデータを充実させる  ✓
 // TODO: 企画書書き換える（コピーして新しいファイルから！！）　（優先度高）
 
 const Detail = () => {
-  const { empId, weekStart, compare } = useParams();
+  const { empId } = useParams();
   const [employeee, setEmployee] = useState<Employee | null>(null);
   if (!empId) {
     return <div>従業員が選択されていません。</div>;
   }
   const [lastType, setLastType] = useState<string | null>(null);
   const [lastRole, setLastRole] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   // ページのURLが変わったときに従業員データを更新
   useEffect(() => {
@@ -71,16 +72,6 @@ const Detail = () => {
   }, [lastType, lastRole, selectedDateString]);
 
   const groupedRecord = groupRecordsById(recordsToShow);
-
-  const getLabel = (record: TimeRecorderType, recordType: "type" | "role") => {
-    const defaultOptions =
-      recordType === "type" ? defaultTypeOptions : defaultRoleOptions;
-    const label = defaultOptions.find(
-      (option) => option.value === record[recordType]
-    )?.label;
-
-    return label;
-  };
 
   const matchedShift = getMatchedShift({
     emp_id: empId,
@@ -251,6 +242,14 @@ const Detail = () => {
             showDiffs={showDiffs}
             withName={false}
           />
+          <button
+            className="btn"
+            onClick={() =>
+              navigate(`/correction/${empId}/${selectedDateString}`)
+            }
+          >
+            タイムレコーダー履歴修正
+          </button>
         </div>
       </div>
     </>
