@@ -31,6 +31,8 @@ import getLabel from "../hooks/getLabel";
 
 // TODO: 企画書書き換える（コピーして新しいファイルから！！）　（優先度高）
 
+// TODO: feature-correction-page　修正ページ　（優先度高）
+
 const Detail = () => {
   const { empId } = useParams();
   const [employeee, setEmployee] = useState<Employee | null>(null);

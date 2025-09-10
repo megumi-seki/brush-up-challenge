@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { Employee } from "../types";
 import getRolesText from "../hooks/getRolesText";
-import ButtonToClockLogs from "../components/ButtonToClockLogs";
-import ButtonToHome from "../components/ButtonToHome";
 import getRecordsByDate from "../hooks/getRecordsByDate";
 import getLabel from "../hooks/getLabel";
 import formatTime from "../hooks/formatTime";
@@ -17,7 +15,6 @@ const Correction = () => {
   } else if (!selectedDateString) {
     return <div>修正対象の日付が選択されていません。</div>;
   }
-  const navigate = useNavigate();
 
   // ページのURLが変わったときに従業員データを更新
   useEffect(() => {
@@ -57,15 +54,14 @@ const Correction = () => {
                 <th className="detail-logs-th">担当</th>
                 <th className="detail-logs-th">時刻</th>
                 <th className="detail-logs-th">メモ</th>
+                <th className="detail-logs-th"></th>
               </tr>
             </thead>
             <tbody>
               {recordsToShow.map((record, index) => (
                 <tr key={index}>
                   <td className="detail-logs-td">
-                    <div>
-                      <span>{getLabel(record, "type")}</span>
-                    </div>
+                    <span>{getLabel(record, "type")}</span>
                   </td>
                   <td className="detail-logs-td">
                     {record.type !== "clock_out" &&
@@ -83,11 +79,15 @@ const Correction = () => {
                     </div>
                   </td>
                   <td className="detail-logs-td">{record.note || "-"}</td>
+                  <td>
+                    <button>削除</button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+        <button>申請</button>
       </div>
     </>
   );
