@@ -30,7 +30,7 @@ const Correction = () => {
     datetimeString: selectedDateString,
     key: "time_records",
   });
-  const recordsToShow = recordsOfSelectedDate.filter(
+  const recordsBeforeCorrection = recordsOfSelectedDate.filter(
     (record) => record.emp_id === empId
   );
 
@@ -47,6 +47,7 @@ const Correction = () => {
         </div>
         <div>
           <h3>{formatDate(selectedDateString)}のタイムレコーダー履歴修正</h3>
+          <h4>修正前</h4>
           <table border={1}>
             <thead>
               <tr>
@@ -54,11 +55,10 @@ const Correction = () => {
                 <th className="detail-logs-th">担当</th>
                 <th className="detail-logs-th">時刻</th>
                 <th className="detail-logs-th">メモ</th>
-                <th className="detail-logs-th"></th>
               </tr>
             </thead>
             <tbody>
-              {recordsToShow.map((record, index) => (
+              {recordsBeforeCorrection.map((record, index) => (
                 <tr key={index}>
                   <td className="detail-logs-td">
                     <span>{getLabel(record, "type")}</span>
@@ -79,9 +79,44 @@ const Correction = () => {
                     </div>
                   </td>
                   <td className="detail-logs-td">{record.note || "-"}</td>
-                  <td>
-                    <button>削除</button>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <h4>修正後</h4>
+          <table border={1}>
+            <thead>
+              <tr>
+                <th className="detail-logs-th"></th>
+                <th className="detail-logs-th">登録種別</th>
+                <th className="detail-logs-th">担当</th>
+                <th className="detail-logs-th">時刻</th>
+                <th className="detail-logs-th">メモ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recordsBeforeCorrection.map((record, index) => (
+                <tr key={index}>
+                  <td>削除</td>
+                  <td className="detail-logs-td">
+                    <span>{getLabel(record, "type")}</span>
                   </td>
+                  <td className="detail-logs-td">
+                    {record.type !== "clock_out" &&
+                    record.type !== "break_begin" ? (
+                      <div>
+                        <span>{getLabel(record, "role")}</span>
+                      </div>
+                    ) : (
+                      "-"
+                    )}
+                  </td>
+                  <td className="detail-logs-td">
+                    <div className="flex gap-small justify-center align-baseline">
+                      <span>{formatTime(record.datetime)}</span>
+                    </div>
+                  </td>
+                  <td className="detail-logs-td">{record.note || "-"}</td>
                 </tr>
               ))}
             </tbody>
