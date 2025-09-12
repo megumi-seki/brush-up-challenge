@@ -383,3 +383,7 @@ th {
   text-align: center;
   padding-bottom: 8px;
 }
+
+.modified-record-td {
+  background-color: #DBEAFE;
+}

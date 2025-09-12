@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import type { Employee } from "../types";
 import getRolesText from "../hooks/getRolesText";
 import ButtonToClockLogs from "../components/ButtonToClockLogs";
+import formatDate from "../hooks/formatDate";
 
 type HomeProps = {
   employees: Employee[];
@@ -9,6 +10,7 @@ type HomeProps = {
 
 const Home = ({ employees }: HomeProps) => {
   const navigate = useNavigate();
+  const today = new Date();
 
   const pageContent = (
     <div className="container">
@@ -34,7 +36,11 @@ const Home = ({ employees }: HomeProps) => {
               <tr
                 className="with-hover"
                 key={emp.id}
-                onClick={() => navigate(`/detail/${emp.id}`)}
+                onClick={() =>
+                  navigate(
+                    `/detail/${emp.id}/${today.toISOString().split("T")[0]}`
+                  )
+                }
               >
                 <td className="home-td">{emp.id}</td>
                 <td className="home-td">{emp.name}</td>

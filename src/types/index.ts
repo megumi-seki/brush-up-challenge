@@ -9,7 +9,7 @@ export type TimeRecorderType = {
   datetime: string;
   role: string | null;
   type: string;
-  note?: string;
+  note: string;
 };
 
 export type ShiftType = {
@@ -35,3 +35,9 @@ export type GroupedTimeRecorderType = {
   break_duration_millis: number | null; // ミリ秒単位
   role_changes: RoleTimeType[];
 };
+
+export type CorrectionRequestType = {
+    emp_id: string;
+    dateString: string;
+    records: TimeRecorderType[];
+  };

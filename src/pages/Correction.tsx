@@ -1,18 +1,24 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import type { Employee } from "../types";
+import type {
+  CorrectionRequestType,
+  Employee,
+  TimeRecorderType,
+} from "../types";
 import getRolesText from "../hooks/getRolesText";
 import getRecordsByDate from "../hooks/getRecordsByDate";
 import getLabel from "../hooks/getLabel";
 import formatTime from "../hooks/formatTime";
 import formatDate from "../hooks/formatDate";
+import { defaultRoleOptions } from "../components/TimeRecorderForm";
 
 const Correction = () => {
-  const { empId, selectedDateString } = useParams();
+  const { empId, dateStringParam } = useParams();
   const [employeee, setEmployee] = useState<Employee | null>(null);
+  const navigate = useNavigate();
   if (!empId) {
     return <div>従業員が選択されていません。</div>;
-  } else if (!selectedDateString) {
+  } else if (!dateStringParam) {
     return <div>修正対象の日付が選択されていません。</div>;
   }
 
@@ -27,12 +33,77 @@ const Correction = () => {
   }, [empId]);
 
   const recordsOfSelectedDate = getRecordsByDate({
-    datetimeString: selectedDateString,
+    datetimeString: dateStringParam,
     key: "time_records",
   });
   const recordsBeforeCorrection = recordsOfSelectedDate.filter(
     (record) => record.emp_id === empId
   );
+
+  const [correctedRecords, setCorredtedRecords] = useState(
+    recordsBeforeCorrection
+  );
+
+  type CorrectionActions = "modifyRole" | "modifyTime" | "modifyNote";
+  const handleCorrection = (
+    index: number,
+    action: CorrectionActions,
+    value?: any
+  ) => {
+    const updatedRecords = [...correctedRecords];
+
+    switch (action) {
+      case "modifyRole":
+        updatedRecords[index].role = value;
+        break;
+      case "modifyTime":
+        const [hours, minutes] = value.split(":");
+        const updatedDatetime = new Date(updatedRecords[index].datetime);
+        updatedDatetime.setHours(Number(hours), Number(minutes));
+        updatedRecords[index].datetime = updatedDatetime.toISOString();
+        break;
+      case "modifyNote":
+        updatedRecords[index].note = value;
+        break;
+      default:
+        break;
+    }
+
+    setCorredtedRecords(updatedRecords);
+  };
+
+  const handleSubmit = () => {
+    if (
+      JSON.stringify(recordsBeforeCorrection) ===
+      JSON.stringify(correctedRecords)
+    )
+      return;
+
+    const key = "time_records_correction_requests";
+    const storedRequests = localStorage.getItem(key);
+    const parsedRequests: CorrectionRequestType[] = storedRequests
+      ? JSON.parse(storedRequests)
+      : [];
+
+    // 修正対象の日付と従業員IDに基づいて、元のレコードを除外
+    const filteredRequests = parsedRequests.filter(
+      (request) =>
+        !(request.emp_id === empId && request.dateString === dateStringParam)
+    );
+
+    const newRequest: CorrectionRequestType = {
+      emp_id: empId,
+      dateString: dateStringParam,
+      records: correctedRecords,
+    };
+
+    // 修正後のレコードを追加
+    const updatedRequests = [...filteredRequests, newRequest];
+
+    localStorage.setItem(key, JSON.stringify(updatedRequests));
+
+    navigate(`/detail/${empId}/${dateStringParam}`);
+  };
 
   const pageContent = (
     <>
@@ -46,7 +117,7 @@ const Correction = () => {
           </div>
         </div>
         <div>
-          <h3>{formatDate(selectedDateString)}のタイムレコーダー履歴修正</h3>
+          <h3>{formatDate(dateStringParam)}のタイムレコーダー履歴修正</h3>
           <h4>修正前</h4>
           <table border={1}>
             <thead>
@@ -87,7 +158,6 @@ const Correction = () => {
           <table border={1}>
             <thead>
               <tr>
-                <th className="detail-logs-th"></th>
                 <th className="detail-logs-th">登録種別</th>
                 <th className="detail-logs-th">担当</th>
                 <th className="detail-logs-th">時刻</th>
@@ -95,9 +165,8 @@ const Correction = () => {
               </tr>
             </thead>
             <tbody>
-              {recordsBeforeCorrection.map((record, index) => (
+              {correctedRecords.map((record, index) => (
                 <tr key={index}>
-                  <td>削除</td>
                   <td className="detail-logs-td">
                     <span>{getLabel(record, "type")}</span>
                   </td>
@@ -105,24 +174,76 @@ const Correction = () => {
                     {record.type !== "clock_out" &&
                     record.type !== "break_begin" ? (
                       <div>
-                        <span>{getLabel(record, "role")}</span>
+                        <label htmlFor="roleCorrection" className="hidden">
+                          役割変更
+                        </label>
+                        <select
+                          name="roleCorrection"
+                          id="roleCorrection"
+                          value={record.role!} // null許容してるが、打刻情報にはすべてroleが入っている
+                          onChange={(e) =>
+                            handleCorrection(
+                              index,
+                              "modifyRole",
+                              e.target.value
+                            )
+                          }
+                        >
+                          {employeee?.roles.map((role) => (
+                            <option value={role} key={role}>
+                              {
+                                defaultRoleOptions.find(
+                                  (defaultOption) =>
+                                    defaultOption.value === role
+                                )?.label
+                              }
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     ) : (
                       "-"
                     )}
                   </td>
                   <td className="detail-logs-td">
-                    <div className="flex gap-small justify-center align-baseline">
-                      <span>{formatTime(record.datetime)}</span>
+                    <div>
+                      <label htmlFor="datetimeCorrection" className="hidden">
+                        時刻変更
+                      </label>
+                      <input
+                        id="datetimeCorrection"
+                        type="time"
+                        value={formatTime(record.datetime)}
+                        onChange={(e) =>
+                          handleCorrection(index, "modifyTime", e.target.value)
+                        }
+                      />
                     </div>
                   </td>
-                  <td className="detail-logs-td">{record.note || "-"}</td>
+                  <td className="detail-logs-td">
+                    <div>
+                      <label htmlFor="noteCorrection" className="hidden">
+                        メモ変更
+                      </label>
+                      <input
+                        id="noteCorrection"
+                        type="text"
+                        value={record.note}
+                        placeholder="-"
+                        onChange={(e) =>
+                          handleCorrection(index, "modifyNote", e.target.value)
+                        }
+                      />
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <button>申請</button>
+        <button type="submit" onClick={handleSubmit}>
+          申請
+        </button>
       </div>
     </>
   );

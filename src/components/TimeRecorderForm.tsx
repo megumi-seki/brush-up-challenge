@@ -134,7 +134,7 @@ const TimeRecorderForm = ({
   const [selectedRole, setSelectedRole] = useState<string | undefined>(
     undefined
   );
-  const [note, setNote] = useState("");
+  const [note, setNote] = useState<string | null>(null);
   const [now, setNow] = useState(new Date());
   const prevMinuteRef = useRef(now.getMinutes());
 
@@ -192,7 +192,7 @@ const TimeRecorderForm = ({
       datetime: now.toISOString(),
       role: selectedRole ? selectedRole : lastRole ?? employee.roles[0],
       type: selectedType,
-      note: note.trim(),
+      note: note ? note.trim() : "-",
     };
 
     const key = "time_records";
@@ -247,7 +247,7 @@ const TimeRecorderForm = ({
           id="note"
           placeholder="メモ"
           className="note-input"
-          value={note}
+          value={note || ""}
           onChange={(e) => setNote(e.target.value)}
         />
       </div>

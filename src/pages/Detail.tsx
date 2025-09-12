@@ -4,7 +4,11 @@ import TimeRecorderForm, {
   defaultRoleOptions,
   defaultTypeOptions,
 } from "../components/TimeRecorderForm";
-import type { Employee, TimeRecorderType } from "../types";
+import type {
+  CorrectionRequestType,
+  Employee,
+  TimeRecorderType,
+} from "../types";
 import ClockLogTableTitle from "../components/ClockLogTableTitle";
 import ClockLogTable from "../components/ClockLogTable";
 import getRecordsByDate from "../hooks/getRecordsByDate";
@@ -33,11 +37,23 @@ import getLabel from "../hooks/getLabel";
 
 // TODO: feature-correction-page　修正ページ　（優先度高）
 
+// TODO: datetimeを日本時間に変換する　（優先度高）
+// const utcDate = new Date("2025-09-07T23:00:00.000Z");
+
+// // 日本時間に変換して文字列化
+// const jstString = utcDate.toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
+
+// console.log(jstString); // 2025/9/8 8:00:00
+
 const Detail = () => {
-  const { empId } = useParams();
+  const { empId, dateStringParam } = useParams();
   const [employeee, setEmployee] = useState<Employee | null>(null);
   if (!empId) {
     return <div>従業員が選択されていません。</div>;
+  }
+
+  if (!dateStringParam) {
+    return <div>対象の日付が選択されていません。</div>;
   }
   const [lastType, setLastType] = useState<string | null>(null);
   const [lastRole, setLastRole] = useState<string | null>(null);
@@ -53,13 +69,13 @@ const Detail = () => {
     }
   }, [empId]);
 
-  const today = new Date();
   const [showRoleWithColor, setShowRoleWithColor] = useState(false);
   const [showDiffs, setShowDiffs] = useState(false);
-  const [selectedDateString, setSelectedDateString] = useState(
-    today.toISOString().split("T")[0]
-  );
+  const [selectedDateString, setSelectedDateString] = useState(dateStringParam);
   const [recordsToShow, setRecordsToShow] = useState<TimeRecorderType[]>([]);
+  const [correctionRequestedRecords, setCorrectionRequestedRecords] = useState<
+    TimeRecorderType[] | null
+  >(null);
 
   useEffect(() => {
     const recordsOfSelectedDate = getRecordsByDate({
@@ -103,6 +119,31 @@ const Detail = () => {
     }
   }, [recordsToShow]);
 
+  useEffect(() => {
+    // 修正申請済みのものがあれば表示
+    const storedCorrectionRequests = localStorage.getItem(
+      "time_records_correction_requests"
+    );
+    if (storedCorrectionRequests) {
+      const parsedRequests: CorrectionRequestType[] = JSON.parse(
+        storedCorrectionRequests
+      );
+
+      if (parsedRequests.length > 0) {
+        const matchedRequest = parsedRequests.find(
+          (request) =>
+            request.emp_id === empId &&
+            request.dateString === selectedDateString
+        );
+        if (matchedRequest) {
+          setCorrectionRequestedRecords(matchedRequest.records);
+        } else {
+          setCorrectionRequestedRecords(null);
+        }
+      }
+    }
+  }, [selectedDateString]);
+
   type differenceTextType = {
     datetimeDiff: string | null;
     roleDiff: string | null;
@@ -144,6 +185,22 @@ const Detail = () => {
       differenceTexts.datetimeDiff = datetimeDiffText;
     }
     return differenceTexts;
+  };
+
+  type ValueType = "type" | "role" | "datetime" | "note";
+  type getClassNameForCorrectionTableTdProps = {
+    index: number;
+    value: string | null;
+    valueType: ValueType;
+  };
+
+  const getClassNameForCorrectionTableTd = ({
+    index,
+    value,
+    valueType,
+  }: getClassNameForCorrectionTableTdProps) => {
+    const isModifiyed = value !== recordsToShow[index][valueType];
+    return isModifiyed ? "detail-logs-td modified-record-td" : "detail-logs-td";
   };
 
   const pageContent = (
@@ -253,6 +310,68 @@ const Detail = () => {
             タイムレコーダー履歴修正
           </button>
         </div>
+        {correctionRequestedRecords && (
+          <div>
+            <h3>修正申請中のタイムレコーダー履歴</h3>
+            <table border={1}>
+              <thead>
+                <tr>
+                  <th className="detail-logs-th">登録種別</th>
+                  <th className="detail-logs-th">担当</th>
+                  <th className="detail-logs-th">時刻</th>
+                  <th className="detail-logs-th">メモ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {correctionRequestedRecords.map((record, index) => (
+                  <tr key={index}>
+                    <td
+                      className={getClassNameForCorrectionTableTd({
+                        index,
+                        value: record.type,
+                        valueType: "type",
+                      })}
+                    >
+                      {getLabel(record, "type")}
+                    </td>
+                    <td
+                      className={getClassNameForCorrectionTableTd({
+                        index,
+                        value: record.role,
+                        valueType: "role",
+                      })}
+                    >
+                      {record.type !== "clock_out" &&
+                      record.type !== "break_begin" ? (
+                        <span>{getLabel(record, "role")}</span>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+                    <td
+                      className={getClassNameForCorrectionTableTd({
+                        index,
+                        value: record.datetime,
+                        valueType: "datetime",
+                      })}
+                    >
+                      {formatTime(record.datetime)}
+                    </td>
+                    <td
+                      className={getClassNameForCorrectionTableTd({
+                        index,
+                        value: record.note,
+                        valueType: "note",
+                      })}
+                    >
+                      {record.note || "-"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </>
   );

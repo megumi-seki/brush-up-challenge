@@ -60,7 +60,9 @@ const ClockLogTable = ({
             {withName && (
               <td
                 className="with-hover"
-                onClick={() => navigate(`/detail/${record.emp_id}`)}
+                onClick={() =>
+                  navigate(`/detail/${record.emp_id}/${selectedDateString}`)
+                }
               >
                 {getEmpNameById(record.emp_id)}
               </td>

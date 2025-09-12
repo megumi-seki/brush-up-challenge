@@ -43,9 +43,9 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home employees={employeees} />} />
-      <Route path="/detail/:empId/" element={<Detail />} />
+      <Route path="/detail/:empId/:dateStringParam" element={<Detail />} />
       <Route
-        path="/correction/:empId/:selectedDateString"
+        path="/correction/:empId/:dateStringParam"
         element={<Correction />}
       />
       <Route path="/logs" element={<ClockLogs />} />

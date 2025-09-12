@@ -57,6 +57,7 @@ export const TIME_RECORDER_DEMO_DATA: TimeRecorderType[] = [
           datetime: `${formattedYesterday}T07:30:00.000+0900`,
           role: "oven",
           type: "clock_in",
+          note: "",
         },
         
         {
@@ -64,42 +65,49 @@ export const TIME_RECORDER_DEMO_DATA: TimeRecorderType[] = [
           datetime: `${formattedYesterday}T13:10:00.000+0900`,
           role: "oven",
           type: "break_begin",
+          note: "",
         },
         {
           emp_id: "001",
           datetime: `${formattedYesterday}T13:51:00.000+0900`,
           role: "oven",
           type: "break_end",
+          note: "",
         },
         {
           emp_id: "001",
           datetime: `${formattedYesterday}T17:00:00.000+0900`,
           role: "oven",
           type: "clock_out",
+          note: "",
         },
         {
           emp_id: "003",
           datetime: `${formattedYesterday}T07:00:00.000+0900`,
           role: "dough",
           type: "clock_in",
+          note: "",
         },
         {
           emp_id: "003",
           datetime: `${formattedYesterday}T12:00:00.000+0900`,
           role: "dough",
           type: "break_begin",
+          note: "",
         },
         {
           emp_id: "003",
           datetime: `${formattedYesterday}T12:50:00.000+0900`,
           role: "dough",
           type: "break_end",
+          note: "",
         },
         {
           emp_id: "003",
           datetime: `${formattedYesterday}T16:36:00.000+0900`,
           role: "dough",
           type: "clock_out",
+          note: "",
         },
         
         {
@@ -107,30 +115,35 @@ export const TIME_RECORDER_DEMO_DATA: TimeRecorderType[] = [
           datetime: `${formattedYesterday}T08:58:00.000+0900`,
           role: "wrapping",
           type: "clock_in",
+          note: "",
         },
         {
           emp_id: "008",
           datetime: `${formattedYesterday}T14:00:00.000+0900`,
           role: "wrapping",
           type: "break_begin",
+          note: "",
         },
         {
           emp_id: "008",
           datetime: `${formattedYesterday}T14:58:00.000+0900`,
           role: "cafe",
           type: "break_end",
+          note: "",
         },
         {
           emp_id: "008",
           datetime: `${formattedYesterday}T17:15:00.000+0900`,
           role: "wrapping",
           type: "role_change",
+          note: "",
         },
         {
           emp_id: "008",
           datetime: `${formattedYesterday}T18:15:00.000+0900`,
           role: "wrapping",
           type: "clock_out",
+          note: "",
         },
         
         {
@@ -138,24 +151,28 @@ export const TIME_RECORDER_DEMO_DATA: TimeRecorderType[] = [
           datetime: `${formattedYesterday}T08:30:00.000+0900`,
           role: "shaping",
           type: "clock_in",
+          note: "",
         },
         {
           emp_id: "017",
           datetime: `${formattedYesterday}T12:03:00.000+0900`,
           role: "shaping",
           type: "break_begin",
+          note: "",
         },
         {
           emp_id: "017",
           datetime: `${formattedYesterday}T12:35:00.000+0900`,
           role: "shaping",
           type: "break_end",
+          note: "",
         },
         {
           emp_id: "017",
           datetime: `${formattedYesterday}T17:55:00.000+0900`,
           role: "shaping",
           type: "clock_out",
+          note: "",
         },
         
         {
@@ -163,24 +180,28 @@ export const TIME_RECORDER_DEMO_DATA: TimeRecorderType[] = [
           datetime: `${formattedYesterday}T07:55:00.000+0900`,
           role: "sandwich",
           type: "clock_in",
+          note: "",
         },
          {
           emp_id: "005",
           datetime: `${formattedYesterday}T13:04:00.000+0900`,
           role: "sandwich",
           type: "break_begin",
+          note: "",
         },
         {
           emp_id: "005",
           datetime: `${formattedYesterday}T13:42:00.000+0900`,
           role: "cafe",
           type: "break_end",
+          note: "",
         },
         {
           emp_id: "005",
           datetime: `${formattedYesterday}T16:00:00.000+0900`,
           role: "cafe",
           type: "clock_out",
+          note: "",
         },
 
         {
@@ -188,6 +209,7 @@ export const TIME_RECORDER_DEMO_DATA: TimeRecorderType[] = [
           datetime: `${formattedYesterday}T07:00:00.000+0900`,
           role: "sandwich",
           type: "clock_in",
+          note: "",
         },
         
         {
@@ -195,12 +217,14 @@ export const TIME_RECORDER_DEMO_DATA: TimeRecorderType[] = [
           datetime: `${formattedYesterday}T11:30:00.000+0900`,
           role: "shaping",
           type: "role_change",
+          note: "",
         },
         {
           emp_id: "012",
           datetime: `${formattedYesterday}T12:00:00.000+0900`,
           role: "shaping",
           type: "break_begin",
+          note: "",
         },
         
         {
@@ -208,12 +232,14 @@ export const TIME_RECORDER_DEMO_DATA: TimeRecorderType[] = [
           datetime: `${formattedYesterday}T13:00:00.000+0900`,
           role: "shaping",
           type: "break_end",
+          note: "",
         },
         {
           emp_id: "012",
           datetime: `${formattedYesterday}T15:00:00.000+0900`,
           role: "shaping",
           type: "clock_out",
+          note: "",
         },
 
         {
@@ -221,12 +247,14 @@ export const TIME_RECORDER_DEMO_DATA: TimeRecorderType[] = [
           datetime: `${formattedYesterday}T13:00:00.000+0900`,
           role: "cafe",
           type: "clock_in",
+          note: "",
         },
         {
           emp_id: "015",
           datetime: `${formattedYesterday}T17:00:00.000+0900`,
           role: "cafe",
           type: "clock_out",
+          note: "",
         },
         
         {
@@ -234,12 +262,14 @@ export const TIME_RECORDER_DEMO_DATA: TimeRecorderType[] = [
           datetime: `${formattedYesterday}T16:15:00.000+0900`,
           role: "sales",
           type: "clock_in",
+          note: "",
         },
         {
           emp_id: "027",
           datetime: `${formattedYesterday}T22:05:00.000+0900`,
           role: "sales",
           type: "clock_out",
+          note: "",
         },
         
         {
@@ -247,24 +277,28 @@ export const TIME_RECORDER_DEMO_DATA: TimeRecorderType[] = [
           datetime: `${formattedYesterday}T10:55:00.000+0900`,
           role: "sales",
           type: "clock_in",
+          note: "",
         },
         {
           emp_id: "028",
           datetime: `${formattedYesterday}T14:00:00.000+0900`,
           role: "sales",
           type: "clock_out",
+          note: "",
         },
         {
           emp_id: "029",
           datetime: `${formattedYesterday}T10:03:00.000+0900`,
           role: "sales",
           type: "clock_in",
+          note: "",
         },
         {
           emp_id: "029",
           datetime: `${formattedYesterday}T16:04:00.000+0900`,
           role: "sales",
           type: "clock_out",
+          note: "",
         },
 
         {
@@ -272,12 +306,14 @@ export const TIME_RECORDER_DEMO_DATA: TimeRecorderType[] = [
           datetime: `${formattedYesterday}T16:48:00.000+0900`,
           role: "sales",
           type: "clock_in",
+          note: "",
         },
         {
           emp_id: "030",
           datetime: `${formattedYesterday}T22:55:00.000+0900`,
           role: "sales",
           type: "clock_out",
+          note: "",
         },
         
         {
@@ -285,12 +321,14 @@ export const TIME_RECORDER_DEMO_DATA: TimeRecorderType[] = [
           datetime: `${formattedYesterday}T08:54:00.000+0900`,
           role: "sales",
           type: "clock_in",
+          note: "",
         },
         {
           emp_id: "031",
           datetime: `${formattedYesterday}T13:38:00.000+0900`,
           role: "sales",
           type: "clock_out",
+          note: "",
         },
       ];
 
