@@ -6,6 +6,7 @@ import getLabel from "../hooks/getLabel";
 import formatTime from "../hooks/formatTime";
 import ButtonToHome from "../components/ButtonToHome";
 import ButtonToClockLogs from "../components/ButtonToClockLogs";
+import CorrectionCheckTable from "../components/CorrectionCheckTable";
 
 const CorrectionCheck = () => {
   const [storedCorrectionRequests, setStoredCorrectionRequests] = useState<
@@ -39,64 +40,11 @@ const CorrectionCheck = () => {
         <div>修正申請中のタイムレコーダー履歴はありません</div>
       ) : (
         storedCorrectionRequests.map((request) => (
-          <div key={`${request.emp_id}-${request.dateString}`}>
-            <div className="flex justify-between">
-              <div className="flex gap-medium">
-                <span>従業員番号: {request.emp_id}</span>
-                <span>名前: {getEmpNameById(request.emp_id)}</span>
-                <span>日付: {formatDate(request.dateString)}</span>
-              </div>
-            </div>
-            <div>
-              <table border={1}>
-                <thead>
-                  <tr>
-                    <th className="detail-logs-th">登録種別</th>
-                    <th className="detail-logs-th">担当</th>
-                    <th className="detail-logs-th">時刻</th>
-                    <th className="detail-logs-th">メモ</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {request.records.map((record, index) => (
-                    <tr key={index}>
-                      <td>{getLabel(record, "type")}</td>
-                      <td
-                        className={
-                          record.role.label ? "modified-record-td" : ""
-                        }
-                      >
-                        {record.type !== "clock_out" &&
-                        record.type !== "break_begin" ? (
-                          <span>
-                            {record.role.label ??
-                              getLabel(record.role.value!, "role")}
-                          </span>
-                        ) : (
-                          "-"
-                        )}
-                      </td>
-                      <td
-                        className={
-                          record.datetime.label ? "modified-record-td" : ""
-                        }
-                      >
-                        {record.datetime.label ??
-                          formatTime(record.datetime.value)}
-                      </td>
-                      <td
-                        className={
-                          record.note.label ? "modified-record-td" : ""
-                        }
-                      >
-                        {record.note.label ?? (record.note.value || "-")}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <CorrectionCheckTable
+            key={`${request.emp_id}-${request.dateString}`}
+            tabelId={`${request.emp_id}-${request.dateString}`}
+            request={request}
+          />
         ))
       )}
     </div>

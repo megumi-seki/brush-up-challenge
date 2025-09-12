@@ -33,6 +33,7 @@ table {
   text-align: center;
 }
 
+
 th {
   background: #ffe5c2;
   color: #a05a2c;
@@ -394,4 +395,76 @@ th {
 
 .modified-record-td {
   background-color: #DBEAFE;
+}
+
+.correction-check-table-container {
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+}
+
+.approve-deny-label {
+  width: 80px;
+  height: 35px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  transition: background 0.2s;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+    color: white;
+}
+
+.approve-deny-label input[type="radio"]{
+  display: none;
+}
+
+.correction-approve-label {
+  background-color: #4caf4f86;
+}
+
+.correction-approve-label.selected {
+  background-color: #4CAF50;
+}
+
+.correction-approve-label:hover {
+  background-color: #4CAF50;
+}
+
+.correction-deny-label {
+  background-color: #e573737e;
+}
+
+.correction-deny-label.selected {
+  background-color: #E57373;
+}
+
+.correction-deny-label:hover {
+  background-color: #E57373;
+}
+
+.correction-approve-deny-container {
+  display: grid;
+  grid-template-rows: 1fr 2fr 1fr;
+  padding: 1rem;
+  justify-items: center;
+  align-items: center;
+}
+
+.approve-or-deny-comment {
+  height: 80px;
+  padding: 5px;
+}
+
+.approve-or-deny-submit-btn {
+    background: #a96a3f;
+    color: #fff;
+    width: 75%;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    padding: 7px;
 }
