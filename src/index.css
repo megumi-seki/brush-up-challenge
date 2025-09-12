@@ -102,6 +102,10 @@ th {
     justify-content: center;
   }
 
+  .justify-end {
+    justify-content: flex-end;
+  }
+
   .align-center {
     align-items: center;
   }
@@ -124,6 +128,10 @@ th {
 
   .border {
     border: 0.5px dashed #d8d8d8;
+  }
+
+  .bold {
+    font-weight: bold;
   }
 
   .btn {

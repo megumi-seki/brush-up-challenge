@@ -5,6 +5,7 @@ import ClockLogTableTitle from "../components/ClockLogTableTitle";
 import ClockLogTable from "../components/ClockLogTable";
 import ButtonToHome from "../components/ButtonToHome";
 import getMatchedShift from "../hooks/getMatchedShift";
+import ButtonToCorrectionCheck from "../components/ButtonToCorrectionCheck";
 
 const ClockLogs = () => {
   const today = new Date();
@@ -37,6 +38,13 @@ const ClockLogs = () => {
 
   const pageContent = (
     <div className="container-large">
+      <div className="flex justify-between align-center">
+        <h3>タイムレコーダー履歴</h3>
+        <div className="flex gap-medium">
+          <ButtonToHome />
+          <ButtonToCorrectionCheck />
+        </div>
+      </div>
       <ClockLogTableTitle
         selectedDateString={selectedDateString}
         setSelectedDateString={setSelectedDateString}
@@ -59,7 +67,6 @@ const ClockLogs = () => {
           withName={true}
         />
       </div>
-      <ButtonToHome />
     </div>
   );
 

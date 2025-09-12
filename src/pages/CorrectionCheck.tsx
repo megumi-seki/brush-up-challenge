@@ -4,6 +4,8 @@ import getEmpNameById from "../hooks/getEmpNameById";
 import formatDate from "../hooks/formatDate";
 import getLabel from "../hooks/getLabel";
 import formatTime from "../hooks/formatTime";
+import ButtonToHome from "../components/ButtonToHome";
+import ButtonToClockLogs from "../components/ButtonToClockLogs";
 
 const CorrectionCheck = () => {
   const [storedCorrectionRequests, setStoredCorrectionRequests] = useState<
@@ -26,7 +28,13 @@ const CorrectionCheck = () => {
 
   const pageContent = (
     <div className="container-large flex flex-col gap-medium">
-      <h3>タイムレコーダー履歴申請</h3>
+      <div className="flex justify-between align-center">
+        <h3>タイムレコーダー履歴申請</h3>
+        <div className="flex gap-medium">
+          <ButtonToHome />
+          <ButtonToClockLogs />
+        </div>
+      </div>
       {storedCorrectionRequests.length === 0 ? (
         <div>修正申請中のタイムレコーダー履歴はありません</div>
       ) : (

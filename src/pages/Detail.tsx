@@ -207,10 +207,8 @@ const Detail = () => {
             <span>従業員番号: {empId}</span>
             <span>名前: {employeee?.name}</span>
             <span>担当: {getRolesText({ roles: employeee?.roles })}</span>
-            <span>ステータス:</span>
           </div>
           <div className="flex gap-medium">
-            <ButtonToClockLogs />
             <ButtonToHome />
           </div>
         </div>
@@ -225,6 +223,17 @@ const Detail = () => {
           />
         </div>
         <div>
+          <div className="flex justify-between align-center">
+            <h3>タイムレコーダー履歴</h3>
+            <button
+              className="btn"
+              onClick={() =>
+                navigate(`/correction/${empId}/${selectedDateString}`)
+              }
+            >
+              タイムレコーダー修正申請
+            </button>
+          </div>
           <ClockLogTableTitle
             selectedDateString={selectedDateString}
             setSelectedDateString={setSelectedDateString}
@@ -297,14 +306,6 @@ const Detail = () => {
             showDiffs={showDiffs}
             withName={false}
           />
-          <button
-            className="btn"
-            onClick={() =>
-              navigate(`/correction/${empId}/${selectedDateString}`)
-            }
-          >
-            タイムレコーダー履歴修正
-          </button>
         </div>
         {correctionRequestedRecords && (
           <div>
