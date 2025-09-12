@@ -184,22 +184,6 @@ const Detail = () => {
     return differenceTexts;
   };
 
-  type ValueType = "type" | "role" | "datetime" | "note";
-  type getClassNameForCorrectionTableTdProps = {
-    index: number;
-    value: string | null;
-    valueType: ValueType;
-  };
-
-  const getClassNameForCorrectionTableTd = ({
-    index,
-    value,
-    valueType,
-  }: getClassNameForCorrectionTableTdProps) => {
-    const isModifiyed = value !== recordsToShow[index][valueType];
-    return isModifiyed ? "detail-logs-td modified-record-td" : "detail-logs-td";
-  };
-
   const pageContent = (
     <>
       <div className="container-large flex flex-col gap-learge">
