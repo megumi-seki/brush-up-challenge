@@ -69,7 +69,7 @@ const Correction = () => {
 
         updatedRecords[index].role = {
           value,
-          label: `${getLabel(initRole!, "role")}->${getLabel(value, "role")}`,
+          label: `${getLabel(initRole!, "role")} -> ${getLabel(value, "role")}`,
         };
         break;
       case "modifyTime":
@@ -82,7 +82,7 @@ const Correction = () => {
         const updatedDatetimeString = updatedDatetime.toISOString();
         updatedRecords[index].datetime = {
           value: updatedDatetimeString,
-          label: `${formattedInitTime}->${formatTime(updatedDatetimeString)}`,
+          label: `${formattedInitTime} -> ${formatTime(updatedDatetimeString)}`,
         };
         break;
       case "modifyNote":
@@ -90,7 +90,7 @@ const Correction = () => {
 
         updatedRecords[index].note = {
           value,
-          label: `${initNote}->${value}`,
+          label: `${initNote} -> ${value}`,
         };
         break;
       default:
