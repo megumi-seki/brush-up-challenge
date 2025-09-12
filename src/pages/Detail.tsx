@@ -16,7 +16,6 @@ import getMatchedShift from "../hooks/getMatchedShift";
 import formatTimeFromMillis from "../hooks/formatTimeFromMillis";
 import getRolesText from "../hooks/getRolesText";
 import ButtonToHome from "../components/ButtonToHome";
-import ButtonToClockLogs from "../components/ButtonToClockLogs";
 import getLabel from "../hooks/getLabel";
 import TimeRecorderForm from "../components/TimeRecorderForm";
 
@@ -28,12 +27,14 @@ import TimeRecorderForm from "../components/TimeRecorderForm";
 // 別ブランチ  TODO: clocklogspage　表示順のソート（優先度低）
 
 // 別ブランチ　TODO: getMatchedShiftとgetGroupedMatchedShiftを整理する（優先度低）
+// TODO: getLabel切り離して改善する（優先度低）
 
 // TODO: 休憩や担当切替の回数や扱いの制限どこまでにしてるか確認する（優先度中）
 
-// TODO: 企画書書き換える（コピーして新しいファイルから！！）　（優先度高）
-
-// TODO: feature-correction-page　修正ページ　（優先度高）
+// TODO: 変更申請承認、拒否ボタン付ける（優先度高）
+//       承認したらつじつまが合わなくなる場合、お知らせをだす
+//       拒否の場合は、変更申請中の記録を削除し、個人ページにその旨を書いておく
+// 　　　 承認の場合は、元の記録を変更申請後のものに置き換える。（担当が変更された場合は休憩開始、退勤なども同時に変更する）
 
 // TODO: datetimeを日本時間に変換する　（優先度高）
 // const utcDate = new Date("2025-09-07T23:00:00.000Z");
