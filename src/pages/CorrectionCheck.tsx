@@ -31,7 +31,7 @@ const CorrectionCheck = () => {
         <div>修正申請中のタイムレコーダー履歴はありません</div>
       ) : (
         storedCorrectionRequests.map((request) => (
-          <>
+          <div key={`${request.emp_id}-${request.dateString}`}>
             <div className="flex justify-between">
               <div className="flex gap-medium">
                 <span>従業員番号: {request.emp_id}</span>
@@ -68,7 +68,7 @@ const CorrectionCheck = () => {
                 </tbody>
               </table>
             </div>
-          </>
+          </div>
         ))
       )}
     </div>

@@ -321,13 +321,7 @@ const Detail = () => {
               <tbody>
                 {correctionRequestedRecords.map((record, index) => (
                   <tr key={index}>
-                    <td
-                      className={getClassNameForCorrectionTableTd({
-                        index,
-                        value: record.type.value,
-                        valueType: "type",
-                      })}
-                    >
+                    <td className="detail-logs-td">
                       {getLabel(record, "type")}
                     </td>
                     <td
@@ -337,8 +331,8 @@ const Detail = () => {
                           : "detail-logs-td"
                       }
                     >
-                      {record.type.value !== "clock_out" &&
-                      record.type.value !== "break_begin" ? (
+                      {record.type !== "clock_out" &&
+                      record.type !== "break_begin" ? (
                         <span>{getLabel(record, "role")}</span>
                       ) : (
                         "-"
