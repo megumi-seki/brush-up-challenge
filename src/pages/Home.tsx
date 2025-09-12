@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import type { Employee } from "../types";
 import getRolesText from "../hooks/getRolesText";
 import ButtonToClockLogs from "../components/ButtonToClockLogs";
-import formatDate from "../hooks/formatDate";
 
 type HomeProps = {
   employees: Employee[];
@@ -22,6 +21,9 @@ const Home = ({ employees }: HomeProps) => {
         <div className="flex justify-between align-center">
           <h3>従業員一覧</h3>
           <ButtonToClockLogs />
+          <button className="btn" onClick={() => navigate(`/correction-check`)}>
+            タイムレコーダー履歴修正確認
+          </button>
         </div>
         <table border={1}>
           <thead>

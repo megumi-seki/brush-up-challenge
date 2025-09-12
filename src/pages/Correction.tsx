@@ -106,146 +106,139 @@ const Correction = () => {
   };
 
   const pageContent = (
-    <>
-      <div className="container-large flex flex-col gap-medium">
-        <div className="flex justify-between">
-          <div className="flex gap-medium">
-            <span>従業員番号: {empId}</span>
-            <span>名前: {employeee?.name}</span>
-            <span>担当: {getRolesText({ roles: employeee?.roles })}</span>
-            <span>ステータス:</span>
-          </div>
+    <div className="container-large flex flex-col gap-medium">
+      <div className="flex justify-between">
+        <div className="flex gap-medium">
+          <span>従業員番号: {empId}</span>
+          <span>名前: {employeee?.name}</span>
+          <span>担当: {getRolesText({ roles: employeee?.roles })}</span>
+          <span>ステータス:</span>
         </div>
-        <div>
-          <h3>{formatDate(dateStringParam)}のタイムレコーダー履歴修正</h3>
-          <h4>修正前</h4>
-          <table border={1}>
-            <thead>
-              <tr>
-                <th className="detail-logs-th">登録種別</th>
-                <th className="detail-logs-th">担当</th>
-                <th className="detail-logs-th">時刻</th>
-                <th className="detail-logs-th">メモ</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recordsBeforeCorrection.map((record, index) => (
-                <tr key={index}>
-                  <td className="detail-logs-td">
-                    <span>{getLabel(record, "type")}</span>
-                  </td>
-                  <td className="detail-logs-td">
-                    {record.type !== "clock_out" &&
-                    record.type !== "break_begin" ? (
-                      <div>
-                        <span>{getLabel(record, "role")}</span>
-                      </div>
-                    ) : (
-                      "-"
-                    )}
-                  </td>
-                  <td className="detail-logs-td">
-                    <div className="flex gap-small justify-center align-baseline">
-                      <span>{formatTime(record.datetime)}</span>
-                    </div>
-                  </td>
-                  <td className="detail-logs-td">{record.note || "-"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <h4>修正後</h4>
-          <table border={1}>
-            <thead>
-              <tr>
-                <th className="detail-logs-th">登録種別</th>
-                <th className="detail-logs-th">担当</th>
-                <th className="detail-logs-th">時刻</th>
-                <th className="detail-logs-th">メモ</th>
-              </tr>
-            </thead>
-            <tbody>
-              {correctedRecords.map((record, index) => (
-                <tr key={index}>
-                  <td className="detail-logs-td">
-                    <span>{getLabel(record, "type")}</span>
-                  </td>
-                  <td className="detail-logs-td">
-                    {record.type !== "clock_out" &&
-                    record.type !== "break_begin" ? (
-                      <div>
-                        <label htmlFor="roleCorrection" className="hidden">
-                          役割変更
-                        </label>
-                        <select
-                          name="roleCorrection"
-                          id="roleCorrection"
-                          value={record.role!} // null許容してるが、打刻情報にはすべてroleが入っている
-                          onChange={(e) =>
-                            handleCorrection(
-                              index,
-                              "modifyRole",
-                              e.target.value
-                            )
-                          }
-                        >
-                          {employeee?.roles.map((role) => (
-                            <option value={role} key={role}>
-                              {
-                                defaultRoleOptions.find(
-                                  (defaultOption) =>
-                                    defaultOption.value === role
-                                )?.label
-                              }
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    ) : (
-                      "-"
-                    )}
-                  </td>
-                  <td className="detail-logs-td">
-                    <div>
-                      <label htmlFor="datetimeCorrection" className="hidden">
-                        時刻変更
-                      </label>
-                      <input
-                        id="datetimeCorrection"
-                        type="time"
-                        value={formatTime(record.datetime)}
-                        onChange={(e) =>
-                          handleCorrection(index, "modifyTime", e.target.value)
-                        }
-                      />
-                    </div>
-                  </td>
-                  <td className="detail-logs-td">
-                    <div>
-                      <label htmlFor="noteCorrection" className="hidden">
-                        メモ変更
-                      </label>
-                      <input
-                        id="noteCorrection"
-                        type="text"
-                        value={record.note}
-                        placeholder="-"
-                        onChange={(e) =>
-                          handleCorrection(index, "modifyNote", e.target.value)
-                        }
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <button type="submit" onClick={handleSubmit}>
-          申請
-        </button>
       </div>
-    </>
+      <div>
+        <h3>{formatDate(dateStringParam)}のタイムレコーダー履歴修正</h3>
+        <h4>修正前</h4>
+        <table border={1}>
+          <thead>
+            <tr>
+              <th className="detail-logs-th">登録種別</th>
+              <th className="detail-logs-th">担当</th>
+              <th className="detail-logs-th">時刻</th>
+              <th className="detail-logs-th">メモ</th>
+            </tr>
+          </thead>
+          <tbody>
+            {recordsBeforeCorrection.map((record, index) => (
+              <tr key={index}>
+                <td className="detail-logs-td">
+                  <span>{getLabel(record, "type")}</span>
+                </td>
+                <td className="detail-logs-td">
+                  {record.type !== "clock_out" &&
+                  record.type !== "break_begin" ? (
+                    <div>
+                      <span>{getLabel(record, "role")}</span>
+                    </div>
+                  ) : (
+                    "-"
+                  )}
+                </td>
+                <td className="detail-logs-td">
+                  <div className="flex gap-small justify-center align-baseline">
+                    <span>{formatTime(record.datetime)}</span>
+                  </div>
+                </td>
+                <td className="detail-logs-td">{record.note || "-"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <h4>修正後</h4>
+        <table border={1}>
+          <thead>
+            <tr>
+              <th className="detail-logs-th">登録種別</th>
+              <th className="detail-logs-th">担当</th>
+              <th className="detail-logs-th">時刻</th>
+              <th className="detail-logs-th">メモ</th>
+            </tr>
+          </thead>
+          <tbody>
+            {correctedRecords.map((record, index) => (
+              <tr key={index}>
+                <td className="detail-logs-td">
+                  <span>{getLabel(record, "type")}</span>
+                </td>
+                <td className="detail-logs-td">
+                  {record.type !== "clock_out" &&
+                  record.type !== "break_begin" ? (
+                    <div>
+                      <label htmlFor="roleCorrection" className="hidden">
+                        役割変更
+                      </label>
+                      <select
+                        name="roleCorrection"
+                        id="roleCorrection"
+                        value={record.role!} // null許容してるが、打刻情報にはすべてroleが入っている
+                        onChange={(e) =>
+                          handleCorrection(index, "modifyRole", e.target.value)
+                        }
+                      >
+                        {employeee?.roles.map((role) => (
+                          <option value={role} key={role}>
+                            {
+                              defaultRoleOptions.find(
+                                (defaultOption) => defaultOption.value === role
+                              )?.label
+                            }
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  ) : (
+                    "-"
+                  )}
+                </td>
+                <td className="detail-logs-td">
+                  <div>
+                    <label htmlFor="datetimeCorrection" className="hidden">
+                      時刻変更
+                    </label>
+                    <input
+                      id="datetimeCorrection"
+                      type="time"
+                      value={formatTime(record.datetime)}
+                      onChange={(e) =>
+                        handleCorrection(index, "modifyTime", e.target.value)
+                      }
+                    />
+                  </div>
+                </td>
+                <td className="detail-logs-td">
+                  <div>
+                    <label htmlFor="noteCorrection" className="hidden">
+                      メモ変更
+                    </label>
+                    <input
+                      id="noteCorrection"
+                      type="text"
+                      value={record.note}
+                      placeholder="-"
+                      onChange={(e) =>
+                        handleCorrection(index, "modifyNote", e.target.value)
+                      }
+                    />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <button type="submit" onClick={handleSubmit}>
+        申請
+      </button>
+    </div>
   );
 
   return pageContent;

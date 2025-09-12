@@ -10,6 +10,7 @@ import {
   TIME_RECORDER_DEMO_DATA,
 } from "./constants/appConfig";
 import Correction from "./pages/Correction";
+import CorrectionCheck from "./pages/CorrectionCheck";
 
 function App() {
   const [employeees, setEmployees] = useState<Employee[]>([]);
@@ -48,6 +49,7 @@ function App() {
         path="/correction/:empId/:dateStringParam"
         element={<Correction />}
       />
+      <Route path="/correction-check" element={<CorrectionCheck />} />
       <Route path="/logs" element={<ClockLogs />} />
     </Routes>
   );

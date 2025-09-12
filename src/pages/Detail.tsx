@@ -39,10 +39,8 @@ import getLabel from "../hooks/getLabel";
 
 // TODO: datetimeを日本時間に変換する　（優先度高）
 // const utcDate = new Date("2025-09-07T23:00:00.000Z");
-
 // // 日本時間に変換して文字列化
 // const jstString = utcDate.toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
-
 // console.log(jstString); // 2025/9/8 8:00:00
 
 const Detail = () => {
