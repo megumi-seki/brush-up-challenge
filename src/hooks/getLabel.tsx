@@ -2,14 +2,30 @@ import {
   defaultRoleOptions,
   defaultTypeOptions,
 } from "../components/TimeRecorderForm";
-import type { TimeRecorderType } from "../types";
+import type { CorrectionTimeRecordType, TimeRecorderType } from "../types";
 
-const getLabel = (record: TimeRecorderType, recordType: "type" | "role") => {
+const getLabel = (
+  record: TimeRecorderType | CorrectionTimeRecordType | string,
+  recordType: "type" | "role"
+) => {
   const defaultOptions =
     recordType === "type" ? defaultTypeOptions : defaultRoleOptions;
-  const label = defaultOptions.find(
-    (option) => option.value === record[recordType]
-  )?.label;
+
+  let value: string | null = null;
+
+  if (typeof record === "string") {
+    value = record;
+  } else if (
+    typeof record[recordType] === "object" &&
+    record[recordType] !== null &&
+    "value" in record[recordType]
+  ) {
+    value = record[recordType].value;
+  } else {
+    value = record[recordType];
+  }
+
+  const label = defaultOptions.find((option) => option.value === value)?.label;
 
   return label;
 };

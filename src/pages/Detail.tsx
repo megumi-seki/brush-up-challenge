@@ -1,11 +1,8 @@
-import { Children, Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import TimeRecorderForm, {
-  defaultRoleOptions,
-  defaultTypeOptions,
-} from "../components/TimeRecorderForm";
 import type {
   CorrectionRequestType,
+  CorrectionTimeRecordType,
   Employee,
   TimeRecorderType,
 } from "../types";
@@ -21,6 +18,7 @@ import getRolesText from "../hooks/getRolesText";
 import ButtonToHome from "../components/ButtonToHome";
 import ButtonToClockLogs from "../components/ButtonToClockLogs";
 import getLabel from "../hooks/getLabel";
+import TimeRecorderForm from "../components/TimeRecorderForm";
 
 // 別ブランチ TODO: 差異表示、差異が10分以上だとboldになるようにする　（優先度低）
 // 別ブランチ  TODO: 全体のタイムレコーダー記録再表示　総時間の際は（）書きに変更する（優先度高）
@@ -72,7 +70,7 @@ const Detail = () => {
   const [selectedDateString, setSelectedDateString] = useState(dateStringParam);
   const [recordsToShow, setRecordsToShow] = useState<TimeRecorderType[]>([]);
   const [correctionRequestedRecords, setCorrectionRequestedRecords] = useState<
-    TimeRecorderType[] | null
+    CorrectionTimeRecordType[] | null
   >(null);
 
   useEffect(() => {
@@ -326,43 +324,43 @@ const Detail = () => {
                     <td
                       className={getClassNameForCorrectionTableTd({
                         index,
-                        value: record.type,
+                        value: record.type.value,
                         valueType: "type",
                       })}
                     >
                       {getLabel(record, "type")}
                     </td>
                     <td
-                      className={getClassNameForCorrectionTableTd({
-                        index,
-                        value: record.role,
-                        valueType: "role",
-                      })}
+                      className={
+                        record.role.label
+                          ? "detail-logs-td modified-record-td"
+                          : "detail-logs-td"
+                      }
                     >
-                      {record.type !== "clock_out" &&
-                      record.type !== "break_begin" ? (
+                      {record.type.value !== "clock_out" &&
+                      record.type.value !== "break_begin" ? (
                         <span>{getLabel(record, "role")}</span>
                       ) : (
                         "-"
                       )}
                     </td>
                     <td
-                      className={getClassNameForCorrectionTableTd({
-                        index,
-                        value: record.datetime,
-                        valueType: "datetime",
-                      })}
+                      className={
+                        record.datetime.label
+                          ? "detail-logs-td modified-record-td"
+                          : "detail-logs-td"
+                      }
                     >
-                      {formatTime(record.datetime)}
+                      {formatTime(record.datetime.value)}
                     </td>
                     <td
-                      className={getClassNameForCorrectionTableTd({
-                        index,
-                        value: record.note,
-                        valueType: "note",
-                      })}
+                      className={
+                        record.note.label
+                          ? "detail-logs-td modified-record-td"
+                          : "detail-logs-td"
+                      }
                     >
-                      {record.note || "-"}
+                      {record.note.value || "-"}
                     </td>
                   </tr>
                 ))}

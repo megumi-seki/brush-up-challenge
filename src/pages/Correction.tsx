@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type {
   CorrectionRequestType,
+  CorrectionTimeRecordType,
   Employee,
-  TimeRecorderType,
 } from "../types";
 import getRolesText from "../hooks/getRolesText";
 import getRecordsByDate from "../hooks/getRecordsByDate";
@@ -40,30 +40,58 @@ const Correction = () => {
     (record) => record.emp_id === empId
   );
 
-  const [correctedRecords, setCorredtedRecords] = useState(
-    recordsBeforeCorrection
-  );
+  const initCorrectedRecords: CorrectionTimeRecordType[] =
+    recordsBeforeCorrection.map((record) => ({
+      emp_id: record.emp_id,
+      datetime: { value: record.datetime, label: null },
+      role: {
+        value: record.role,
+        label: null,
+      },
+      type: { value: record.type, label: null },
+      note: { value: record.note, label: null },
+    }));
+
+  const [correctedRecords, setCorredtedRecords] =
+    useState<CorrectionTimeRecordType[]>(initCorrectedRecords);
 
   type CorrectionActions = "modifyRole" | "modifyTime" | "modifyNote";
   const handleCorrection = (
     index: number,
     action: CorrectionActions,
-    value?: any
+    value: string
   ) => {
     const updatedRecords = [...correctedRecords];
 
     switch (action) {
       case "modifyRole":
-        updatedRecords[index].role = value;
+        const initRole = initCorrectedRecords[index].role.value;
+
+        updatedRecords[index].role = {
+          value,
+          label: `${getLabel(initRole!, "role")}->${getLabel(value, "role")}`,
+        };
         break;
       case "modifyTime":
+        const initTime = new Date(initCorrectedRecords[index].datetime.value);
+        const formattedInitTime = formatTime(initTime.toISOString());
+
         const [hours, minutes] = value.split(":");
-        const updatedDatetime = new Date(updatedRecords[index].datetime);
+        const updatedDatetime = new Date(updatedRecords[index].datetime.value);
         updatedDatetime.setHours(Number(hours), Number(minutes));
-        updatedRecords[index].datetime = updatedDatetime.toISOString();
+        const updatedDatetimeString = updatedDatetime.toISOString();
+        updatedRecords[index].datetime = {
+          value: updatedDatetimeString,
+          label: `${formattedInitTime}->${formatTime(updatedDatetimeString)}`,
+        };
         break;
       case "modifyNote":
-        updatedRecords[index].note = value;
+        const initNote = initCorrectedRecords[index].note.value;
+
+        updatedRecords[index].note = {
+          value,
+          label: `${initNote}->${value}`,
+        };
         break;
       default:
         break;
@@ -170,8 +198,8 @@ const Correction = () => {
                   <span>{getLabel(record, "type")}</span>
                 </td>
                 <td className="detail-logs-td">
-                  {record.type !== "clock_out" &&
-                  record.type !== "break_begin" ? (
+                  {record.type.value !== "clock_out" &&
+                  record.type.value !== "break_begin" ? (
                     <div>
                       <label htmlFor="roleCorrection" className="hidden">
                         役割変更
@@ -179,7 +207,7 @@ const Correction = () => {
                       <select
                         name="roleCorrection"
                         id="roleCorrection"
-                        value={record.role!} // null許容してるが、打刻情報にはすべてroleが入っている
+                        value={record.role.value!} // null許容してるが、打刻情報にはすべてroleが入っている
                         onChange={(e) =>
                           handleCorrection(index, "modifyRole", e.target.value)
                         }
@@ -207,7 +235,7 @@ const Correction = () => {
                     <input
                       id="datetimeCorrection"
                       type="time"
-                      value={formatTime(record.datetime)}
+                      value={formatTime(record.datetime.value)}
                       onChange={(e) =>
                         handleCorrection(index, "modifyTime", e.target.value)
                       }
@@ -222,7 +250,7 @@ const Correction = () => {
                     <input
                       id="noteCorrection"
                       type="text"
-                      value={record.note}
+                      value={record.note.value}
                       placeholder="-"
                       onChange={(e) =>
                         handleCorrection(index, "modifyNote", e.target.value)

@@ -36,8 +36,16 @@ export type GroupedTimeRecorderType = {
   role_changes: RoleTimeType[];
 };
 
+export type CorrectionTimeRecordType = {
+  emp_id: string;
+  datetime: {value: string, label: string | null};
+  role: {value: string | null, label: string | null};
+  type: {value: string, label: string | null};
+  note: {value: string, label: string | null};
+};
+
 export type CorrectionRequestType = {
     emp_id: string;
     dateString: string;
-    records: TimeRecorderType[];
+    records: CorrectionTimeRecordType[];
   };

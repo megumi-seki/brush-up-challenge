@@ -54,15 +54,15 @@ const CorrectionCheck = () => {
                     <tr key={index}>
                       <td>{getLabel(record, "type")}</td>
                       <td>
-                        {record.type !== "clock_out" &&
-                        record.type !== "break_begin" ? (
+                        {record.type.value !== "clock_out" &&
+                        record.type.value !== "break_begin" ? (
                           <span>{getLabel(record, "role")}</span>
                         ) : (
                           "-"
                         )}
                       </td>
-                      <td>{formatTime(record.datetime)}</td>
-                      <td>{record.note || "-"}</td>
+                      <td>{formatTime(record.datetime.value)}</td>
+                      <td>{record.note.value || "-"}</td>
                     </tr>
                   ))}
                 </tbody>
