@@ -53,16 +53,36 @@ const CorrectionCheck = () => {
                   {request.records.map((record, index) => (
                     <tr key={index}>
                       <td>{getLabel(record, "type")}</td>
-                      <td>
+                      <td
+                        className={
+                          record.role.label ? "modified-record-td" : ""
+                        }
+                      >
                         {record.type !== "clock_out" &&
                         record.type !== "break_begin" ? (
-                          <span>{getLabel(record, "role")}</span>
+                          <span>
+                            {record.role.label ??
+                              getLabel(record.role.value!, "role")}
+                          </span>
                         ) : (
                           "-"
                         )}
                       </td>
-                      <td>{formatTime(record.datetime.value)}</td>
-                      <td>{record.note.value || "-"}</td>
+                      <td
+                        className={
+                          record.datetime.label ? "modified-record-td" : ""
+                        }
+                      >
+                        {record.datetime.label ??
+                          formatTime(record.datetime.value)}
+                      </td>
+                      <td
+                        className={
+                          record.note.label ? "modified-record-td" : ""
+                        }
+                      >
+                        {record.note.label ?? (record.note.value || "-")}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
