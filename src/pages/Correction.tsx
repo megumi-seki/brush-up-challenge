@@ -48,7 +48,7 @@ const Correction = () => {
         value: record.role,
         label: null,
       },
-      type: { value: record.type, label: null },
+      type: record.type,
       note: { value: record.note, label: null },
     }));
 
@@ -198,8 +198,8 @@ const Correction = () => {
                   <span>{getLabel(record, "type")}</span>
                 </td>
                 <td className="detail-logs-td">
-                  {record.type.value !== "clock_out" &&
-                  record.type.value !== "break_begin" ? (
+                  {record.type !== "clock_out" &&
+                  record.type !== "break_begin" ? (
                     <div>
                       <label htmlFor="roleCorrection" className="hidden">
                         役割変更

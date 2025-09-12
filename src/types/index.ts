@@ -40,7 +40,7 @@ export type CorrectionTimeRecordType = {
   emp_id: string;
   datetime: {value: string, label: string | null};
   role: {value: string | null, label: string | null};
-  type: {value: string, label: string | null};
+  type: string;
   note: {value: string, label: string | null};
 };
 
