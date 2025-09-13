@@ -42,7 +42,7 @@ const CorrectionCheckTable = ({
           recordDateString === request.dateString
         );
       });
-      const requestedRecords: TimeRecorderType[] = request.records.map(
+      const rowRequestedRecords: TimeRecorderType[] = request.records.map(
         (record) => ({
           emp_id: record.emp_id,
           datetime: record.datetime.value,
@@ -51,6 +51,15 @@ const CorrectionCheckTable = ({
           note: record.note.value,
         })
       );
+
+      const requestedRecords = rowRequestedRecords.map((record, index) => {
+        if (record.type === "break_begin" || record.type === "clock_out") {
+          return {
+            ...record,
+            role: rowRequestedRecords[index - 1].role,
+          };
+        } else return record;
+      });
       const updatedRecords = [...filteredRecords, ...requestedRecords];
       localStorage.setItem("time_records", JSON.stringify(updatedRecords));
     }
