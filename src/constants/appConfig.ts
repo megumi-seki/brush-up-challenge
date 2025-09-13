@@ -9,7 +9,7 @@ export const EMPLOYEE_DEMO_DATA: Employee[] = [
         { id: "002", name: "鈴木花子", roles: ["oven"] },
         { id: "003", name: "高橋健一", roles: ["dough"] },
         { id: "004", name: "田中美咲", roles: ["dough"] },
-        { id: "005", name: "伊藤翔", roles: ["sandwich", "cafe, shaping"] },
+        { id: "005", name: "伊藤翔", roles: ["sandwich", "cafe", "shaping"] },
         { id: "006", name: "渡辺彩香", roles: ["sandwich", "cafe", "shaping"] },
         { id: "007", name: "山本大輔", roles: ["sandwich", "cafe", "shaping"] },
         { id: "008", name: "中村里奈", roles: ["sandwich", "wrapping", "cafe", "sales"] },

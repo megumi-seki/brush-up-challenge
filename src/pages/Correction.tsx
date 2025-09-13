@@ -11,6 +11,8 @@ import getLabel from "../hooks/getLabel";
 import formatTime from "../hooks/formatTime";
 import formatDate from "../hooks/formatDate";
 import { defaultRoleOptions } from "../components/TimeRecorderForm";
+import RecordToShowTr from "../components/RecordToShowTr";
+import RecordsThead from "../components/RecordsThead";
 
 const Correction = () => {
   const { empId, dateStringParam } = useParams();
@@ -152,37 +154,15 @@ const Correction = () => {
         <div className="flex flex-col">
           <p className="bold">修正前</p>
           <table border={1}>
-            <thead>
-              <tr>
-                <th className="detail-logs-th">登録種別</th>
-                <th className="detail-logs-th">担当</th>
-                <th className="detail-logs-th">時刻</th>
-                <th className="detail-logs-th">メモ</th>
-              </tr>
-            </thead>
+            <RecordsThead />
             <tbody>
               {recordsBeforeCorrection.map((record, index) => (
-                <tr key={index}>
-                  <td className="detail-logs-td">
-                    <span>{getLabel(record, "type")}</span>
-                  </td>
-                  <td className="detail-logs-td">
-                    {record.type !== "clock_out" &&
-                    record.type !== "break_begin" ? (
-                      <div>
-                        <span>{getLabel(record, "role")}</span>
-                      </div>
-                    ) : (
-                      "-"
-                    )}
-                  </td>
-                  <td className="detail-logs-td">
-                    <div className="flex gap-small justify-center align-baseline">
-                      <span>{formatTime(record.datetime)}</span>
-                    </div>
-                  </td>
-                  <td className="detail-logs-td">{record.note || "-"}</td>
-                </tr>
+                <RecordToShowTr
+                  key={index}
+                  record={record}
+                  index={index}
+                  showDiffs={false}
+                />
               ))}
             </tbody>
           </table>
@@ -190,14 +170,7 @@ const Correction = () => {
         <div>
           <p className="bold">修正後</p>
           <table border={1}>
-            <thead>
-              <tr>
-                <th className="detail-logs-th">登録種別</th>
-                <th className="detail-logs-th">担当</th>
-                <th className="detail-logs-th">時刻</th>
-                <th className="detail-logs-th">メモ</th>
-              </tr>
-            </thead>
+            <RecordsThead />
             <tbody>
               {correctedRecords.map((record, index) => (
                 <tr key={index}>

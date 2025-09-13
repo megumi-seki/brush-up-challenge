@@ -11,14 +11,13 @@ import ClockLogTableTitle from "../components/ClockLogTableTitle";
 import ClockLogTable from "../components/ClockLogTable";
 import getRecordsByDate from "../hooks/getRecordsByDate";
 import groupRecordsById from "../hooks/groupRecordsById";
-import formatTime from "../hooks/formatTime";
-import getMinutes from "../hooks/getMinutes";
-import getMatchedShift from "../hooks/getMatchedShift";
-import formatTimeFromMillis from "../hooks/formatTimeFromMillis";
 import getRolesText from "../hooks/getRolesText";
 import ButtonToHome from "../components/ButtonToHome";
-import getLabel from "../hooks/getLabel";
 import TimeRecorderForm from "../components/TimeRecorderForm";
+import CorrectionRequestedRecordTr from "../components/CorrectionRequestedRecordTr";
+import getMatchedShift from "../hooks/getMatchedShift";
+import RecordToShowTr from "../components/RecordToShowTr";
+import RecordsThead from "../components/RecordsThead";
 
 // 別ブランチ TODO: 差異表示、差異が10分以上だとboldになるようにする　（優先度低）
 // 別ブランチ  TODO: 全体のタイムレコーダー記録再表示　総時間の際は（）書きに変更する（優先度高）
@@ -32,10 +31,7 @@ import TimeRecorderForm from "../components/TimeRecorderForm";
 
 // TODO: 休憩や担当切替の回数や扱いの制限どこまでにしてるか確認する（優先度中）
 
-// TODO: 変更申請承認、拒否ボタン付ける（優先度高） ✓
-//       承認したらつじつまが合わなくなる場合、お知らせをだす (優先度低)
-//       拒否の場合は、変更申請中の記録を削除し、個人ページにその旨を書いておく　✓
-// 　　　 承認の場合は、元の記録を変更申請後のものに置き換える。（担当が変更された場合は休憩開始、退勤なども同時に変更する） ✓
+// TODO: 承認したらつじつまが合わなくなる場合、お知らせをだす (優先度低)
 
 // TODO: datetimeを日本時間に変換する　（優先度高）
 // const utcDate = new Date("2025-09-07T23:00:00.000Z");
@@ -46,15 +42,30 @@ import TimeRecorderForm from "../components/TimeRecorderForm";
 const Detail = () => {
   const { empId, dateStringParam } = useParams();
   const [employeee, setEmployee] = useState<Employee | null>(null);
-  if (!empId) {
-    return <div>従業員が選択されていません。</div>;
-  }
+  if (!empId) return <div>従業員が選択されていません。</div>;
+  if (!dateStringParam) return <div>対象の日付が選択されていません。</div>;
 
-  if (!dateStringParam) {
-    return <div>対象の日付が選択されていません。</div>;
-  }
   const [lastType, setLastType] = useState<string | null>(null);
   const [lastRole, setLastRole] = useState<string | null>(null);
+  const [showRoleWithColor, setShowRoleWithColor] = useState(false);
+  const [showDiffs, setShowDiffs] = useState(false);
+  const [selectedDateString, setSelectedDateString] = useState(dateStringParam);
+
+  const [recordsToShow, setRecordsToShow] = useState<TimeRecorderType[]>([]);
+  const groupedRecord = groupRecordsById(recordsToShow);
+  const matchedShift = getMatchedShift({
+    emp_id: empId,
+    selectedDateString: selectedDateString,
+  });
+
+  const [correctionRequestedRecords, setCorrectionRequestedRecords] = useState<
+    CorrectionTimeRecordType[] | null
+  >(null);
+  const [messageOnRequest, setMessageOnRequest] =
+    useState<MessageOnRequestType | null>(null);
+  const [differenceExceptionMessage, setDifferenceExceptionMessage] = useState<
+    string | null
+  >(null);
   const navigate = useNavigate();
 
   // ページのURLが変わったときに従業員データを更新
@@ -67,16 +78,6 @@ const Detail = () => {
     }
   }, []);
 
-  const [showRoleWithColor, setShowRoleWithColor] = useState(false);
-  const [showDiffs, setShowDiffs] = useState(false);
-  const [selectedDateString, setSelectedDateString] = useState(dateStringParam);
-  const [recordsToShow, setRecordsToShow] = useState<TimeRecorderType[]>([]);
-  const [correctionRequestedRecords, setCorrectionRequestedRecords] = useState<
-    CorrectionTimeRecordType[] | null
-  >(null);
-  const [messageOnRequest, setMessageOnRequest] =
-    useState<MessageOnRequestType | null>(null);
-
   useEffect(() => {
     const recordsOfSelectedDate = getRecordsByDate({
       datetimeString: selectedDateString,
@@ -88,17 +89,6 @@ const Detail = () => {
 
     setRecordsToShow(filteredRecords);
   }, [lastType, lastRole, selectedDateString]);
-
-  const groupedRecord = groupRecordsById(recordsToShow);
-
-  const matchedShift = getMatchedShift({
-    emp_id: empId,
-    selectedDateString: selectedDateString,
-  });
-
-  const [differenceExceptionMessage, setDifferenceExceptionMessage] = useState<
-    string | null
-  >(null);
 
   useEffect(() => {
     const matchedShiftTypes = matchedShift.map((shift) => shift.type);
@@ -158,49 +148,6 @@ const Detail = () => {
     }
   }, [selectedDateString]);
 
-  type differenceTextType = {
-    datetimeDiff: string | null;
-    roleDiff: string | null;
-    typeDiff: string | null;
-  };
-
-  const getDifferenceTexts = (record: TimeRecorderType, index: number) => {
-    let differenceTexts: differenceTextType = {
-      datetimeDiff: null,
-      roleDiff: null,
-      typeDiff: null,
-    };
-
-    if (matchedShift.length === 0) return differenceTexts;
-
-    if (record.type !== matchedShift[index].type) {
-      differenceTexts.typeDiff = ` (シフトでは${getLabel(
-        matchedShift[index],
-        "type"
-      )})`;
-    }
-
-    if (record.role !== matchedShift[index].role)
-      differenceTexts.roleDiff = ` (シフトでは${getLabel(
-        matchedShift[index],
-        "role"
-      )})`;
-
-    const recordMinute = getMinutes(record.datetime);
-    const shiftMinute = getMinutes(matchedShift[index].datetime);
-    const differenceMin = shiftMinute - recordMinute;
-    if (differenceMin !== 0) {
-      const datetimeDiffText =
-        differenceMin > 0
-          ? `(シフトより${formatTimeFromMillis(differenceMin * 60 * 1000)}早い)`
-          : `(シフトより${formatTimeFromMillis(
-              Math.abs(differenceMin * 60 * 1000)
-            )}遅い)`;
-      differenceTexts.datetimeDiff = datetimeDiffText;
-    }
-    return differenceTexts;
-  };
-
   const pageContent = (
     <>
       <div className="container-large flex flex-col gap-learge">
@@ -250,54 +197,16 @@ const Detail = () => {
             </div>
           )}
           <table border={1}>
-            <thead>
-              <tr>
-                <th className="detail-logs-th">登録種別</th>
-                <th className="detail-logs-th">担当</th>
-                <th className="detail-logs-th">時刻</th>
-                <th className="detail-logs-th">メモ</th>
-              </tr>
-            </thead>
+            <RecordsThead />
             <tbody>
               {recordsToShow.map((record, index) => (
-                <tr key={index}>
-                  <td className="detail-logs-td">
-                    <div>
-                      <span>{getLabel(record, "type")}</span>
-                      {showDiffs && (
-                        <span className="differenceText">
-                          {getDifferenceTexts(record, index).typeDiff}
-                        </span>
-                      )}
-                    </div>
-                  </td>
-                  <td className="detail-logs-td">
-                    {record.type !== "clock_out" &&
-                    record.type !== "break_begin" ? (
-                      <div>
-                        <span>{getLabel(record, "role")}</span>
-                        {showDiffs && (
-                          <span className="differenceText">
-                            {getDifferenceTexts(record, index).roleDiff}
-                          </span>
-                        )}
-                      </div>
-                    ) : (
-                      "-"
-                    )}
-                  </td>
-                  <td className="detail-logs-td">
-                    <div className="flex gap-small justify-center align-baseline">
-                      <span>{formatTime(record.datetime)}</span>
-                      {showDiffs && (
-                        <span className="differenceText">
-                          {getDifferenceTexts(record, index).datetimeDiff}
-                        </span>
-                      )}
-                    </div>
-                  </td>
-                  <td className="detail-logs-td">{record.note || "-"}</td>
-                </tr>
+                <RecordToShowTr
+                  key={index}
+                  record={record}
+                  index={index}
+                  showDiffs={showDiffs}
+                  matchedShift={matchedShift}
+                />
               ))}
             </tbody>
           </table>
@@ -316,53 +225,10 @@ const Detail = () => {
           <div>
             <h3>修正申請中のタイムレコーダー履歴</h3>
             <table border={1}>
-              <thead>
-                <tr>
-                  <th className="detail-logs-th">登録種別</th>
-                  <th className="detail-logs-th">担当</th>
-                  <th className="detail-logs-th">時刻</th>
-                  <th className="detail-logs-th">メモ</th>
-                </tr>
-              </thead>
+              <RecordsThead />
               <tbody>
                 {correctionRequestedRecords.map((record, index) => (
-                  <tr key={index}>
-                    <td className="detail-logs-td">
-                      {getLabel(record, "type")}
-                    </td>
-                    <td
-                      className={
-                        record.role.label
-                          ? "detail-logs-td modified-record-td"
-                          : "detail-logs-td"
-                      }
-                    >
-                      {record.type !== "clock_out" &&
-                      record.type !== "break_begin" ? (
-                        <span>{getLabel(record, "role")}</span>
-                      ) : (
-                        "-"
-                      )}
-                    </td>
-                    <td
-                      className={
-                        record.datetime.label
-                          ? "detail-logs-td modified-record-td"
-                          : "detail-logs-td"
-                      }
-                    >
-                      {formatTime(record.datetime.value)}
-                    </td>
-                    <td
-                      className={
-                        record.note.label
-                          ? "detail-logs-td modified-record-td"
-                          : "detail-logs-td"
-                      }
-                    >
-                      {record.note.value || "-"}
-                    </td>
-                  </tr>
+                  <CorrectionRequestedRecordTr record={record} index={index} />
                 ))}
               </tbody>
             </table>
