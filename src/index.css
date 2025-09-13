@@ -115,6 +115,10 @@ th {
     align-items: baseline;
   }
 
+  .text-center {
+    text-align: center;
+  }
+
   .gap-small {
     gap: 0.5rem;
   }
@@ -467,4 +471,8 @@ th {
     cursor: pointer;
     border: none;
     padding: 7px;
+}
+
+.message-on-request {
+  color: #6589dc;
 }

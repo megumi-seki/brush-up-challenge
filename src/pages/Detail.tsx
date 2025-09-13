@@ -4,6 +4,7 @@ import type {
   CorrectionRequestType,
   CorrectionTimeRecordType,
   Employee,
+  MessageOnRequestType,
   TimeRecorderType,
 } from "../types";
 import ClockLogTableTitle from "../components/ClockLogTableTitle";
@@ -59,7 +60,7 @@ const Detail = () => {
       const selectedEmployee = employees.find((emp) => emp.id === empId);
       setEmployee(selectedEmployee || null);
     }
-  }, [empId]);
+  }, []);
 
   const [showRoleWithColor, setShowRoleWithColor] = useState(false);
   const [showDiffs, setShowDiffs] = useState(false);
@@ -68,6 +69,8 @@ const Detail = () => {
   const [correctionRequestedRecords, setCorrectionRequestedRecords] = useState<
     CorrectionTimeRecordType[] | null
   >(null);
+  const [messageOnRequest, setMessageOnRequest] =
+    useState<MessageOnRequestType | null>(null);
 
   useEffect(() => {
     const recordsOfSelectedDate = getRecordsByDate({
@@ -108,6 +111,20 @@ const Detail = () => {
       );
     } else {
       setDifferenceExceptionMessage(null);
+    }
+
+    const storedMessagesOnRequests = localStorage.getItem(
+      "messages_on_requests"
+    );
+    if (storedMessagesOnRequests) {
+      const parsedMessages: MessageOnRequestType[] = JSON.parse(
+        storedMessagesOnRequests
+      );
+      const messageForRecordsToShow = parsedMessages.find(
+        (message) =>
+          message.emp_id === empId && message.dateString === selectedDateString
+      );
+      if (messageForRecordsToShow) setMessageOnRequest(messageForRecordsToShow);
     }
   }, [recordsToShow]);
 
@@ -286,6 +303,9 @@ const Detail = () => {
             showDiffs={showDiffs}
             withName={false}
           />
+          {messageOnRequest && (
+            <p className="message-on-request text-center">{`${messageOnRequest.message} 店長からのコメント：${messageOnRequest.comment}`}</p>
+          )}
         </div>
         {correctionRequestedRecords && (
           <div>

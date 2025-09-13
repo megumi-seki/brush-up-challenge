@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import formatDate from "../hooks/formatDate";
 import formatTime from "../hooks/formatTime";
 import getEmpNameById from "../hooks/getEmpNameById";
@@ -75,22 +75,29 @@ const CorrectionCheckTable = ({
     );
     setStoredCorrectionRequests(filteredRequests);
 
-    // 修正申請処理に関するメッセージを追加
+    // 修正申請処理に関するメッセージを更新
     const storedMessagesOnRequests = localStorage.getItem(
       "messages_on_requests"
     );
     const parsedMessagesOnRequests: MessageOnRequestType[] =
       storedMessagesOnRequests ? JSON.parse(storedMessagesOnRequests) : [];
+    const filteredMessages = parsedMessagesOnRequests.filter(
+      (message) =>
+        !(
+          message.emp_id === request.emp_id &&
+          message.dateString === request.dateString
+        )
+    );
     const message = approveSelected
-      ? "変更申請が承認されました。"
-      : "変更申請が拒否されました。";
+      ? "タイムレコーダー修正申請が承認されました。"
+      : "タイムレコーダー修正申請が拒否されました。";
     const newMessage: MessageOnRequestType = {
       emp_id: request.emp_id,
       dateString: request.dateString,
       message: message,
       comment: comment,
     };
-    const updatedMessagesOnRequests = [...parsedMessagesOnRequests, newMessage];
+    const updatedMessagesOnRequests = [...filteredMessages, newMessage];
     localStorage.setItem(
       "messages_on_requests",
       JSON.stringify(updatedMessagesOnRequests)
