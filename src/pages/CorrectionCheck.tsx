@@ -9,8 +9,6 @@ import CorrectionCheckTable from "../components/CorrectionCheckTable";
 //       拒否の場合は、変更申請中の記録を削除し、個人ページにその旨を書いておく
 // 　　　 承認の場合は、元の記録を変更申請後のものに置き換える。（担当が変更された場合は休憩開始、退勤なども同時に変更する）
 
-// NEXT: submit button onclickで送信時の挙動を操作する
-
 const CorrectionCheck = () => {
   const [storedCorrectionRequests, setStoredCorrectionRequests] = useState<
     CorrectionRequestType[]

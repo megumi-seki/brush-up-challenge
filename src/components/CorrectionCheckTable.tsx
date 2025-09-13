@@ -35,13 +35,13 @@ const CorrectionCheckTable = ({
       const storedRecords = localStorage.getItem("time_records");
       if (!storedRecords) return;
       const parsedRecords: TimeRecorderType[] = JSON.parse(storedRecords);
-      const filteredRecords = parsedRecords.filter(
-        (record) =>
-          !(
-            record.emp_id === request.emp_id &&
-            record.datetime === request.dateString
-          )
-      );
+      const filteredRecords = parsedRecords.filter((record) => {
+        const recordDateString = record.datetime.split("T")[0];
+        return !(
+          record.emp_id === request.emp_id &&
+          recordDateString === request.dateString
+        );
+      });
       const requestedRecords: TimeRecorderType[] = request.records.map(
         (record) => ({
           emp_id: record.emp_id,
