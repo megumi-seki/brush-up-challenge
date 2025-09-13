@@ -49,3 +49,10 @@ export type CorrectionRequestType = {
     dateString: string;
     records: CorrectionTimeRecordType[];
   };
+
+export type MessageOnRequestType = {
+    emp_id: string;
+    dateString: string;
+    message: string;
+    comment: string;
+}

@@ -47,6 +47,7 @@ const CorrectionCheck = () => {
             key={`${request.emp_id}-${request.dateString}`}
             tabelId={`${request.emp_id}-${request.dateString}`}
             request={request}
+            setStoredCorrectionRequests={setStoredCorrectionRequests}
           />
         ))
       )}

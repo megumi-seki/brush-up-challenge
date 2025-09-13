@@ -1,20 +1,101 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import formatDate from "../hooks/formatDate";
 import formatTime from "../hooks/formatTime";
 import getEmpNameById from "../hooks/getEmpNameById";
 import getLabel from "../hooks/getLabel";
-import type { CorrectionRequestType } from "../types";
+import type {
+  CorrectionRequestType,
+  MessageOnRequestType,
+  TimeRecorderType,
+} from "../types";
 
 type CorrectionCheckTableProps = {
   tabelId: string;
   request: CorrectionRequestType;
+  setStoredCorrectionRequests: React.Dispatch<
+    React.SetStateAction<CorrectionRequestType[]>
+  >;
 };
 
 const CorrectionCheckTable = ({
   tabelId,
   request,
+  setStoredCorrectionRequests,
 }: CorrectionCheckTableProps) => {
   const [approveSelected, setApproveSelected] = useState(true);
+  const [comment, setComment] = useState("");
+
+  const handleOnChangeComment = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setComment(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    // 承認された場合のみタイムレコーダー履歴を更新
+    if (approveSelected) {
+      const storedRecords = localStorage.getItem("time_records");
+      if (!storedRecords) return;
+      const parsedRecords: TimeRecorderType[] = JSON.parse(storedRecords);
+      const filteredRecords = parsedRecords.filter(
+        (record) =>
+          !(
+            record.emp_id === request.emp_id &&
+            record.datetime === request.dateString
+          )
+      );
+      const requestedRecords: TimeRecorderType[] = request.records.map(
+        (record) => ({
+          emp_id: record.emp_id,
+          datetime: record.datetime.value,
+          role: record.role.value,
+          type: record.type,
+          note: record.note.value,
+        })
+      );
+      const updatedRecords = [...filteredRecords, ...requestedRecords];
+      localStorage.setItem("time_records", JSON.stringify(updatedRecords));
+    }
+
+    // 変更申請を削除
+    const storedCorrectionRequests = localStorage.getItem(
+      "time_records_correction_requests"
+    );
+    if (!storedCorrectionRequests) return;
+    const parsedRequests: CorrectionRequestType[] = JSON.parse(
+      storedCorrectionRequests
+    );
+    const filteredRequests = parsedRequests.filter(
+      (req) =>
+        !(
+          req.emp_id === request.emp_id && req.dateString === request.dateString
+        )
+    );
+    localStorage.setItem(
+      "time_records_correction_requests",
+      JSON.stringify(filteredRequests)
+    );
+    setStoredCorrectionRequests(filteredRequests);
+
+    // 修正申請処理に関するメッセージを追加
+    const storedMessagesOnRequests = localStorage.getItem(
+      "messages_on_requests"
+    );
+    const parsedMessagesOnRequests: MessageOnRequestType[] =
+      storedMessagesOnRequests ? JSON.parse(storedMessagesOnRequests) : [];
+    const message = approveSelected
+      ? "変更申請が承認されました。"
+      : "変更申請が拒否されました。";
+    const newMessage: MessageOnRequestType = {
+      emp_id: request.emp_id,
+      dateString: request.dateString,
+      message: message,
+      comment: comment,
+    };
+    const updatedMessagesOnRequests = [...parsedMessagesOnRequests, newMessage];
+    localStorage.setItem(
+      "messages_on_requests",
+      JSON.stringify(updatedMessagesOnRequests)
+    );
+  };
 
   return (
     <div key={tabelId}>
@@ -109,9 +190,13 @@ const CorrectionCheckTable = ({
               type="text"
               className="approve-or-deny-comment"
               placeholder="コメント/拒否理由"
+              onChange={handleOnChangeComment}
+              value={comment}
             />
           </div>
-          <button className="approve-or-deny-submit-btn">送信</button>
+          <button className="approve-or-deny-submit-btn" onClick={handleSubmit}>
+            送信
+          </button>
         </div>
       </div>
     </div>
