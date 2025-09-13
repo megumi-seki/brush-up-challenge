@@ -5,8 +5,8 @@ import ButtonToClockLogs from "../components/ButtonToClockLogs";
 import CorrectionCheckTable from "../components/CorrectionCheckTable";
 
 // TODO: 変更申請承認、拒否ボタン付ける（優先度高） ✓
-//       承認したらつじつまが合わなくなる場合、お知らせをだす
-//       拒否の場合は、変更申請中の記録を削除し、個人ページにその旨を書いておく
+//       承認したらつじつまが合わなくなる場合、お知らせをだす (優先度低)
+//       拒否の場合は、変更申請中の記録を削除し、個人ページにその旨を書いておく　✓
 // 　　　 承認の場合は、元の記録を変更申請後のものに置き換える。（担当が変更された場合は休憩開始、退勤なども同時に変更する）
 
 const CorrectionCheck = () => {

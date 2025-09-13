@@ -303,7 +303,7 @@ const Detail = () => {
             showDiffs={showDiffs}
             withName={false}
           />
-          {messageOnRequest && (
+          {!correctionRequestedRecords && messageOnRequest && (
             <p className="message-on-request text-center">{`${messageOnRequest.message} 店長からのコメント：${messageOnRequest.comment}`}</p>
           )}
         </div>
