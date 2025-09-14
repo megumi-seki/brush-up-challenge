@@ -257,6 +257,7 @@ const Correction = () => {
                         onChange={(e) =>
                           handleCorrection(index, "modifyType", e.target.value)
                         }
+                        disabled={record.deleted}
                       >
                         {DEFAULT_TYPE_OPTIONS.map((type) => (
                           <option value={type.value} key={type.value}>
@@ -284,6 +285,7 @@ const Correction = () => {
                               e.target.value
                             )
                           }
+                          disabled={record.deleted}
                         >
                           {employeee?.roles.map((role) => (
                             <option value={role} key={role}>
@@ -313,6 +315,7 @@ const Correction = () => {
                         onChange={(e) =>
                           handleCorrection(index, "modifyTime", e.target.value)
                         }
+                        disabled={record.deleted}
                       />
                     </div>
                   </td>
@@ -329,6 +332,7 @@ const Correction = () => {
                         onChange={(e) =>
                           handleCorrection(index, "modifyNote", e.target.value)
                         }
+                        disabled={record.deleted}
                       />
                     </div>
                   </td>
@@ -348,7 +352,9 @@ const Correction = () => {
               ))}
             </tbody>
           </table>
-          <button onClick={handleAddRecordButton}>+打刻を追加</button>
+          <button onClick={handleAddRecordButton} className="add-record-btn">
+            + 打刻を追加
+          </button>
         </div>
       </div>
       <button className="btn submit-btn" type="submit" onClick={handleSubmit}>

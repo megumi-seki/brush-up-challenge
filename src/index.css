@@ -188,6 +188,18 @@ th {
      border-bottom: 1.3px solid #dbc5b5;
   }
 
+  .add-record-btn {
+    background-color: white;
+    border: 1.5px solid black;
+    color: black;
+    font-weight: bold;
+    border-radius: 5px;
+    width: 100%;
+    margin: auto;
+    padding: 5px 0px;
+    cursor: pointer;
+  }
+
   .note-input {
     padding: 8px;
     border: 1px solid #ccc;
