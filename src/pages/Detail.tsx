@@ -27,17 +27,10 @@ import RecordsThead from "../components/RecordsThead";
 // 別ブランチ  TODO: clocklogspage　表示順のソート（優先度低）
 
 // 別ブランチ　TODO: getMatchedShiftとgetGroupedMatchedShiftを整理する（優先度低）
-// TODO: getLabel切り離して改善する（優先度低） ✓
 
 // TODO: 休憩や担当切替の回数や扱いの制限どこまでにしてるか確認する（優先度中）
 
 // TODO: 承認したらつじつまが合わなくなる場合、お知らせをだす (優先度低)
-
-// TODO & NEXT: datetimeを日本時間に変換する　（優先度高） ✓
-// const utcDate = new Date("2025-09-07T23:00:00.000Z");
-// // 日本時間に変換して文字列化
-// const jstString = utcDate.toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
-// console.log(jstString); // 2025/9/8 8:00:00
 
 const Detail = () => {
   const { empId, dateStringParam } = useParams();
