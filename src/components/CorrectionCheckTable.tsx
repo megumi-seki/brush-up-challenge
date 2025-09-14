@@ -9,6 +9,7 @@ import type {
 } from "../types";
 import getTypeLabel from "../hooks/getTypeLabel";
 import getRoleLabel from "../hooks/getRoleLabel";
+import RecordsThead from "./RecordsThead";
 
 type CorrectionCheckTableProps = {
   tabelId: string;
@@ -43,25 +44,34 @@ const CorrectionCheckTable = ({
           recordDateString === request.dateString
         );
       });
-      const rowRequestedRecords: TimeRecorderType[] = request.records.map(
-        (record) => ({
-          emp_id: record.emp_id,
-          datetime: record.datetime.value,
-          role: record.role.value,
-          type: record.type,
-          note: record.note.value,
-        })
+
+      const filteredRequestedRecords = request.records.filter(
+        (record) => !record.deleted
       );
 
-      const requestedRecords = rowRequestedRecords.map((record, index) => {
-        if (record.type === "break_begin" || record.type === "clock_out") {
-          return {
-            ...record,
-            role: rowRequestedRecords[index - 1].role,
-          };
-        } else return record;
-      });
-      const updatedRecords = [...filteredRecords, ...requestedRecords];
+      const rowRequestedRecords = filteredRequestedRecords.map((record) => ({
+        emp_id: record.emp_id,
+        datetime: record.datetime.value,
+        role: record.role.value,
+        type: record.type,
+        note: record.note.value,
+      }));
+
+      const adjustedRequestedRecords = rowRequestedRecords.map(
+        (record, index) => {
+          if (
+            index !== 0 &&
+            (record.type === "break_begin" || record.type === "clock_out")
+          ) {
+            return {
+              ...record,
+              role: rowRequestedRecords[index - 1].role,
+            };
+          } else return record;
+        }
+      );
+
+      const updatedRecords = [...filteredRecords, ...adjustedRequestedRecords];
       localStorage.setItem("time_records", JSON.stringify(updatedRecords));
     }
 
@@ -125,19 +135,18 @@ const CorrectionCheckTable = ({
       </div>
       <div className="correction-check-table-container">
         <table border={1}>
-          <thead>
-            <tr>
-              <th className="detail-logs-th">登録種別</th>
-              <th className="detail-logs-th">担当</th>
-              <th className="detail-logs-th">時刻</th>
-              <th className="detail-logs-th">メモ</th>
-            </tr>
-          </thead>
+          <RecordsThead withDelete={true} />
           <tbody>
             {request.records.map((record, index) => (
-              <tr key={index}>
+              <tr key={index} className={record.deleted ? "deleted-tr" : ""}>
                 <td>{getTypeLabel(record)}</td>
-                <td className={record.role.label ? "modified-record-td" : ""}>
+                <td
+                  className={
+                    !record.deleted && record.role.label
+                      ? "modified-record-td"
+                      : ""
+                  }
+                >
                   {record.type !== "clock_out" &&
                   record.type !== "break_begin" ? (
                     <span>{record.role.label ?? getRoleLabel(record)}</span>
@@ -146,12 +155,35 @@ const CorrectionCheckTable = ({
                   )}
                 </td>
                 <td
-                  className={record.datetime.label ? "modified-record-td" : ""}
+                  className={
+                    !record.deleted && record.datetime.label
+                      ? "modified-record-td"
+                      : ""
+                  }
                 >
                   {record.datetime.label ?? formatTime(record.datetime.value)}
                 </td>
-                <td className={record.note.label ? "modified-record-td" : ""}>
+                <td
+                  className={
+                    !record.deleted && record.note.label
+                      ? "modified-record-td"
+                      : ""
+                  }
+                >
                   {record.note.label ?? (record.note.value || "-")}
+                </td>
+                <td>
+                  <div>
+                    <label htmlFor="delete-record-checkbox" className="hidden">
+                      打刻を削除
+                    </label>
+                    <input
+                      id="delete-record-checkbox"
+                      disabled={true}
+                      type="checkbox"
+                      checked={record.deleted}
+                    />
+                  </div>
                 </td>
               </tr>
             ))}

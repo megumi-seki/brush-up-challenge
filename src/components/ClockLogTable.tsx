@@ -38,6 +38,9 @@ const ClockLogTable = ({
       key: "break_duration_millis",
       selectedDateString: selectedDateString,
     });
+  const sortedGropuedRecords = groupedRecords.sort(
+    (a, b) => Number(a.emp_id) - Number(b.emp_id)
+  );
 
   return (
     <table border={1}>
@@ -55,7 +58,7 @@ const ClockLogTable = ({
         </tr>
       </thead>
       <tbody>
-        {groupedRecords.map((record) => (
+        {sortedGropuedRecords.map((record) => (
           <tr key={record.emp_id}>
             {withName && (
               <td

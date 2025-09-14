@@ -13,11 +13,11 @@ const CorrectionRequestedRecordTr = ({
   index,
 }: CorrectionRequestedRecordTrProps) => {
   return (
-    <tr key={index}>
+    <tr key={index} className={record.deleted ? "deleted-tr" : ""}>
       <td className="detail-logs-td">{getTypeLabel(record)}</td>
       <td
         className={
-          record.role.label
+          !record.deleted && record.role.label
             ? "detail-logs-td modified-record-td"
             : "detail-logs-td"
         }
@@ -30,7 +30,7 @@ const CorrectionRequestedRecordTr = ({
       </td>
       <td
         className={
-          record.datetime.label
+          !record.deleted && record.datetime.label
             ? "detail-logs-td modified-record-td"
             : "detail-logs-td"
         }
@@ -39,12 +39,25 @@ const CorrectionRequestedRecordTr = ({
       </td>
       <td
         className={
-          record.note.label
+          !record.deleted && record.note.label
             ? "detail-logs-td modified-record-td"
             : "detail-logs-td"
         }
       >
         {record.note.value || "-"}
+      </td>
+      <td>
+        <div>
+          <label htmlFor="delete-record-checkbox" className="hidden">
+            打刻を削除
+          </label>
+          <input
+            id="delete-record-checkbox"
+            disabled={true}
+            type="checkbox"
+            checked={record.deleted}
+          />
+        </div>
       </td>
     </tr>
   );

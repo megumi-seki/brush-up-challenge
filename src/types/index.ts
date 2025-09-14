@@ -38,6 +38,8 @@ export type GroupedTimeRecorderType = {
 
 export type CorrectionTimeRecordType = {
   emp_id: string;
+  deleted: boolean;
+  added: boolean;
   datetime: {value: string, label: string | null};
   role: {value: string | null, label: string | null};
   type: string;

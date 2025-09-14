@@ -194,7 +194,7 @@ const Detail = () => {
             </div>
           )}
           <table border={1}>
-            <RecordsThead />
+            <RecordsThead withDelete={false} />
             <tbody>
               {recordsToShow.map((record, index) => (
                 <RecordToShowTr
@@ -224,7 +224,7 @@ const Detail = () => {
           <div>
             <h3>修正申請中のタイムレコーダー履歴</h3>
             <table border={1}>
-              <RecordsThead />
+              <RecordsThead withDelete={true} />
               <tbody>
                 {correctionRequestedRecords.map((record, index) => (
                   <CorrectionRequestedRecordTr record={record} index={index} />
