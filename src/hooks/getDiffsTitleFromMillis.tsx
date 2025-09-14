@@ -19,10 +19,10 @@ const getDiffsTitleFromMillis = ({
     selectedDateString: selectedDateString,
   });
   const shiftDurationMillis = matchedShift?.[key];
-  if (!shiftDurationMillis || !recordDurationMillis) return null;
+  if (!shiftDurationMillis || !recordDurationMillis) return undefined;
 
   const diffs = shiftDurationMillis - recordDurationMillis;
-  if (diffs === 0) return null;
+  if (diffs === 0) return undefined;
   else if (diffs < 0) {
     const millis = Math.abs(diffs);
     const formattedTime = formatTimeFromMillis(millis);
