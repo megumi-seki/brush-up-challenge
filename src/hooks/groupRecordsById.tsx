@@ -1,4 +1,6 @@
+import { toZonedTime } from "date-fns-tz";
 import type { GroupedTimeRecorderType, TimeRecorderType } from "../types";
+import { TIMEZONE } from "../constants/appConfig";
 
 const groupRecordsById = (
   records: TimeRecorderType[]
@@ -55,7 +57,7 @@ const groupRecordsById = (
 
   Object.values(groupedMap).forEach((group) => {
     const parse = (datetime: string | null) =>
-      datetime ? new Date(datetime) : null;
+      datetime ? toZonedTime(new Date(datetime), TIMEZONE) : null;
 
     const start = parse(group.clock_in.datetime);
     const end = parse(group.clock_out.datetime);

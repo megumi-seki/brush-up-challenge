@@ -5,15 +5,18 @@ import RadioGroup from "./RadioGroup";
 import getRecordsById from "../hooks/getRecordsById";
 import type { Employee, TimeRecorderType } from "../types";
 import getEmployeeById from "../hooks/getEmployeeById";
-import { NOW } from "../constants/appConfig";
+import { NOW, TIMEZONE } from "../constants/appConfig";
+import { toZonedTime } from "date-fns-tz";
 
 const isLastRecordToday = (empId: string) => {
   if (!empId) return null;
   const records = getRecordsById(empId);
   if (records.length === 0) return null;
-  const lastRecordDate = new Date(
-    records[records.length - 1].datetime
-  ).getDate();
+  const jstLastRecord = toZonedTime(
+    new Date(records[records.length - 1].datetime),
+    TIMEZONE
+  );
+  const lastRecordDate = jstLastRecord.getDate();
   return lastRecordDate === NOW.getDate();
 };
 
@@ -154,7 +157,7 @@ const TimeRecorderForm = ({
   // 分単位で時刻を更新
   useEffect(() => {
     const timer = setInterval(() => {
-      const current = new Date();
+      const current = NOW;
       if (current.getMinutes() !== prevMinuteRef.current) {
         setNow(current);
         prevMinuteRef.current = current.getMinutes();

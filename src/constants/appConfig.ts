@@ -1,11 +1,13 @@
 import toDatestring from "../hooks/toDatestring";
 import type { Employee, ShiftType, TimeRecorderType } from "../types";
+import { toZonedTime } from "date-fns-tz";
 
 export const GRAPH_START_HOUR = 7;
 export const GRAPH_END_HOUR = 24;
 export const GRAPH_TOTAL_MINUTES = (GRAPH_END_HOUR - GRAPH_START_HOUR) * 60; // 1020分 分単位でグラフ化
 
-export const NOW = new Date();
+export const TIMEZONE = "Asia/Tokyo";
+export const NOW = toZonedTime(new Date(), TIMEZONE)
 
 export const EMPLOYEE_DEMO_DATA: Employee[] = [
         { id: "001", name: "佐藤太郎", roles: ["oven"] },
@@ -51,8 +53,8 @@ export const EMPLOYEE_DEMO_DATA: Employee[] = [
 
       ];
 
-const yesterday = new Date().setDate(NOW.getDate() - 1);
-const formattedYesterday = toDatestring(new Date(yesterday))
+const yesterday = toZonedTime(new Date().setDate(NOW.getDate() - 1), TIMEZONE);
+const formattedYesterday = toDatestring(yesterday)
 export const TIME_RECORDER_DEMO_DATA: TimeRecorderType[] = [
 
         {

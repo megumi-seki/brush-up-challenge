@@ -13,6 +13,8 @@ import formatDate from "../hooks/formatDate";
 import { defaultRoleOptions } from "../components/TimeRecorderForm";
 import RecordToShowTr from "../components/RecordToShowTr";
 import RecordsThead from "../components/RecordsThead";
+import { toZonedTime } from "date-fns-tz";
+import { TIMEZONE } from "../constants/appConfig";
 
 const Correction = () => {
   const { empId, dateStringParam } = useParams();
@@ -75,11 +77,17 @@ const Correction = () => {
         };
         break;
       case "modifyTime":
-        const initTime = new Date(initCorrectedRecords[index].datetime.value);
+        const utcInitTime = new Date(
+          initCorrectedRecords[index].datetime.value
+        );
+        const initTime = toZonedTime(utcInitTime, TIMEZONE);
         const formattedInitTime = formatTime(initTime.toISOString());
 
         const [hours, minutes] = value.split(":");
-        const updatedDatetime = new Date(updatedRecords[index].datetime.value);
+        const utcUpdatedDatetime = new Date(
+          updatedRecords[index].datetime.value
+        );
+        const updatedDatetime = toZonedTime(utcUpdatedDatetime, TIMEZONE);
         updatedDatetime.setHours(Number(hours), Number(minutes));
         const updatedDatetimeString = updatedDatetime.toISOString();
         updatedRecords[index].datetime = {

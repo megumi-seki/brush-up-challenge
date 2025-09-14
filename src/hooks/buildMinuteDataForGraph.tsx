@@ -1,5 +1,6 @@
+import { toZonedTime } from "date-fns-tz";
 import { defaultRoleOptions } from "../components/TimeRecorderForm";
-import { GRAPH_TOTAL_MINUTES } from "../constants/appConfig";
+import { GRAPH_TOTAL_MINUTES, TIMEZONE } from "../constants/appConfig";
 import type { GroupedTimeRecorderType } from "../types";
 import getMinutes from "./getMinutes";
 
@@ -27,9 +28,11 @@ const buildMinuteDataForGraph = ({
     break_end,
     ...role_changes,
   ].filter((e) => e?.datetime);
-  const sortedRoleChanges = eventsWithDatetime.sort(
-    (a, b) => new Date(a.datetime!).getTime() - new Date(b.datetime!).getTime()
-  );
+  const sortedRoleChanges = eventsWithDatetime.sort((a, b) => {
+    const jstA = toZonedTime(new Date(a.datetime!), TIMEZONE);
+    const jstB = toZonedTime(new Date(b.datetime!), TIMEZONE);
+    return jstA.getTime() - jstB.getTime();
+  });
 
   const startMin = getMinutes(clock_in.datetime!); //isDataEnoughのチェックによりclockInDatetimeは必ずstring
   const endMin = getMinutes(clock_out.datetime!); //isDataEnoughのチェックによりclockOutDatetimeは必ずstring

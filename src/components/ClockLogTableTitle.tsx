@@ -1,4 +1,5 @@
-import { NOW } from "../constants/appConfig";
+import { toZonedTime } from "date-fns-tz";
+import { NOW, TIMEZONE } from "../constants/appConfig";
 import toDatestring from "../hooks/toDatestring";
 
 type ClockLogTableTitleProps = {
@@ -19,7 +20,7 @@ const ClockLogTableTitle = ({
   setShowDiffs,
 }: ClockLogTableTitleProps) => {
   const handleOnClick = (type: "previous" | "next") => {
-    const selectedDate = new Date(selectedDateString);
+    const selectedDate = toZonedTime(new Date(selectedDateString), TIMEZONE);
     if (type === "next") {
       selectedDate.setDate(selectedDate.getDate() + 1);
     } else {
