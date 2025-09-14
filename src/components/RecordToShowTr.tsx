@@ -1,7 +1,8 @@
 import formatTime from "../hooks/formatTime";
 import formatTimeFromMillis from "../hooks/formatTimeFromMillis";
-import getLabel from "../hooks/getLabel";
 import getMinutes from "../hooks/getMinutes";
+import getRoleLabel from "../hooks/getRoleLabel";
+import getTypeLabel from "../hooks/getTypeLabel";
 import type { TimeRecorderType } from "../types";
 
 type RecordToShowTrProps = {
@@ -33,16 +34,14 @@ const RecordToShowTr = ({
     if (!matchedShift || matchedShift.length === 0) return differenceTexts;
 
     if (record.type !== matchedShift[index].type) {
-      differenceTexts.typeDiff = ` (シフトでは${getLabel(
-        matchedShift[index],
-        "type"
+      differenceTexts.typeDiff = ` (シフトでは${getTypeLabel(
+        matchedShift[index]
       )})`;
     }
 
     if (record.role !== matchedShift[index].role)
-      differenceTexts.roleDiff = ` (シフトでは${getLabel(
-        matchedShift[index],
-        "role"
+      differenceTexts.roleDiff = ` (シフトでは${getRoleLabel(
+        matchedShift[index]
       )})`;
 
     const recordMinute = getMinutes(record.datetime);
@@ -64,7 +63,7 @@ const RecordToShowTr = ({
     <tr key={index}>
       <td className="detail-logs-td">
         <div>
-          <span>{getLabel(record, "type")}</span>
+          <span>{getTypeLabel(record)}</span>
           {showDiffs && (
             <span className="differenceText">
               {getDifferenceTexts(record, index).typeDiff}
@@ -75,7 +74,7 @@ const RecordToShowTr = ({
       <td className="detail-logs-td">
         {record.type !== "clock_out" && record.type !== "break_begin" ? (
           <div>
-            <span>{getLabel(record, "role")}</span>
+            <span>{getRoleLabel(record)}</span>
             {showDiffs && (
               <span className="differenceText">
                 {getDifferenceTexts(record, index).roleDiff}

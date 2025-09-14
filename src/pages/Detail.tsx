@@ -27,7 +27,7 @@ import RecordsThead from "../components/RecordsThead";
 // 別ブランチ  TODO: clocklogspage　表示順のソート（優先度低）
 
 // 別ブランチ　TODO: getMatchedShiftとgetGroupedMatchedShiftを整理する（優先度低）
-// TODO: getLabel切り離して改善する（優先度低）
+// TODO: getLabel切り離して改善する（優先度低） ✓
 
 // TODO: 休憩や担当切替の回数や扱いの制限どこまでにしてるか確認する（優先度中）
 

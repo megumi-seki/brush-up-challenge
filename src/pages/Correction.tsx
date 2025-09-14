@@ -7,13 +7,14 @@ import type {
 } from "../types";
 import getRolesText from "../hooks/getRolesText";
 import getRecordsByDate from "../hooks/getRecordsByDate";
-import getLabel from "../hooks/getLabel";
 import formatTime from "../hooks/formatTime";
 import formatDate from "../hooks/formatDate";
 import RecordToShowTr from "../components/RecordToShowTr";
 import RecordsThead from "../components/RecordsThead";
 import { toZonedTime } from "date-fns-tz";
 import { DEFAULT_ROLE_OPTIONS, TIMEZONE } from "../constants/appConfig";
+import getRoleLabel from "../hooks/getRoleLabel";
+import getTypeLabel from "../hooks/getTypeLabel";
 
 const Correction = () => {
   const { empId, dateStringParam } = useParams();
@@ -72,7 +73,7 @@ const Correction = () => {
 
         updatedRecords[index].role = {
           value,
-          label: `${getLabel(initRole!, "role")} -> ${getLabel(value, "role")}`,
+          label: `${getRoleLabel(initRole!)} -> ${getRoleLabel(value)}`,
         };
         break;
       case "modifyTime":
@@ -182,7 +183,7 @@ const Correction = () => {
               {correctedRecords.map((record, index) => (
                 <tr key={index}>
                   <td className="detail-logs-td">
-                    <span>{getLabel(record, "type")}</span>
+                    <span>{getTypeLabel(record)}</span>
                   </td>
                   <td className="detail-logs-td">
                     {record.type !== "clock_out" &&

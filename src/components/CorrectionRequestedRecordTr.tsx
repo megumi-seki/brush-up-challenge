@@ -1,5 +1,6 @@
 import formatTime from "../hooks/formatTime";
-import getLabel from "../hooks/getLabel";
+import getRoleLabel from "../hooks/getRoleLabel";
+import getTypeLabel from "../hooks/getTypeLabel";
 import type { CorrectionTimeRecordType } from "../types";
 
 type CorrectionRequestedRecordTrProps = {
@@ -13,7 +14,7 @@ const CorrectionRequestedRecordTr = ({
 }: CorrectionRequestedRecordTrProps) => {
   return (
     <tr key={index}>
-      <td className="detail-logs-td">{getLabel(record, "type")}</td>
+      <td className="detail-logs-td">{getTypeLabel(record)}</td>
       <td
         className={
           record.role.label
@@ -22,7 +23,7 @@ const CorrectionRequestedRecordTr = ({
         }
       >
         {record.type !== "clock_out" && record.type !== "break_begin" ? (
-          <span>{getLabel(record, "role")}</span>
+          <span>{getRoleLabel(record)}</span>
         ) : (
           "-"
         )}

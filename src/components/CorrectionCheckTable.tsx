@@ -2,12 +2,13 @@ import { useState } from "react";
 import formatDate from "../hooks/formatDate";
 import formatTime from "../hooks/formatTime";
 import getEmpNameById from "../hooks/getEmpNameById";
-import getLabel from "../hooks/getLabel";
 import type {
   CorrectionRequestType,
   MessageOnRequestType,
   TimeRecorderType,
 } from "../types";
+import getTypeLabel from "../hooks/getTypeLabel";
+import getRoleLabel from "../hooks/getRoleLabel";
 
 type CorrectionCheckTableProps = {
   tabelId: string;
@@ -135,14 +136,11 @@ const CorrectionCheckTable = ({
           <tbody>
             {request.records.map((record, index) => (
               <tr key={index}>
-                <td>{getLabel(record, "type")}</td>
+                <td>{getTypeLabel(record)}</td>
                 <td className={record.role.label ? "modified-record-td" : ""}>
                   {record.type !== "clock_out" &&
                   record.type !== "break_begin" ? (
-                    <span>
-                      {record.role.label ??
-                        getLabel(record.role.value!, "role")}
-                    </span>
+                    <span>{record.role.label ?? getRoleLabel(record)}</span>
                   ) : (
                     "-"
                   )}
