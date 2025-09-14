@@ -33,7 +33,7 @@ import RecordsThead from "../components/RecordsThead";
 
 // TODO: 承認したらつじつまが合わなくなる場合、お知らせをだす (優先度低)
 
-// TODO: datetimeを日本時間に変換する　（優先度高）
+// TODO & NEXT: datetimeを日本時間に変換する　（優先度高）
 // const utcDate = new Date("2025-09-07T23:00:00.000Z");
 // // 日本時間に変換して文字列化
 // const jstString = utcDate.toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
