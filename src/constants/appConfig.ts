@@ -7,7 +7,6 @@ export const GRAPH_END_HOUR = 24;
 export const GRAPH_TOTAL_MINUTES = (GRAPH_END_HOUR - GRAPH_START_HOUR) * 60; // 1020分 分単位でグラフ化
 
 export const TIMEZONE = "Asia/Tokyo";
-export const NOW = toZonedTime(new Date(), TIMEZONE)
 
 export const DEFAULT_TYPE_OPTIONS = [
   { value: "clock_in", label: "出勤" },
@@ -71,7 +70,8 @@ export const EMPLOYEE_DEMO_DATA: Employee[] = [
 
       ];
 
-const yesterday = toZonedTime(new Date().setDate(NOW.getDate() - 1), TIMEZONE);
+const yesterday = toZonedTime(new Date().setDate(toZonedTime(new Date(), TIMEZONE)
+.getDate() - 1), TIMEZONE);
 const formattedYesterday = toDatestring(yesterday)
 export const TIME_RECORDER_DEMO_DATA: TimeRecorderType[] = [
 

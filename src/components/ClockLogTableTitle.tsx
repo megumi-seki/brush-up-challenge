@@ -1,5 +1,5 @@
 import { toZonedTime } from "date-fns-tz";
-import { NOW, TIMEZONE } from "../constants/appConfig";
+import { TIMEZONE } from "../constants/appConfig";
 import toDatestring from "../hooks/toDatestring";
 
 type ClockLogTableTitleProps = {
@@ -29,7 +29,8 @@ const ClockLogTableTitle = ({
     const newSelectedDateString = toDatestring(selectedDate);
     setSelectedDateString(newSelectedDateString);
   };
-  const isCurrentSelectedDateToday = selectedDateString === toDatestring(NOW);
+  const isCurrentSelectedDateToday =
+    selectedDateString === toDatestring(toZonedTime(new Date(), TIMEZONE));
 
   return (
     <div className="flex justify-between align-center">

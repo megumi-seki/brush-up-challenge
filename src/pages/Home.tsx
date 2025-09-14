@@ -4,7 +4,8 @@ import getRolesText from "../hooks/getRolesText";
 import ButtonToClockLogs from "../components/ButtonToClockLogs";
 import ButtonToCorrectionCheck from "../components/ButtonToCorrectionCheck";
 import toDatestring from "../hooks/toDatestring";
-import { NOW } from "../constants/appConfig";
+import { toZonedTime } from "date-fns-tz";
+import { TIMEZONE } from "../constants/appConfig";
 
 type HomeProps = {
   employees: Employee[];
@@ -41,7 +42,11 @@ const Home = ({ employees }: HomeProps) => {
                 className="with-hover"
                 key={emp.id}
                 onClick={() =>
-                  navigate(`/detail/${emp.id}/${toDatestring(NOW)}`)
+                  navigate(
+                    `/detail/${emp.id}/${toDatestring(
+                      toZonedTime(new Date(), TIMEZONE)
+                    )}`
+                  )
                 }
               >
                 <td className="home-td">{emp.id}</td>

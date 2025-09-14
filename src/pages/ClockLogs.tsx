@@ -7,13 +7,14 @@ import ButtonToHome from "../components/ButtonToHome";
 import getMatchedShift from "../hooks/getMatchedShift";
 import ButtonToCorrectionCheck from "../components/ButtonToCorrectionCheck";
 import toDatestring from "../hooks/toDatestring";
-import { NOW } from "../constants/appConfig";
+import { toZonedTime } from "date-fns-tz";
+import { TIMEZONE } from "../constants/appConfig";
 
 const ClockLogs = () => {
   const [showRoleWithColor, setShowRoleWithColor] = useState(false);
   const [showDiffs, setShowDiffs] = useState(false);
   const [selectedDateString, setSelectedDateString] = useState(
-    toDatestring(NOW)
+    toDatestring(toZonedTime(new Date(), TIMEZONE))
   );
   const recordsOfDate = getRecordsByDate({
     datetimeString: selectedDateString,

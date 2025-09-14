@@ -5,7 +5,7 @@ import RadioGroup from "./RadioGroup";
 import getRecordsById from "../hooks/getRecordsById";
 import type { Employee, TimeRecorderType } from "../types";
 import getEmployeeById from "../hooks/getEmployeeById";
-import { DEFAULT_ROLE_OPTIONS, NOW, TIMEZONE } from "../constants/appConfig";
+import { DEFAULT_ROLE_OPTIONS, TIMEZONE } from "../constants/appConfig";
 import { toZonedTime } from "date-fns-tz";
 import formatDateToJst from "../hooks/formatDateToJst";
 
@@ -33,7 +33,7 @@ const TimeRecorderForm = ({
     undefined
   );
   const [note, setNote] = useState<string | null>(null);
-  const [now, setNow] = useState(NOW);
+  const [now, setNow] = useState(toZonedTime(new Date(), TIMEZONE));
   const prevMinuteRef = useRef(now.getMinutes());
 
   const typeOptions = useMemo(
@@ -52,7 +52,7 @@ const TimeRecorderForm = ({
   // 分単位で時刻を更新
   useEffect(() => {
     const timer = setInterval(() => {
-      const current = NOW;
+      const current = toZonedTime(new Date(), TIMEZONE);
       if (current.getMinutes() !== prevMinuteRef.current) {
         setNow(current);
         prevMinuteRef.current = current.getMinutes();
@@ -167,7 +167,7 @@ const isLastRecordToday = (empId: string) => {
     TIMEZONE
   );
   const lastRecordDate = jstLastRecord.getDate();
-  return lastRecordDate === NOW.getDate();
+  return lastRecordDate === toZonedTime(new Date(), TIMEZONE).getDate();
 };
 
 const getLastType = (empId: string | undefined): string | null => {
