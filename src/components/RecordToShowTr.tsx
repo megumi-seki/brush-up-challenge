@@ -32,6 +32,7 @@ const RecordToShowTr = ({
     };
 
     if (!matchedShift || matchedShift.length === 0) return differenceTexts;
+    if (index > matchedShift.length - 1) return differenceTexts;
 
     if (record.type !== matchedShift[index].type) {
       differenceTexts.typeDiff = ` (シフトでは${getTypeLabel(
