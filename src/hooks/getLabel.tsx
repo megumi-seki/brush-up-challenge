@@ -1,7 +1,7 @@
 import {
-  defaultRoleOptions,
-  defaultTypeOptions,
-} from "../components/TimeRecorderForm";
+  DEFAULT_ROLE_OPTIONS,
+  DEFAULT_TYPE_OPTIONS,
+} from "../constants/appConfig";
 import type { CorrectionTimeRecordType, TimeRecorderType } from "../types";
 
 const getLabel = (
@@ -9,7 +9,7 @@ const getLabel = (
   recordType: "type" | "role"
 ) => {
   const defaultOptions =
-    recordType === "type" ? defaultTypeOptions : defaultRoleOptions;
+    recordType === "type" ? DEFAULT_TYPE_OPTIONS : DEFAULT_ROLE_OPTIONS;
 
   let value: string | null = null;
 

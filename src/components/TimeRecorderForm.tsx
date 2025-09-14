@@ -5,115 +5,9 @@ import RadioGroup from "./RadioGroup";
 import getRecordsById from "../hooks/getRecordsById";
 import type { Employee, TimeRecorderType } from "../types";
 import getEmployeeById from "../hooks/getEmployeeById";
-import { NOW, TIMEZONE } from "../constants/appConfig";
+import { DEFAULT_ROLE_OPTIONS, NOW, TIMEZONE } from "../constants/appConfig";
 import { toZonedTime } from "date-fns-tz";
 import formatDateToJst from "../hooks/formatDateToJst";
-
-const isLastRecordToday = (empId: string) => {
-  if (!empId) return null;
-  const records = getRecordsById(empId);
-  if (records.length === 0) return null;
-  const jstLastRecord = toZonedTime(
-    new Date(records[records.length - 1].datetime),
-    TIMEZONE
-  );
-  const lastRecordDate = jstLastRecord.getDate();
-  return lastRecordDate === NOW.getDate();
-};
-
-const getLastType = (empId: string | undefined): string | null => {
-  if (!empId) return null;
-  const records = getRecordsById(empId);
-  if (records.length === 0) return null;
-  return records[records.length - 1].type;
-};
-
-const getLastRole = (empId: string): string | null => {
-  const records = getRecordsById(empId);
-  if (records.length === 0) return null;
-  return records[records.length - 1].role;
-};
-
-export const defaultTypeOptions = [
-  { value: "clock_in", label: "出勤" },
-  { value: "clock_out", label: "退勤" },
-  { value: "break_begin", label: "休憩開始" },
-  { value: "break_end", label: "休憩終了" },
-  { value: "role_change", label: "担当切替" },
-];
-
-const getTypeOptions = (lastType: string | null) => {
-  switch (lastType) {
-    case "clock_in":
-    case "role_change":
-      return [
-        { value: "break_begin", label: "休憩開始" },
-        { value: "role_change", label: "担当切替" },
-        { value: "clock_out", label: "退勤" },
-      ];
-    case "break_begin":
-      return [{ value: "break_end", label: "休憩終了" }];
-    case "break_end":
-      return [
-        { value: "clock_out", label: "退勤" },
-        { value: "role_change", label: "担当切替" },
-      ];
-    case "clock_out":
-    default:
-      return [{ value: "clock_in", label: "出勤" }];
-  }
-};
-
-const getTypeOptionsWithoutRoleChange = (lastType: string | null) => {
-  switch (lastType) {
-    case "clock_in":
-    case "role_change":
-      return [
-        { value: "break_begin", label: "休憩開始" },
-        { value: "clock_out", label: "退勤" },
-      ];
-    case "break_begin":
-      return [{ value: "break_end", label: "休憩終了" }];
-    case "break_end":
-      return [{ value: "clock_out", label: "退勤" }];
-    case "clock_out":
-    default:
-      return [{ value: "clock_in", label: "出勤" }];
-  }
-};
-
-const typeTexts: Record<string, string> = {
-  clock_in: "として業務を開始する",
-  role_change: "に業務を切り替える",
-  break_begin: "",
-  break_end: "として業務を再開する",
-  clock_out: "",
-};
-
-export const defaultRoleOptions = [
-  { value: "oven", label: "釜" },
-  { value: "dough", label: "仕込み" },
-  { value: "wrapping", label: "品ド" },
-  { value: "cafe", label: "カフェ" },
-  { value: "shaping", label: "麺台" },
-  { value: "sandwich", label: "サンド" },
-  { value: "sales", label: "販売" },
-];
-
-const getRoleOptions = (employee: Employee, selectedType: string) => {
-  if (selectedType === "break_begin" || selectedType === "clock_out") return [];
-  if (!employee) return [];
-  if (employee.roles.length === 1) return [];
-  return selectedType === "break_end" || selectedType === "clock_in"
-    ? defaultRoleOptions.filter((option) =>
-        employee.roles.includes(option.value)
-      )
-    : defaultRoleOptions.filter(
-        (option) =>
-          employee.roles.includes(option.value) &&
-          getLastRole(employee.id) !== option.value
-      );
-};
 
 type TimeRecorderFormProps = {
   empId: string;
@@ -238,7 +132,7 @@ const TimeRecorderForm = ({
             options={roleOptions}
             selectedValue={selectedRole}
             onChange={setSelectedRole}
-            text={typeTexts[selectedType]}
+            text={getTypeTexts[selectedType]}
           />
         </>
       )}
@@ -263,3 +157,91 @@ const TimeRecorderForm = ({
 };
 
 export default TimeRecorderForm;
+
+const isLastRecordToday = (empId: string) => {
+  if (!empId) return null;
+  const records = getRecordsById(empId);
+  if (records.length === 0) return null;
+  const jstLastRecord = toZonedTime(
+    new Date(records[records.length - 1].datetime),
+    TIMEZONE
+  );
+  const lastRecordDate = jstLastRecord.getDate();
+  return lastRecordDate === NOW.getDate();
+};
+
+const getLastType = (empId: string | undefined): string | null => {
+  if (!empId) return null;
+  const records = getRecordsById(empId);
+  if (records.length === 0) return null;
+  return records[records.length - 1].type;
+};
+
+const getLastRole = (empId: string): string | null => {
+  const records = getRecordsById(empId);
+  if (records.length === 0) return null;
+  return records[records.length - 1].role;
+};
+
+const getTypeOptions = (lastType: string | null) => {
+  switch (lastType) {
+    case "clock_in":
+    case "role_change":
+      return [
+        { value: "break_begin", label: "休憩開始" },
+        { value: "role_change", label: "担当切替" },
+        { value: "clock_out", label: "退勤" },
+      ];
+    case "break_begin":
+      return [{ value: "break_end", label: "休憩終了" }];
+    case "break_end":
+      return [
+        { value: "clock_out", label: "退勤" },
+        { value: "role_change", label: "担当切替" },
+      ];
+    case "clock_out":
+    default:
+      return [{ value: "clock_in", label: "出勤" }];
+  }
+};
+
+const getTypeOptionsWithoutRoleChange = (lastType: string | null) => {
+  switch (lastType) {
+    case "clock_in":
+    case "role_change":
+      return [
+        { value: "break_begin", label: "休憩開始" },
+        { value: "clock_out", label: "退勤" },
+      ];
+    case "break_begin":
+      return [{ value: "break_end", label: "休憩終了" }];
+    case "break_end":
+      return [{ value: "clock_out", label: "退勤" }];
+    case "clock_out":
+    default:
+      return [{ value: "clock_in", label: "出勤" }];
+  }
+};
+
+const getTypeTexts: Record<string, string> = {
+  clock_in: "として業務を開始する",
+  role_change: "に業務を切り替える",
+  break_begin: "",
+  break_end: "として業務を再開する",
+  clock_out: "",
+};
+
+const getRoleOptions = (employee: Employee, selectedType: string) => {
+  if (selectedType === "break_begin" || selectedType === "clock_out") return [];
+  if (!employee) return [];
+  if (employee.roles.length === 1) return [];
+  return selectedType === "break_end" || selectedType === "clock_in"
+    ? DEFAULT_ROLE_OPTIONS.filter((option) =>
+        employee.roles.includes(option.value)
+      )
+    : DEFAULT_ROLE_OPTIONS.filter(
+        (option) =>
+          employee.roles.includes(option.value) &&
+          getLastRole(employee.id) !== option.value
+      );
+};

@@ -9,6 +9,24 @@ export const GRAPH_TOTAL_MINUTES = (GRAPH_END_HOUR - GRAPH_START_HOUR) * 60; // 
 export const TIMEZONE = "Asia/Tokyo";
 export const NOW = toZonedTime(new Date(), TIMEZONE)
 
+export const DEFAULT_TYPE_OPTIONS = [
+  { value: "clock_in", label: "出勤" },
+  { value: "clock_out", label: "退勤" },
+  { value: "break_begin", label: "休憩開始" },
+  { value: "break_end", label: "休憩終了" },
+  { value: "role_change", label: "担当切替" },
+];
+
+export const DEFAULT_ROLE_OPTIONS = [
+  { value: "oven", label: "釜" },
+  { value: "dough", label: "仕込み" },
+  { value: "wrapping", label: "品ド" },
+  { value: "cafe", label: "カフェ" },
+  { value: "shaping", label: "麺台" },
+  { value: "sandwich", label: "サンド" },
+  { value: "sales", label: "販売" },
+];
+
 export const EMPLOYEE_DEMO_DATA: Employee[] = [
         { id: "001", name: "佐藤太郎", roles: ["oven"] },
         { id: "002", name: "鈴木花子", roles: ["oven"] },

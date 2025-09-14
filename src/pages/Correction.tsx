@@ -10,11 +10,10 @@ import getRecordsByDate from "../hooks/getRecordsByDate";
 import getLabel from "../hooks/getLabel";
 import formatTime from "../hooks/formatTime";
 import formatDate from "../hooks/formatDate";
-import { defaultRoleOptions } from "../components/TimeRecorderForm";
 import RecordToShowTr from "../components/RecordToShowTr";
 import RecordsThead from "../components/RecordsThead";
 import { toZonedTime } from "date-fns-tz";
-import { TIMEZONE } from "../constants/appConfig";
+import { DEFAULT_ROLE_OPTIONS, TIMEZONE } from "../constants/appConfig";
 
 const Correction = () => {
   const { empId, dateStringParam } = useParams();
@@ -207,7 +206,7 @@ const Correction = () => {
                           {employeee?.roles.map((role) => (
                             <option value={role} key={role}>
                               {
-                                defaultRoleOptions.find(
+                                DEFAULT_ROLE_OPTIONS.find(
                                   (defaultOption) =>
                                     defaultOption.value === role
                                 )?.label

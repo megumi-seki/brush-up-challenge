@@ -1,4 +1,4 @@
-import { defaultRoleOptions } from "./TimeRecorderForm";
+import { DEFAULT_ROLE_OPTIONS } from "../constants/appConfig";
 
 type color = {
   value: string;
@@ -18,7 +18,7 @@ const RoleColorExplanation = ({
   ];
 
   if (showRoleWithColor) {
-    colors.unshift(...defaultRoleOptions);
+    colors.unshift(...DEFAULT_ROLE_OPTIONS);
   } else {
     colors.unshift({ value: "work", label: "勤務時間" });
   }

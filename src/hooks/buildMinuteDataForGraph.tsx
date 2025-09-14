@@ -1,6 +1,9 @@
 import { toZonedTime } from "date-fns-tz";
-import { defaultRoleOptions } from "../components/TimeRecorderForm";
-import { GRAPH_TOTAL_MINUTES, TIMEZONE } from "../constants/appConfig";
+import {
+  DEFAULT_ROLE_OPTIONS,
+  GRAPH_TOTAL_MINUTES,
+  TIMEZONE,
+} from "../constants/appConfig";
 import type { GroupedTimeRecorderType } from "../types";
 import getMinutes from "./getMinutes";
 
@@ -85,7 +88,7 @@ const buildMinuteDataForGraph = ({
   for (let i = 0; i <= GRAPH_TOTAL_MINUTES; i++) {
     const role = getRoleForMinute(i);
     const roleClassName = role ? role : "";
-    const roleLabel = defaultRoleOptions.find(
+    const roleLabel = DEFAULT_ROLE_OPTIONS.find(
       (role) => role.value === roleClassName
     )?.label;
 
