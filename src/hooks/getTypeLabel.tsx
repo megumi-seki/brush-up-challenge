@@ -8,6 +8,12 @@ const getTypeLabel = (
 
   if (typeof record === "string") {
     value = record;
+  } else if (
+    typeof record.type === "object" &&
+    record.type !== null &&
+    "value" in record.type
+  ) {
+    value = record.type.value;
   } else {
     value = record.type;
   }

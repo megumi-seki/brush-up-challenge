@@ -227,7 +227,11 @@ const Detail = () => {
               <RecordsThead withDelete={true} />
               <tbody>
                 {correctionRequestedRecords.map((record, index) => (
-                  <CorrectionRequestedRecordTr record={record} index={index} />
+                  <CorrectionRequestedRecordTr
+                    key={`${record.type}-${index}`}
+                    record={record}
+                    index={index}
+                  />
                 ))}
               </tbody>
             </table>

@@ -18,9 +18,9 @@ const getRoleLabel = (
     value = record.role;
   }
 
-  const label = DEFAULT_ROLE_OPTIONS.find(
-    (option) => option.value === value
-  )?.label;
+  const label =
+    DEFAULT_ROLE_OPTIONS.find((option) => option.value === value)?.label ??
+    null;
 
   return label;
 };

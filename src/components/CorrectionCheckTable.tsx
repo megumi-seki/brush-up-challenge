@@ -49,18 +49,24 @@ const CorrectionCheckTable = ({
         (record) => !record.deleted
       );
 
-      const rowRequestedRecords = filteredRequestedRecords.map((record) => ({
-        emp_id: record.emp_id,
-        datetime: record.datetime.value,
-        role: record.role.value,
-        type: record.type,
-        note: record.note.value,
-      }));
+      const rowRequestedRecords: TimeRecorderType[] =
+        filteredRequestedRecords.map((record) => ({
+          emp_id: record.emp_id,
+          datetime: record.datetime.value,
+          role: record.role.value,
+          type: record.type.value,
+          note: record.note.value,
+        }));
 
-      const adjustedRequestedRecords = rowRequestedRecords.map(
+      const sortedRequestedRecords = rowRequestedRecords.sort(
+        (a, b) =>
+          new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+      );
+
+      const adjustedRequestedRecords = sortedRequestedRecords.map(
         (record, index) => {
           if (
-            index !== 0 &&
+            index > 0 &&
             (record.type === "break_begin" || record.type === "clock_out")
           ) {
             return {
@@ -138,8 +144,21 @@ const CorrectionCheckTable = ({
           <RecordsThead withDelete={true} />
           <tbody>
             {request.records.map((record, index) => (
-              <tr key={index} className={record.deleted ? "deleted-tr" : ""}>
-                <td>{getTypeLabel(record)}</td>
+              <tr
+                key={index}
+                className={
+                  record.deleted
+                    ? "deleted-tr"
+                    : record.added
+                    ? "modified-record-td"
+                    : ""
+                }
+              >
+                <td>
+                  {record.added
+                    ? `(追加) -> ${getTypeLabel(record)}`
+                    : getTypeLabel(record)}
+                </td>
                 <td
                   className={
                     !record.deleted && record.role.label
@@ -147,8 +166,8 @@ const CorrectionCheckTable = ({
                       : ""
                   }
                 >
-                  {record.type !== "clock_out" &&
-                  record.type !== "break_begin" ? (
+                  {record.type.value !== "clock_out" &&
+                  record.type.value !== "break_begin" ? (
                     <span>{record.role.label ?? getRoleLabel(record)}</span>
                   ) : (
                     "-"

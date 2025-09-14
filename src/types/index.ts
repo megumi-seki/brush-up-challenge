@@ -42,7 +42,7 @@ export type CorrectionTimeRecordType = {
   added: boolean;
   datetime: {value: string, label: string | null};
   role: {value: string | null, label: string | null};
-  type: string;
+  type: {value: string, label: string | null};
   note: {value: string, label: string | null};
 };
 

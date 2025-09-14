@@ -12,7 +12,11 @@ import formatDate from "../hooks/formatDate";
 import RecordToShowTr from "../components/RecordToShowTr";
 import RecordsThead from "../components/RecordsThead";
 import { toZonedTime } from "date-fns-tz";
-import { DEFAULT_ROLE_OPTIONS, TIMEZONE } from "../constants/appConfig";
+import {
+  DEFAULT_ROLE_OPTIONS,
+  DEFAULT_TYPE_OPTIONS,
+  TIMEZONE,
+} from "../constants/appConfig";
 import getRoleLabel from "../hooks/getRoleLabel";
 import getTypeLabel from "../hooks/getTypeLabel";
 import formatDateToJst from "../hooks/formatDateToJst";
@@ -55,7 +59,7 @@ const Correction = () => {
         value: record.role,
         label: null,
       },
-      type: record.type,
+      type: { value: record.type, label: null },
       note: { value: record.note, label: null },
     }));
 
@@ -63,6 +67,7 @@ const Correction = () => {
     useState<CorrectionTimeRecordType[]>(initCorrectedRecords);
 
   type CorrectionActions =
+    | "modifyType"
     | "modifyRole"
     | "modifyTime"
     | "modifyNote"
@@ -76,20 +81,33 @@ const Correction = () => {
     const updatedRecords = [...correctedRecords];
 
     switch (action) {
+      case "modifyType":
+        const initType = initCorrectedRecords[index]?.type.value;
+        const initTypeLabel = initType ? getRoleLabel(initType!) : "";
+
+        updatedRecords[index].type = {
+          value,
+          label: `${initTypeLabel} -> ${getTypeLabel(value)}`,
+        };
+        break;
       case "modifyRole":
-        const initRole = initCorrectedRecords[index].role.value;
+        const initRole = initCorrectedRecords[index]?.role.value;
+        const initRoleLabel = initRole ? getRoleLabel(initRole!) : "";
 
         updatedRecords[index].role = {
           value,
-          label: `${getRoleLabel(initRole!)} -> ${getRoleLabel(value)}`,
+          label: `${initRoleLabel} -> ${getRoleLabel(value)}`,
         };
         break;
       case "modifyTime":
-        const utcInitTime = new Date(
-          initCorrectedRecords[index].datetime.value
-        );
-        const initTime = toZonedTime(utcInitTime, TIMEZONE);
-        const formattedInitTime = formatTime(initTime);
+        let formattedInitTime = "";
+        if (initCorrectedRecords[index]) {
+          const utcInitTime = new Date(
+            initCorrectedRecords[index].datetime.value
+          );
+          const initTime = toZonedTime(utcInitTime, TIMEZONE);
+          formattedInitTime = formatTime(initTime);
+        }
 
         const [hours, minutes] = value.split(":");
         const utcUpdatedDatetime = new Date(
@@ -104,7 +122,9 @@ const Correction = () => {
         };
         break;
       case "modifyNote":
-        const initNote = initCorrectedRecords[index].note.value;
+        const initNote = initCorrectedRecords[index]
+          ? initCorrectedRecords[index].note.value
+          : "";
 
         updatedRecords[index].note = {
           value,
@@ -121,6 +141,36 @@ const Correction = () => {
     }
 
     setCorredtedRecords(updatedRecords);
+  };
+
+  const handleAddRecordButton = () => {
+    const initDate = new Date(dateStringParam);
+    initDate.setHours(12, 0, 0, 0);
+    const initDateString = formatDateToJst(initDate);
+
+    const newRecord: CorrectionTimeRecordType = {
+      emp_id: empId,
+      deleted: false,
+      added: true,
+      datetime: {
+        value: initDateString,
+        label: `-> ${formatTime(initDateString)}`,
+      },
+      role: {
+        value: employeee?.roles[0]!,
+        label: ` -> ${getRoleLabel(employeee?.roles[0]!)}`,
+      },
+      type: {
+        value: DEFAULT_TYPE_OPTIONS[0].value,
+        label: ` -> ${DEFAULT_TYPE_OPTIONS[0].label}`,
+      },
+      note: {
+        value: "",
+        label: "-",
+      },
+    };
+
+    setCorredtedRecords([...correctedRecords, newRecord]);
   };
 
   const handleSubmit = () => {
@@ -188,111 +238,117 @@ const Correction = () => {
             </tbody>
           </table>
         </div>
-        <div>
+        <div className="flex flex-col justify-center">
           <p className="bold">修正後</p>
           <table border={1}>
             <RecordsThead withDelete={true} />
             <tbody>
               {correctedRecords.map((record, index) => (
-                <>
-                  <tr key={index}>
-                    <td className="detail-logs-td">
-                      <span>{getTypeLabel(record)}</span>
-                    </td>
-                    <td className="detail-logs-td">
-                      {record.type !== "clock_out" &&
-                      record.type !== "break_begin" ? (
-                        <div>
-                          <label htmlFor="roleCorrection" className="hidden">
-                            役割変更
-                          </label>
-                          <select
-                            name="roleCorrection"
-                            id="roleCorrection"
-                            value={record.role.value!} // null許容してるが、打刻情報にはすべてroleが入っている
-                            onChange={(e) =>
-                              handleCorrection(
-                                index,
-                                "modifyRole",
-                                e.target.value
-                              )
-                            }
-                          >
-                            {employeee?.roles.map((role) => (
-                              <option value={role} key={role}>
-                                {
-                                  DEFAULT_ROLE_OPTIONS.find(
-                                    (defaultOption) =>
-                                      defaultOption.value === role
-                                  )?.label
-                                }
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      ) : (
-                        "-"
-                      )}
-                    </td>
-                    <td className="detail-logs-td">
-                      <div>
-                        <label htmlFor="datetimeCorrection" className="hidden">
-                          時刻変更
-                        </label>
-                        <input
-                          id="datetimeCorrection"
-                          type="time"
-                          value={formatTime(record.datetime.value)}
-                          onChange={(e) =>
-                            handleCorrection(
-                              index,
-                              "modifyTime",
-                              e.target.value
-                            )
-                          }
-                        />
-                      </div>
-                    </td>
-                    <td className="detail-logs-td">
-                      <div>
-                        <label htmlFor="noteCorrection" className="hidden">
-                          メモ変更
-                        </label>
-                        <input
-                          id="noteCorrection"
-                          type="text"
-                          value={record.note.value}
-                          placeholder="-"
-                          onChange={(e) =>
-                            handleCorrection(
-                              index,
-                              "modifyNote",
-                              e.target.value
-                            )
-                          }
-                        />
-                      </div>
-                    </td>
-                    <td>
-                      <label
-                        htmlFor="delete-record-checkbox"
-                        className="hidden"
+                <tr key={index} className={record.deleted ? "deleted-tr" : ""}>
+                  <td className="detail-logs-td">
+                    <div>
+                      <label htmlFor="typeCorrection" className="hidden">
+                        登録種別変更
+                      </label>
+                      <select
+                        name="typeCorrection"
+                        id="typeCorrection"
+                        value={record.type.value!}
+                        onChange={(e) =>
+                          handleCorrection(index, "modifyType", e.target.value)
+                        }
                       >
-                        打刻を削除
+                        {DEFAULT_TYPE_OPTIONS.map((type) => (
+                          <option value={type.value} key={type.value}>
+                            {type.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </td>
+                  <td className="detail-logs-td">
+                    {record.type.value !== "clock_out" &&
+                    record.type.value !== "break_begin" ? (
+                      <div>
+                        <label htmlFor="roleCorrection" className="hidden">
+                          役割変更
+                        </label>
+                        <select
+                          name="roleCorrection"
+                          id="roleCorrection"
+                          value={record.role.value!} // null許容してるが、打刻情報にはすべてroleが入っている
+                          onChange={(e) =>
+                            handleCorrection(
+                              index,
+                              "modifyRole",
+                              e.target.value
+                            )
+                          }
+                        >
+                          {employeee?.roles.map((role) => (
+                            <option value={role} key={role}>
+                              {
+                                DEFAULT_ROLE_OPTIONS.find(
+                                  (defaultOption) =>
+                                    defaultOption.value === role
+                                )?.label
+                              }
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    ) : (
+                      "-"
+                    )}
+                  </td>
+                  <td className="detail-logs-td">
+                    <div>
+                      <label htmlFor="datetimeCorrection" className="hidden">
+                        時刻変更
                       </label>
                       <input
-                        id="delete-record-checkbox"
-                        type="checkbox"
-                        onChange={() =>
-                          handleCorrection(index, "deleteRecord", "")
+                        id="datetimeCorrection"
+                        type="time"
+                        value={formatTime(record.datetime.value)}
+                        onChange={(e) =>
+                          handleCorrection(index, "modifyTime", e.target.value)
                         }
                       />
-                    </td>
-                  </tr>
-                </>
+                    </div>
+                  </td>
+                  <td className="detail-logs-td">
+                    <div>
+                      <label htmlFor="noteCorrection" className="hidden">
+                        メモ変更
+                      </label>
+                      <input
+                        id="noteCorrection"
+                        type="text"
+                        value={record.note.value}
+                        placeholder="-"
+                        onChange={(e) =>
+                          handleCorrection(index, "modifyNote", e.target.value)
+                        }
+                      />
+                    </div>
+                  </td>
+                  <td>
+                    <label htmlFor="delete-record-checkbox" className="hidden">
+                      打刻を削除
+                    </label>
+                    <input
+                      id="delete-record-checkbox"
+                      type="checkbox"
+                      onChange={() =>
+                        handleCorrection(index, "deleteRecord", "")
+                      }
+                    />
+                  </td>
+                </tr>
               ))}
             </tbody>
           </table>
+          <button onClick={handleAddRecordButton}>+打刻を追加</button>
         </div>
       </div>
       <button className="btn submit-btn" type="submit" onClick={handleSubmit}>

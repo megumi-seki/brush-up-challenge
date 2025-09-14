@@ -13,8 +13,12 @@ const CorrectionRequestedRecordTr = ({
   index,
 }: CorrectionRequestedRecordTrProps) => {
   return (
-    <tr key={index} className={record.deleted ? "deleted-tr" : ""}>
-      <td className="detail-logs-td">{getTypeLabel(record)}</td>
+    <tr
+      key={index}
+      className={
+        record.deleted ? "deleted-tr" : record.added ? "modified-record-td" : ""
+      }
+    >
       <td
         className={
           !record.deleted && record.role.label
@@ -22,7 +26,17 @@ const CorrectionRequestedRecordTr = ({
             : "detail-logs-td"
         }
       >
-        {record.type !== "clock_out" && record.type !== "break_begin" ? (
+        {record.added ? `(追加) ${getTypeLabel(record)}` : getTypeLabel(record)}
+      </td>
+      <td
+        className={
+          !record.deleted && record.role.label
+            ? "detail-logs-td modified-record-td"
+            : "detail-logs-td"
+        }
+      >
+        {record.type.value !== "clock_out" &&
+        record.type.value !== "break_begin" ? (
           <span>{getRoleLabel(record)}</span>
         ) : (
           "-"
