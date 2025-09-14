@@ -33,6 +33,8 @@ import RecordsThead from "../components/RecordsThead";
 
 // TODO: 承認したらつじつまが合わなくなる場合、お知らせをだす (優先度低)
 
+// 承認されても、つじつまが合わない場合検出されない
+
 const Detail = () => {
   const { empId, dateStringParam } = useParams();
   const [employeee, setEmployee] = useState<Employee | null>(null);
