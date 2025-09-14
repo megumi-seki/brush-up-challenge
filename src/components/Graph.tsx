@@ -15,7 +15,7 @@ const Graph = ({
   matchedShift,
   showDiffs,
 }: props) => {
-  const { emp_id, clock_in, break_begin, break_end } = record;
+  const { clock_in, break_begin, break_end } = record;
 
   if (!isDataEnough(record)) {
     let lack = "退勤";

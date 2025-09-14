@@ -5,6 +5,7 @@ import RadioGroup from "./RadioGroup";
 import getRecordsById from "../hooks/getRecordsById";
 import type { Employee, TimeRecorderType } from "../types";
 import getEmployeeById from "../hooks/getEmployeeById";
+import { NOW } from "../constants/appConfig";
 
 const isLastRecordToday = (empId: string) => {
   if (!empId) return null;
@@ -13,8 +14,7 @@ const isLastRecordToday = (empId: string) => {
   const lastRecordDate = new Date(
     records[records.length - 1].datetime
   ).getDate();
-  const today = new Date().getDate();
-  return lastRecordDate === today;
+  return lastRecordDate === NOW.getDate();
 };
 
 const getLastType = (empId: string | undefined): string | null => {
@@ -135,7 +135,7 @@ const TimeRecorderForm = ({
     undefined
   );
   const [note, setNote] = useState<string | null>(null);
-  const [now, setNow] = useState(new Date());
+  const [now, setNow] = useState(NOW);
   const prevMinuteRef = useRef(now.getMinutes());
 
   const typeOptions = useMemo(

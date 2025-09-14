@@ -3,7 +3,7 @@ import ClockLogs from "./pages/ClockLogs";
 import Home from "./pages/Home";
 import Detail from "./pages/Detail";
 import { useEffect, useState } from "react";
-import type { Employee, ShiftType, TimeRecorderType } from "./types";
+import type { Employee } from "./types";
 import {
   EMPLOYEE_DEMO_DATA,
   SHIFT_DEMO_DATA,

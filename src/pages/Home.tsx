@@ -3,6 +3,8 @@ import type { Employee } from "../types";
 import getRolesText from "../hooks/getRolesText";
 import ButtonToClockLogs from "../components/ButtonToClockLogs";
 import ButtonToCorrectionCheck from "../components/ButtonToCorrectionCheck";
+import toDatestring from "../hooks/toDatestring";
+import { NOW } from "../constants/appConfig";
 
 type HomeProps = {
   employees: Employee[];
@@ -10,7 +12,6 @@ type HomeProps = {
 
 const Home = ({ employees }: HomeProps) => {
   const navigate = useNavigate();
-  const today = new Date();
 
   const pageContent = (
     <div className="container">
@@ -40,9 +41,7 @@ const Home = ({ employees }: HomeProps) => {
                 className="with-hover"
                 key={emp.id}
                 onClick={() =>
-                  navigate(
-                    `/detail/${emp.id}/${today.toISOString().split("T")[0]}`
-                  )
+                  navigate(`/detail/${emp.id}/${toDatestring(NOW)}`)
                 }
               >
                 <td className="home-td">{emp.id}</td>

@@ -1,8 +1,11 @@
+import toDatestring from "../hooks/toDatestring";
 import type { Employee, ShiftType, TimeRecorderType } from "../types";
 
 export const GRAPH_START_HOUR = 7;
 export const GRAPH_END_HOUR = 24;
 export const GRAPH_TOTAL_MINUTES = (GRAPH_END_HOUR - GRAPH_START_HOUR) * 60; // 1020分 分単位でグラフ化
+
+export const NOW = new Date();
 
 export const EMPLOYEE_DEMO_DATA: Employee[] = [
         { id: "001", name: "佐藤太郎", roles: ["oven"] },
@@ -48,8 +51,8 @@ export const EMPLOYEE_DEMO_DATA: Employee[] = [
 
       ];
 
-const yesterday = new Date().setDate(new Date().getDate() - 1);
-const formattedYesterday = new Date(yesterday).toISOString().split("T")[0];
+const yesterday = new Date().setDate(NOW.getDate() - 1);
+const formattedYesterday = toDatestring(new Date(yesterday))
 export const TIME_RECORDER_DEMO_DATA: TimeRecorderType[] = [
 
         {

@@ -1,3 +1,6 @@
+import { NOW } from "../constants/appConfig";
+import toDatestring from "../hooks/toDatestring";
+
 type ClockLogTableTitleProps = {
   selectedDateString: string;
   setSelectedDateString: React.Dispatch<React.SetStateAction<string>>;
@@ -15,8 +18,6 @@ const ClockLogTableTitle = ({
   showDiffs,
   setShowDiffs,
 }: ClockLogTableTitleProps) => {
-  const today = new Date();
-
   const handleOnClick = (type: "previous" | "next") => {
     const selectedDate = new Date(selectedDateString);
     if (type === "next") {
@@ -24,11 +25,10 @@ const ClockLogTableTitle = ({
     } else {
       selectedDate.setDate(selectedDate.getDate() - 1);
     }
-    const newSelectedDateString = selectedDate.toISOString().split("T")[0];
+    const newSelectedDateString = toDatestring(selectedDate);
     setSelectedDateString(newSelectedDateString);
   };
-  const isCurrentSelectedDateToday =
-    selectedDateString === today.toISOString().split("T")[0];
+  const isCurrentSelectedDateToday = selectedDateString === toDatestring(NOW);
 
   return (
     <div className="flex justify-between align-center">

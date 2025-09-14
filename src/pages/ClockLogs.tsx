@@ -6,13 +6,14 @@ import ClockLogTable from "../components/ClockLogTable";
 import ButtonToHome from "../components/ButtonToHome";
 import getMatchedShift from "../hooks/getMatchedShift";
 import ButtonToCorrectionCheck from "../components/ButtonToCorrectionCheck";
+import toDatestring from "../hooks/toDatestring";
+import { NOW } from "../constants/appConfig";
 
 const ClockLogs = () => {
-  const today = new Date();
   const [showRoleWithColor, setShowRoleWithColor] = useState(false);
   const [showDiffs, setShowDiffs] = useState(false);
   const [selectedDateString, setSelectedDateString] = useState(
-    today.toISOString().split("T")[0]
+    toDatestring(NOW)
   );
   const recordsOfDate = getRecordsByDate({
     datetimeString: selectedDateString,
