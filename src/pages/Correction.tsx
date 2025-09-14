@@ -81,7 +81,7 @@ const Correction = () => {
           initCorrectedRecords[index].datetime.value
         );
         const initTime = toZonedTime(utcInitTime, TIMEZONE);
-        const formattedInitTime = formatTime(initTime.toISOString());
+        const formattedInitTime = formatTime(initTime);
 
         const [hours, minutes] = value.split(":");
         const utcUpdatedDatetime = new Date(
@@ -89,7 +89,7 @@ const Correction = () => {
         );
         const updatedDatetime = toZonedTime(utcUpdatedDatetime, TIMEZONE);
         updatedDatetime.setHours(Number(hours), Number(minutes));
-        const updatedDatetimeString = updatedDatetime.toISOString();
+        const updatedDatetimeString = updatedDatetime.toString();
         updatedRecords[index].datetime = {
           value: updatedDatetimeString,
           label: `${formattedInitTime} -> ${formatTime(updatedDatetimeString)}`,

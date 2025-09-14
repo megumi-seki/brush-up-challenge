@@ -1,3 +1,6 @@
-const toDatestring = (date: Date): string => date.toISOString().split("T")[0];
+import formatDateToJst from "./formatDateToJst";
+
+const toDatestring = (date: Date): string =>
+  formatDateToJst(date).split("T")[0];
 
 export default toDatestring;

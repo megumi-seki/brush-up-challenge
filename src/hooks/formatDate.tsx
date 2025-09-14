@@ -1,9 +1,12 @@
 import { toZonedTime } from "date-fns-tz";
 import { TIMEZONE } from "../constants/appConfig";
 
-const formatDate = (datetimeString: string | null) => {
-  if (!datetimeString) return "-";
-  const datetime = toZonedTime(new Date(datetimeString), TIMEZONE);
+const formatDate = (datetimeProp: string | Date | null) => {
+  if (!datetimeProp) return "-";
+  const datetime =
+    typeof datetimeProp === "string"
+      ? toZonedTime(new Date(datetimeProp), TIMEZONE)
+      : datetimeProp;
   const formattedDate = `${datetime.getFullYear().toString()}/${(
     datetime.getMonth() + 1
   ).toString()}/${datetime.getDate().toString()} (${

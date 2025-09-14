@@ -7,6 +7,7 @@ import type { Employee, TimeRecorderType } from "../types";
 import getEmployeeById from "../hooks/getEmployeeById";
 import { NOW, TIMEZONE } from "../constants/appConfig";
 import { toZonedTime } from "date-fns-tz";
+import formatDateToJst from "../hooks/formatDateToJst";
 
 const isLastRecordToday = (empId: string) => {
   if (!empId) return null;
@@ -192,7 +193,7 @@ const TimeRecorderForm = ({
 
     const newRecord: TimeRecorderType = {
       emp_id: empId,
-      datetime: now.toISOString(),
+      datetime: formatDateToJst(now),
       role: selectedRole ? selectedRole : lastRole ?? employee.roles[0],
       type: selectedType,
       note: note ? note.trim() : "-",
@@ -220,8 +221,8 @@ const TimeRecorderForm = ({
       onSubmit={handleSubmit}
     >
       <div className="flex-col align-center">
-        <span className="time-big">{formatTime(now.toISOString())}</span>
-        <span>{formatDate(now.toISOString())}</span>
+        <span className="time-big">{formatTime(now)}</span>
+        <span>{formatDate(now)}</span>
       </div>
       <RadioGroup
         name="target_type"
