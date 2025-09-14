@@ -4,6 +4,7 @@ import type {
   CorrectionRequestType,
   CorrectionTimeRecordType,
   Employee,
+  GroupedTimeRecorderType,
   MessageOnRequestType,
   TimeRecorderType,
 } from "../types";
@@ -45,7 +46,9 @@ const Detail = () => {
   const [selectedDateString, setSelectedDateString] = useState(dateStringParam);
 
   const [recordsToShow, setRecordsToShow] = useState<TimeRecorderType[]>([]);
-  const groupedRecord = groupRecordsById(recordsToShow);
+  const [groupedRecords, setGroupedRecords] = useState<
+    GroupedTimeRecorderType[] | null
+  >(null);
   const matchedShift = getMatchedShift({
     emp_id: empId,
     selectedDateString: selectedDateString,
@@ -84,6 +87,7 @@ const Detail = () => {
   }, [lastType, lastRole, selectedDateString]);
 
   useEffect(() => {
+    setGroupedRecords(groupRecordsById(recordsToShow));
     const matchedShiftTypes = matchedShift.map((shift) => shift.type);
     const recordsToShowTypes = recordsToShow.map((record) => record.type);
     const areTypesEqual =
@@ -203,13 +207,15 @@ const Detail = () => {
               ))}
             </tbody>
           </table>
-          <ClockLogTable
-            groupedRecords={groupedRecord}
-            selectedDateString={selectedDateString}
-            showRoleWithColor={showRoleWithColor}
-            showDiffs={showDiffs}
-            withName={false}
-          />
+          {groupedRecords && (
+            <ClockLogTable
+              groupedRecords={groupedRecords}
+              selectedDateString={selectedDateString}
+              showRoleWithColor={showRoleWithColor}
+              showDiffs={showDiffs}
+              withName={false}
+            />
+          )}
           {!correctionRequestedRecords && messageOnRequest && (
             <p className="message-on-request text-center">{`${messageOnRequest.message} 店長からのコメント：${messageOnRequest.comment}`}</p>
           )}

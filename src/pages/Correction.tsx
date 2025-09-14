@@ -15,6 +15,7 @@ import { toZonedTime } from "date-fns-tz";
 import { DEFAULT_ROLE_OPTIONS, TIMEZONE } from "../constants/appConfig";
 import getRoleLabel from "../hooks/getRoleLabel";
 import getTypeLabel from "../hooks/getTypeLabel";
+import formatDateToJst from "../hooks/formatDateToJst";
 
 const Correction = () => {
   const { empId, dateStringParam } = useParams();
@@ -89,7 +90,7 @@ const Correction = () => {
         );
         const updatedDatetime = toZonedTime(utcUpdatedDatetime, TIMEZONE);
         updatedDatetime.setHours(Number(hours), Number(minutes));
-        const updatedDatetimeString = updatedDatetime.toString();
+        const updatedDatetimeString = formatDateToJst(updatedDatetime);
         updatedRecords[index].datetime = {
           value: updatedDatetimeString,
           label: `${formattedInitTime} -> ${formatTime(updatedDatetimeString)}`,

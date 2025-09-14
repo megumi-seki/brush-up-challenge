@@ -8,14 +8,8 @@ const getTypeLabel = (
 
   if (typeof record === "string") {
     value = record;
-  } else if (
-    typeof record.role === "object" &&
-    record.role !== null &&
-    "value" in record.role
-  ) {
-    value = record.role.value;
   } else {
-    value = record.role;
+    value = record.type;
   }
 
   const label = DEFAULT_TYPE_OPTIONS.find(
