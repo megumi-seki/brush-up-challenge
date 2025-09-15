@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import formatTime from "../hooks/formatTime";
 import formatDate from "../hooks/formatDate";
 import RadioGroup from "./RadioGroup";
@@ -15,6 +15,11 @@ type TimeRecorderFormProps = {
   setLastType: React.Dispatch<React.SetStateAction<string | null>>;
   lastRole: string | null;
   setLastRole: React.Dispatch<React.SetStateAction<string | null>>;
+};
+
+type roleTypeOptionType = {
+  value: string;
+  label: string;
 };
 
 const TimeRecorderForm = ({
@@ -35,19 +40,8 @@ const TimeRecorderForm = ({
   const [note, setNote] = useState<string | null>(null);
   const [now, setNow] = useState(toZonedTime(new Date(), TIMEZONE));
   const prevMinuteRef = useRef(now.getMinutes());
-
-  const typeOptions = useMemo(
-    () =>
-      employee.roles.length > 1
-        ? getTypeOptions(lastType)
-        : getTypeOptionsWithoutRoleChange(lastType),
-    [lastType]
-  );
-
-  const roleOptions = useMemo(
-    () => getRoleOptions(employee, selectedType),
-    [empId, selectedType, lastRole]
-  );
+  const [typeOptions, setTypeOptions] = useState<roleTypeOptionType[]>([]);
+  const [roleOptions, setRoleOptions] = useState<roleTypeOptionType[]>([]);
 
   // 分単位で時刻を更新
   useEffect(() => {
@@ -69,10 +63,22 @@ const TimeRecorderForm = ({
   }, [empId]);
 
   useEffect(() => {
+    const typeOptions =
+      employee.roles.length > 1
+        ? getTypeOptions(lastType)
+        : getTypeOptionsWithoutRoleChange(lastType);
+    setTypeOptions(typeOptions);
+  }, [lastType]);
+
+  useEffect(() => {
     if (typeOptions.length > 0) {
       setSelectedType(typeOptions[0].value);
     }
   }, [typeOptions]);
+
+  useEffect(() => {
+    setRoleOptions(getRoleOptions(employee, selectedType));
+  }, [empId, selectedType, lastRole]);
 
   useEffect(() => {
     if (roleOptions.length > 0) {
