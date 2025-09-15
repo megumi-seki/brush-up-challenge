@@ -21,7 +21,7 @@ const CorrectionRequestedRecordTr = ({
     >
       <td
         className={
-          !record.deleted && record.role.label
+          !record.deleted && record.type.label
             ? "detail-logs-td modified-record-td"
             : "detail-logs-td"
         }

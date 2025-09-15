@@ -4,6 +4,7 @@ import type {
   CorrectionRequestType,
   CorrectionTimeRecordType,
   Employee,
+  TimeRecorderType,
 } from "../types";
 import getRolesText from "../hooks/getRolesText";
 import getRecordsByDate from "../hooks/getRecordsByDate";
@@ -83,20 +84,20 @@ const Correction = () => {
     switch (action) {
       case "modifyType":
         const initType = initCorrectedRecords[index]?.type.value;
-        const initTypeLabel = initType ? getRoleLabel(initType!) : "";
+        const initTypeLabel = initType ? getTypeLabel(initType) : "";
 
         updatedRecords[index].type = {
           value,
-          label: `${initTypeLabel} -> ${getTypeLabel(value)}`,
+          label: `${initTypeLabel ?? ""} -> ${getTypeLabel(value)}`,
         };
         break;
       case "modifyRole":
         const initRole = initCorrectedRecords[index]?.role.value;
-        const initRoleLabel = initRole ? getRoleLabel(initRole!) : "";
+        const initRoleLabel = initRole ? getRoleLabel(initRole) : "";
 
         updatedRecords[index].role = {
           value,
-          label: `${initRoleLabel} -> ${getRoleLabel(value)}`,
+          label: `${initRoleLabel ?? ""} -> ${getRoleLabel(value)}`,
         };
         break;
       case "modifyTime":

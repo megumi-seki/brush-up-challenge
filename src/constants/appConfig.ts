@@ -496,6 +496,12 @@ export const SHIFT_DEMO_DATA: ShiftType[] =  [
         },
         {
           emp_id: "012",
+          datetime: `${formattedYesterday}T11:30:00+09:00`,
+          role: "shaping",
+          type: "role_change",
+        },
+        {
+          emp_id: "012",
           datetime: `${formattedYesterday}T12:00:00+09:00`,
           role: "sandwich",
           type: "break_begin",
@@ -503,15 +509,8 @@ export const SHIFT_DEMO_DATA: ShiftType[] =  [
         {
           emp_id: "012",
           datetime: `${formattedYesterday}T13:00:00+09:00`,
-          role: "cafe",
-          type: "break_end",
-        },
-        
-        {
-          emp_id: "012",
-          datetime: `${formattedYesterday}T13:00:00+09:00`,
           role: "shaping",
-          type: "role_change",
+          type: "break_end",
         },
         {
           emp_id: "012",

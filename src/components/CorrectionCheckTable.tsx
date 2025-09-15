@@ -154,10 +154,16 @@ const CorrectionCheckTable = ({
                     : ""
                 }
               >
-                <td>
+                <td
+                  className={
+                    !record.deleted && record.type.label
+                      ? "modified-record-td"
+                      : ""
+                  }
+                >
                   {record.added
                     ? `(追加) -> ${getTypeLabel(record)}`
-                    : getTypeLabel(record)}
+                    : record.type.label ?? getTypeLabel(record)}
                 </td>
                 <td
                   className={

@@ -106,20 +106,6 @@ const Detail = () => {
     } else {
       setDifferenceExceptionMessage(null);
     }
-
-    const storedMessagesOnRequests = localStorage.getItem(
-      "messages_on_requests"
-    );
-    if (storedMessagesOnRequests) {
-      const parsedMessages: MessageOnRequestType[] = JSON.parse(
-        storedMessagesOnRequests
-      );
-      const messageForRecordsToShow = parsedMessages.find(
-        (message) =>
-          message.emp_id === empId && message.dateString === selectedDateString
-      );
-      if (messageForRecordsToShow) setMessageOnRequest(messageForRecordsToShow);
-    }
   }, [recordsToShow]);
 
   useEffect(() => {
@@ -144,6 +130,23 @@ const Detail = () => {
           setCorrectionRequestedRecords(null);
         }
       }
+    }
+
+    const storedMessagesOnRequests = localStorage.getItem(
+      "messages_on_requests"
+    );
+    if (storedMessagesOnRequests) {
+      const parsedMessages: MessageOnRequestType[] = JSON.parse(
+        storedMessagesOnRequests
+      );
+      const messageForRecordsToShow = parsedMessages.find(
+        (message) =>
+          message.emp_id === empId && message.dateString === selectedDateString
+      );
+      if (messageForRecordsToShow) setMessageOnRequest(messageForRecordsToShow);
+      else setMessageOnRequest(null);
+    } else {
+      setMessageOnRequest(null);
     }
   }, [selectedDateString]);
 
