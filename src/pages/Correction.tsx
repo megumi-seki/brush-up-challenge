@@ -4,7 +4,6 @@ import type {
   CorrectionRequestType,
   CorrectionTimeRecordType,
   Employee,
-  TimeRecorderType,
 } from "../types";
 import getRolesText from "../hooks/getRolesText";
 import getRecordsByDate from "../hooks/getRecordsByDate";

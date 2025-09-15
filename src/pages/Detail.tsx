@@ -20,21 +20,6 @@ import getMatchedShift from "../hooks/getMatchedShift";
 import RecordToShowTr from "../components/RecordToShowTr";
 import RecordsThead from "../components/RecordsThead";
 
-// 別ブランチ TODO: 差異表示、差異が10分以上だとboldになるようにする　（優先度低）
-// 別ブランチ  TODO: 全体のタイムレコーダー記録再表示　総時間の際は（）書きに変更する（優先度高）
-
-// 別ブランチ　TODO: カレンダー　当日より後は開けないようにする（優先度低）
-
-// 別ブランチ  TODO: clocklogspage　表示順のソート（優先度低）
-
-// 別ブランチ　TODO: getMatchedShiftとgetGroupedMatchedShiftを整理する（優先度低）
-
-// TODO: 休憩や担当切替の回数や扱いの制限どこまでにしてるか確認する（優先度中）
-
-// TODO: 承認したらつじつまが合わなくなる場合、お知らせをだす (優先度低)
-
-// 承認されても、つじつまが合わない場合検出されない
-
 const Detail = () => {
   const { empId, dateStringParam } = useParams();
   const [employeee, setEmployee] = useState<Employee | null>(null);
