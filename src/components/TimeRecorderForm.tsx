@@ -168,8 +168,11 @@ const isLastRecordToday = (empId: string) => {
   if (!empId) return null;
   const records = getRecordsById(empId);
   if (records.length === 0) return null;
+  const sortedRecords = records.sort(
+    (a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+  );
   const jstLastRecord = toZonedTime(
-    new Date(records[records.length - 1].datetime),
+    new Date(sortedRecords[sortedRecords.length - 1].datetime),
     TIMEZONE
   );
   const lastRecordDate = jstLastRecord.getDate();
@@ -180,13 +183,19 @@ const getLastType = (empId: string | undefined): string | null => {
   if (!empId) return null;
   const records = getRecordsById(empId);
   if (records.length === 0) return null;
-  return records[records.length - 1].type;
+  const sortedRecords = records.sort(
+    (a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+  );
+  return sortedRecords[sortedRecords.length - 1].type;
 };
 
 const getLastRole = (empId: string): string | null => {
   const records = getRecordsById(empId);
   if (records.length === 0) return null;
-  return records[records.length - 1].role;
+  const sortedRecords = records.sort(
+    (a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+  );
+  return sortedRecords[sortedRecords.length - 1].role;
 };
 
 const getTypeOptions = (lastType: string | null) => {
