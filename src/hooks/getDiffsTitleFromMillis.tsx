@@ -8,6 +8,7 @@ type getDiffsTitleFromMillisProps = {
   selectedDateString: string;
 };
 
+// ミリセカンドからシフトとの差分ラベルを作成
 const getDiffsTitleFromMillis = ({
   emp_id,
   recordDurationMillis,
@@ -18,6 +19,7 @@ const getDiffsTitleFromMillis = ({
     emp_id: emp_id,
     selectedDateString: selectedDateString,
   });
+
   const shiftDurationMillis = matchedShift?.[key];
   if (!shiftDurationMillis || !recordDurationMillis) return undefined;
 

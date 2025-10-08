@@ -58,3 +58,9 @@ export type MessageOnRequestType = {
     message: string;
     comment: string;
 }
+
+export type MinuteDataForGraphType = {
+    className: string;
+    label: string; 
+    diffText: string | null 
+  };

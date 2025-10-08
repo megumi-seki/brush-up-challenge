@@ -33,6 +33,7 @@ const TimeRecorderForm = ({
   if (!employee) {
     return <div>従業員が見つかりません</div>;
   }
+
   const [selectedType, setSelectedType] = useState("");
   const [selectedRole, setSelectedRole] = useState<string | undefined>(
     undefined
@@ -60,26 +61,30 @@ const TimeRecorderForm = ({
       setLastType(getLastType(empId));
       setLastRole(getLastRole(empId));
     }
-  }, [empId]);
+  }, []);
 
+  // 最後の打刻種別に応じて打刻種別の選択肢を更新
   useEffect(() => {
     const typeOptions =
-      employee.roles.length > 1
-        ? getTypeOptions(lastType)
+      employee.roles.length > 1 
+        ? getTypeOptions(lastType) 
         : getTypeOptionsWithoutRoleChange(lastType);
     setTypeOptions(typeOptions);
   }, [lastType]);
 
+  // 打刻種別の選択肢が変わった時、選択中の打刻種別を一つ目の選択肢に更新
   useEffect(() => {
     if (typeOptions.length > 0) {
       setSelectedType(typeOptions[0].value);
     }
   }, [typeOptions]);
 
+  // 選択中の打刻種別か最後の役割が変わった時、役割の選択肢を更新
   useEffect(() => {
     setRoleOptions(getRoleOptions(employee, selectedType));
-  }, [empId, selectedType, lastRole]);
+  }, [selectedType, lastRole]);
 
+  // 役割の選択肢が変わった時、選択中の役割を更新
   useEffect(() => {
     if (roleOptions.length > 0) {
       setSelectedRole(roleOptions[0].value);
@@ -99,6 +104,7 @@ const TimeRecorderForm = ({
       note: note ? note.trim() : "-",
     };
 
+    // 新しい打刻を保存
     const key = "time_records";
     const records = localStorage.getItem(key);
     const parsedRecords: TimeRecorderType[] = records
@@ -107,6 +113,7 @@ const TimeRecorderForm = ({
     parsedRecords.push(newRecord);
     localStorage.setItem(key, JSON.stringify(parsedRecords));
 
+    // フォーム内容をリセット
     setNote("");
     const newLastRole = selectedRole ? selectedRole : lastRole;
     setLastRole(newLastRole);
@@ -165,9 +172,9 @@ const TimeRecorderForm = ({
 export default TimeRecorderForm;
 
 const isLastRecordToday = (empId: string) => {
-  if (!empId) return null;
   const records = getRecordsById(empId);
-  if (records.length === 0) return null;
+  if (records.length === 0) return;
+
   const sortedRecords = records.sort(
     (a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
   );
@@ -176,11 +183,11 @@ const isLastRecordToday = (empId: string) => {
     TIMEZONE
   );
   const lastRecordDate = jstLastRecord.getDate();
+
   return lastRecordDate === toZonedTime(new Date(), TIMEZONE).getDate();
 };
 
-const getLastType = (empId: string | undefined): string | null => {
-  if (!empId) return null;
+const getLastType = (empId: string): string | null => {
   const records = getRecordsById(empId);
   if (records.length === 0) return null;
   const sortedRecords = records.sort(
@@ -247,10 +254,10 @@ const getTypeTexts: Record<string, string> = {
 };
 
 const getRoleOptions = (employee: Employee, selectedType: string) => {
-  if (selectedType === "break_begin" || selectedType === "clock_out") return [];
   if (!employee) return [];
-  if (employee.roles.length === 1) return [];
-  return selectedType === "break_end" || selectedType === "clock_in"
+  else if (selectedType === "break_begin" || selectedType === "clock_out") return []; // 休憩開始と退勤は役割選択なし
+  else if (employee.roles.length === 1) return []; // 役割が一つしかない場合は役割選択なし
+  else return selectedType === "break_end" || selectedType === "clock_in" // 休憩終了と出勤は従業員の担当すべてを表示、role changeは最後の役割以外を表示
     ? DEFAULT_ROLE_OPTIONS.filter((option) =>
         employee.roles.includes(option.value)
       )

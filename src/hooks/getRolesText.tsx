@@ -6,10 +6,12 @@ type getRolesTextProps = {
 
 const getRolesText = ({ roles }: getRolesTextProps) => {
   if (!roles) return "";
+
   const rolesWithLabel = DEFAULT_ROLE_OPTIONS.filter((role) =>
     roles.includes(role.value)
   );
   const text = rolesWithLabel.map((role) => role.label).join(", ");
+  
   return text;
 };
 

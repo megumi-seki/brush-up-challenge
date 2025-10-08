@@ -1,5 +1,6 @@
 import type { GroupedTimeRecorderType } from "../types";
 
+//　休憩終了、退勤の打刻がない場合はデータ不足とみなす
 const isDataEnough = (record: GroupedTimeRecorderType) => {
   const { clock_in, clock_out, break_begin, break_end } = record;
   if (

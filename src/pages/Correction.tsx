@@ -21,6 +21,7 @@ import getRoleLabel from "../hooks/getRoleLabel";
 import getTypeLabel from "../hooks/getTypeLabel";
 import formatDateToJst from "../hooks/formatDateToJst";
 
+// 修正ページ
 const Correction = () => {
   const { empId, dateStringParam } = useParams();
   const [employeee, setEmployee] = useState<Employee | null>(null);
@@ -31,7 +32,6 @@ const Correction = () => {
     return <div>修正対象の日付が選択されていません。</div>;
   }
 
-  // ページのURLが変わったときに従業員データを更新
   useEffect(() => {
     const storedData = localStorage.getItem("employees");
     if (storedData && empId) {
@@ -39,7 +39,7 @@ const Correction = () => {
       const selectedEmployee = employees.find((emp) => emp.id === empId);
       setEmployee(selectedEmployee || null);
     }
-  }, [empId]);
+  }, []);
 
   const recordsOfSelectedDate = getRecordsByDate({
     datetimeString: dateStringParam,
@@ -73,6 +73,8 @@ const Correction = () => {
     | "modifyNote"
     | "deleteRecord"
     | "addRecord";
+
+  // 打刻追加以外の修正を反映
   const handleCorrection = (
     index: number,
     action: CorrectionActions,
@@ -91,7 +93,7 @@ const Correction = () => {
         };
         break;
       case "modifyRole":
-        const initRole = initCorrectedRecords[index]?.role.value;
+                const initRole = initCorrectedRecords[index]?.role.value;
         const initRoleLabel = initRole ? getRoleLabel(initRole) : "";
 
         updatedRecords[index].role = {
@@ -106,16 +108,18 @@ const Correction = () => {
             initCorrectedRecords[index].datetime.value
           );
           const initTime = toZonedTime(utcInitTime, TIMEZONE);
-          formattedInitTime = formatTime(initTime);
+          formattedInitTime = formatTime(initTime); // 修正前の時刻
         }
 
-        const [hours, minutes] = value.split(":");
+        const [hours, minutes] = value.split(":"); // 修正後の時刻の要素
+        // ↓修正前の時刻と、編集途中の時刻を別々に管理することにより、最終保存時に正しいラベルを表示
         const utcUpdatedDatetime = new Date(
           updatedRecords[index].datetime.value
         );
         const updatedDatetime = toZonedTime(utcUpdatedDatetime, TIMEZONE);
         updatedDatetime.setHours(Number(hours), Number(minutes));
-        const updatedDatetimeString = formatDateToJst(updatedDatetime);
+        const updatedDatetimeString = formatDateToJst(updatedDatetime); // 修正後の時刻
+        
         updatedRecords[index].datetime = {
           value: updatedDatetimeString,
           label: `${formattedInitTime} -> ${formatTime(updatedDatetimeString)}`,
@@ -125,7 +129,6 @@ const Correction = () => {
         const initNote = initCorrectedRecords[index]
           ? initCorrectedRecords[index].note.value
           : "";
-
         updatedRecords[index].note = {
           value,
           label: `${initNote} -> ${value}`,
@@ -134,7 +137,7 @@ const Correction = () => {
       case "deleteRecord":
         updatedRecords[index].deleted = !updatedRecords[index].deleted;
         break;
-      case "addRecord":
+      case "addRecord": // 打刻追加は別関数で対応
         break;
       default:
         break;
@@ -143,10 +146,11 @@ const Correction = () => {
     setCorredtedRecords(updatedRecords);
   };
 
+  // 打刻追加
   const handleAddRecordButton = () => {
     const initDate = new Date(dateStringParam);
-    initDate.setHours(12, 0, 0, 0);
-    const initDateString = formatDateToJst(initDate);
+    initDate.setHours(12, 0, 0, 0); 
+    const initDateString = formatDateToJst(initDate); // 追加打刻の初期値を12:00に設定
 
     const newRecord: CorrectionTimeRecordType = {
       emp_id: empId,
@@ -170,23 +174,21 @@ const Correction = () => {
       },
     };
 
-    setCorredtedRecords([...correctedRecords, newRecord]);
+    setCorredtedRecords([...correctedRecords, newRecord]); 
   };
 
   const handleSubmit = () => {
-    if (
-      JSON.stringify(recordsBeforeCorrection) ===
-      JSON.stringify(correctedRecords)
-    )
-      return;
-
+    if (JSON.stringify(initCorrectedRecords) ===
+      JSON.stringify(correctedRecords)) 
+     return; // 変更がない場合はなにもしない
+    
     const key = "time_records_correction_requests";
     const storedRequests = localStorage.getItem(key);
     const parsedRequests: CorrectionRequestType[] = storedRequests
       ? JSON.parse(storedRequests)
       : [];
 
-    // 修正対象の日付と従業員IDに基づいて、元のレコードを除外
+    // 同じ対象の修正リクエストがすでにある場合は既存のものを削除し新しいものを追加する
     const filteredRequests = parsedRequests.filter(
       (request) =>
         !(request.emp_id === empId && request.dateString === dateStringParam)
@@ -198,9 +200,8 @@ const Correction = () => {
       records: correctedRecords,
     };
 
-    // 修正後のレコードを追加
+    // 修正後のリクエスト情報を保存
     const updatedRequests = [...filteredRequests, newRequest];
-
     localStorage.setItem(key, JSON.stringify(updatedRequests));
 
     navigate(`/detail/${empId}/${dateStringParam}`);

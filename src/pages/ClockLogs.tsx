@@ -10,12 +10,14 @@ import toDatestring from "../hooks/toDatestring";
 import { toZonedTime } from "date-fns-tz";
 import { TIMEZONE } from "../constants/appConfig";
 
+// タイムレコーダー履歴ページ
 const ClockLogs = () => {
   const [showRoleWithColor, setShowRoleWithColor] = useState(false);
   const [showDiffs, setShowDiffs] = useState(false);
   const [selectedDateString, setSelectedDateString] = useState(
     toDatestring(toZonedTime(new Date(), TIMEZONE))
   );
+
   const recordsOfDate = getRecordsByDate({
     datetimeString: selectedDateString,
     key: "time_records",

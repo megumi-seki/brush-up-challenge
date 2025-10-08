@@ -17,6 +17,7 @@ const getRecordsByDate = ({
     const formattedRecordDate = formatDate(record.datetime);
     return formattedRecordDate === formattedDate;
   });
+  
   return filteredRecords;
 };
 

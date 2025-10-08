@@ -5,6 +5,7 @@ const getRecordsById = (empId: string): TimeRecorderType[] => {
   const storedData = localStorage.getItem(key);
   const records: TimeRecorderType[] = storedData ? JSON.parse(storedData) : [];
   const filteredRecords = records.filter((record) => record.emp_id === empId);
+  
   return filteredRecords;
 };
 

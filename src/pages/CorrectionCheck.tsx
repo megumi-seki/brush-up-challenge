@@ -4,6 +4,7 @@ import ButtonToHome from "../components/ButtonToHome";
 import ButtonToClockLogs from "../components/ButtonToClockLogs";
 import CorrectionCheckTable from "../components/CorrectionCheckTable";
 
+// タイムレコーダー履歴確認ページ
 const CorrectionCheck = () => {
   const [storedCorrectionRequests, setStoredCorrectionRequests] = useState<
     CorrectionRequestType[]

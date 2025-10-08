@@ -8,6 +8,7 @@ type CorrectionRequestedRecordTrProps = {
   index: number;
 };
 
+//　申請中の打刻修正履歴表のための行コンポーネント
 const CorrectionRequestedRecordTr = ({
   record,
   index,

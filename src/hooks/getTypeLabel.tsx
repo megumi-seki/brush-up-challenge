@@ -6,15 +6,15 @@ const getTypeLabel = (
 ) => {
   let value: string | null = null;
 
-  if (typeof record === "string") {
+  if (typeof record === "string") { // 打刻種別の文字列が直接渡された場合
     value = record;
-  } else if (
+  } else if ( // CorrectionTimeRecordTypeの場合
     typeof record.type === "object" &&
     record.type !== null &&
     "value" in record.type
   ) {
     value = record.type.value;
-  } else {
+  } else { // TimeRecorderTypeの場合
     value = record.type;
   }
 

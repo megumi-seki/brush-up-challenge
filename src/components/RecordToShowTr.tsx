@@ -24,6 +24,8 @@ const RecordToShowTr = ({
   showDiffs,
   matchedShift,
 }: RecordToShowTrProps) => {
+
+  // 差分表示につかうテキストを取得
   const getDifferenceTexts = (record: TimeRecorderType, index: number) => {
     let differenceTexts: differenceTextType = {
       datetimeDiff: null,
@@ -32,7 +34,7 @@ const RecordToShowTr = ({
     };
 
     if (!matchedShift || matchedShift.length === 0) return differenceTexts;
-    if (index > matchedShift.length - 1) return differenceTexts;
+    if (index > matchedShift.length - 1) return differenceTexts; // 対応するシフト記録がない場合は処理を行わない
 
     if (record.type !== matchedShift[index].type) {
       differenceTexts.typeDiff = ` (シフトでは${getTypeLabel(

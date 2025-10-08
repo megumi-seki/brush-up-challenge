@@ -20,6 +20,7 @@ import getMatchedShift from "../hooks/getMatchedShift";
 import RecordToShowTr from "../components/RecordToShowTr";
 import RecordsThead from "../components/RecordsThead";
 
+// 個人詳細ページ
 const Detail = () => {
   const { empId, dateStringParam } = useParams();
   const [employeee, setEmployee] = useState<Employee | null>(null);
@@ -36,10 +37,7 @@ const Detail = () => {
   const [groupedRecords, setGroupedRecords] = useState<
     GroupedTimeRecorderType[] | null
   >(null);
-  const matchedShift = getMatchedShift({
-    emp_id: empId,
-    selectedDateString: selectedDateString,
-  });
+  const [matchedShift, setMatchedShift] = useState<TimeRecorderType[]>([]);
 
   const [correctionRequestedRecords, setCorrectionRequestedRecords] = useState<
     CorrectionTimeRecordType[] | null
@@ -51,7 +49,6 @@ const Detail = () => {
   >(null);
   const navigate = useNavigate();
 
-  // ページのURLが変わったときに従業員データを更新
   useEffect(() => {
     const storedData = localStorage.getItem("employees");
     if (storedData && empId) {
@@ -59,8 +56,9 @@ const Detail = () => {
       const selectedEmployee = employees.find((emp) => emp.id === empId);
       setEmployee(selectedEmployee || null);
     }
-  }, []);
+  }, [empId]);
 
+  // 打刻された時（最後の登録種別/担当が変わった時）、または日付が変わった時に表示データを更新
   useEffect(() => {
     const recordsOfSelectedDate = getRecordsByDate({
       datetimeString: selectedDateString,
@@ -74,7 +72,14 @@ const Detail = () => {
   }, [lastType, lastRole, selectedDateString]);
 
   useEffect(() => {
+    // 表示データが変わった時にグルーピングされたデータ・対応シフトを更新
     setGroupedRecords(groupRecordsById(recordsToShow));
+    const matchedShift = getMatchedShift({
+    emp_id: empId,
+    selectedDateString: selectedDateString,
+  });
+    setMatchedShift(matchedShift);
+    
     const matchedShiftTypes = matchedShift.map((shift) => shift.type);
     const recordsToShowTypes = recordsToShow.map((record) => record.type);
     const areTypesEqual =
@@ -82,6 +87,8 @@ const Detail = () => {
       matchedShiftTypes.every(
         (type, index) => type === recordsToShowTypes[index]
       );
+    
+    // 表示データと対応シフトを比較し例外メッセージを更新
     if (matchedShift.length === 0) {
       setDifferenceExceptionMessage("照合するシフトが見つかりません");
     } else if (!areTypesEqual) {
@@ -94,7 +101,7 @@ const Detail = () => {
   }, [recordsToShow]);
 
   useEffect(() => {
-    // 修正申請済みのものがあれば表示
+    // 修正申請中であればその内容をセット
     const storedCorrectionRequests = localStorage.getItem(
       "time_records_correction_requests"
     );
@@ -117,6 +124,7 @@ const Detail = () => {
       }
     }
 
+    // 修正申請に対する店長からのコメントがあればセット
     const storedMessagesOnRequests = localStorage.getItem(
       "messages_on_requests"
     );

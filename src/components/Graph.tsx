@@ -17,6 +17,7 @@ const Graph = ({
 }: props) => {
   const { clock_in, break_begin, break_end } = record;
 
+  // 打刻データ不足の場合はグラフ作成をしない
   if (!isDataEnough(record)) {
     let lack = "退勤";
     if (clock_in.datetime && break_begin.datetime && !break_end.datetime)
@@ -42,8 +43,9 @@ const Graph = ({
     showDiffs,
   });
 
+  // 色付きグラフ、時刻表示、タイトル表示の３レイヤーを使用するため、グラフを分離
   const graphWithColor = clockLogMinuteDataForGraph.map((status, index) => (
-    <span className={`minute ${status.className}`} key={index}></span>
+    <span className={`minute ${status.className}`} key={index} title={status.diffText ?? ""}></span>
   ));
 
   const graphWithTitle = clockLogMinuteDataForGraph.map((status, index) => (

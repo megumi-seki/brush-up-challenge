@@ -2,20 +2,20 @@ import { DEFAULT_ROLE_OPTIONS } from "../constants/appConfig";
 import type { CorrectionTimeRecordType, TimeRecorderType } from "../types";
 
 const getRoleLabel = (
-  record: TimeRecorderType | CorrectionTimeRecordType | string
+  recordProp: TimeRecorderType | CorrectionTimeRecordType | string
 ) => {
   let value: string | null = null;
 
-  if (typeof record === "string") {
-    value = record;
-  } else if (
-    typeof record.role === "object" &&
-    record.role !== null &&
-    "value" in record.role
+  if (typeof recordProp === "string") { // 役割の文字列が直接渡された場合
+    value = recordProp;
+  } else if (  // CorrectionTimeRecordTypeの場合
+    typeof recordProp.role === "object" &&
+    recordProp.role !== null &&
+    "value" in recordProp.role  
   ) {
-    value = record.role.value;
-  } else {
-    value = record.role;
+    value = recordProp.role.value;
+  } else {  // TimeRecorderTypeの場合
+    value = recordProp.role;
   }
 
   const label =

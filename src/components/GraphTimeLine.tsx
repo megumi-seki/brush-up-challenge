@@ -24,20 +24,20 @@ const GraphTimeLine = ({ record, showRoleWithColor }: GraphTimeLineProps) => {
   }
 
   const startMin = getMinutes(clockInDatetime!); //isDataEnoughのチェックによりclockInDatetimeは必ずstring
-  const endMin = clockOutDatetime ? getMinutes(clockOutDatetime) : startMin; // nullにしないため、datetimeがnullの場合はtotal minutes範囲外の値をセット
+  const endMin = getMinutes(clockOutDatetime!); //isDataEnoughのチェックによりclockInDatetimeは必ずstring
   const breakBeginMin = breakBeginDatetime
     ? getMinutes(breakBeginDatetime)
     : null;
   const breakEndMin = breakEndDatetime
     ? getMinutes(breakEndDatetime)
-    : breakBeginMin;
+    : null;
   const roleChangeMins = roleChangeDatetimes.map((datetime) =>
     getMinutes(datetime)
   );
 
   let graphTimelineBar = [];
   for (let i = 0; i <= GRAPH_TOTAL_MINUTES; i++) {
-    // graphTimelineBarには30分刻みで時刻をセット。それ以外は""
+    // イベントがある場合には時刻をセット、クラス名セットのためtypeもセット
     if (i == startMin) {
       graphTimelineBar.push({
         type: "timeClockValue",
@@ -67,7 +67,7 @@ const GraphTimeLine = ({ record, showRoleWithColor }: GraphTimeLineProps) => {
           });
         }
       });
-    } else if (i % 30 === 0) {
+    } else if (i % 30 === 0) { // 30分刻みの参照時刻をセット
       const totalMinutesFromStart = i;
       const hour = Math.floor(totalMinutesFromStart / 60) + GRAPH_START_HOUR;
       const minute = totalMinutesFromStart % 60;
@@ -82,7 +82,7 @@ const GraphTimeLine = ({ record, showRoleWithColor }: GraphTimeLineProps) => {
   const content = graphTimelineBar.map((status, index) => {
     let className = "";
     if (status.type == "timeClockValue") className = "timeClockValue";
-    if (status.type == "timeLineValue") className = "timeLineValue";
+    else if (status.type == "timeLineValue") className = "timeLineValue";
 
     return (
       <span className={`minute ${className}`} key={index}>

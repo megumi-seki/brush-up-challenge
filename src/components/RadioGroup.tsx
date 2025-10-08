@@ -5,7 +5,7 @@ type RadioGroupProps = {
   options: Option[];
   selectedValue: string;
   onChange: (selectedValue: string) => void;
-  text?: string;
+  text?: string; // 役割選択の補足テキスト
 };
 
 const RadioGroup = ({
@@ -33,7 +33,7 @@ const RadioGroup = ({
         {option.label}
       </label>
     ))}
-    {text && <span className="type-text">{text}</span>}
+    {text && <span className="type-text">{text}</span>} 
   </div>
 );
 

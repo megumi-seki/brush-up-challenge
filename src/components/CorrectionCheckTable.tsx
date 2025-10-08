@@ -32,12 +32,13 @@ const CorrectionCheckTable = ({
   };
 
   const handleSubmit = () => {
-    // 承認された場合のみタイムレコーダー履歴を更新
+    // 承認された場合のみリクエスト内容に対応してタイムレコーダー履歴を更新
     if (approveSelected) {
       const storedRecords = localStorage.getItem("time_records");
       if (!storedRecords) return;
       const parsedRecords: TimeRecorderType[] = JSON.parse(storedRecords);
-      const filteredRecords = parsedRecords.filter((record) => {
+
+      const filteredRecords = parsedRecords.filter((record) => { 
         const recordDateString = record.datetime.split("T")[0];
         return !(
           record.emp_id === request.emp_id &&
@@ -45,6 +46,7 @@ const CorrectionCheckTable = ({
         );
       });
 
+      // 削除リクエストはここで除外することにより対応(更新は１日分すべての打刻にかけるため、含めないことにより削除扱いになる)
       const filteredRequestedRecords = request.records.filter(
         (record) => !record.deleted
       );
@@ -63,6 +65,7 @@ const CorrectionCheckTable = ({
           new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
       );
 
+      // 役割がnullのまま登録されてしまうのを防ぐため、前の打刻の役割を引き継ぐ処理
       const adjustedRequestedRecords = sortedRequestedRecords.map(
         (record, index) => {
           if (
@@ -81,7 +84,7 @@ const CorrectionCheckTable = ({
       localStorage.setItem("time_records", JSON.stringify(updatedRecords));
     }
 
-    // 変更申請を削除
+    // 対象の申請を削除
     const storedCorrectionRequests = localStorage.getItem(
       "time_records_correction_requests"
     );
@@ -89,6 +92,7 @@ const CorrectionCheckTable = ({
     const parsedRequests: CorrectionRequestType[] = JSON.parse(
       storedCorrectionRequests
     );
+
     const filteredRequests = parsedRequests.filter(
       (req) =>
         !(
@@ -101,12 +105,14 @@ const CorrectionCheckTable = ({
     );
     setStoredCorrectionRequests(filteredRequests);
 
-    // 修正申請処理に関するメッセージを更新
+    // 対象の申請処理に関するメッセージを更新
     const storedMessagesOnRequests = localStorage.getItem(
       "messages_on_requests"
     );
     const parsedMessagesOnRequests: MessageOnRequestType[] =
       storedMessagesOnRequests ? JSON.parse(storedMessagesOnRequests) : [];
+
+    // 対象申請と同じ打刻履歴に関する既存メッセージがある場合は削除
     const filteredMessages = parsedMessagesOnRequests.filter(
       (message) =>
         !(
@@ -114,6 +120,7 @@ const CorrectionCheckTable = ({
           message.dateString === request.dateString
         )
     );
+    
     const message = approveSelected
       ? "タイムレコーダー修正申請が承認されました。"
       : "タイムレコーダー修正申請が拒否されました。";

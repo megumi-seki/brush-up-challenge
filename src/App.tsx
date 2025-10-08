@@ -15,14 +15,11 @@ import CorrectionCheck from "./pages/CorrectionCheck";
 function App() {
   const [employeees, setEmployees] = useState<Employee[]>([]);
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
     const storedEmployeesData = localStorage.getItem("employees");
     if (storedEmployeesData) {
       setEmployees(JSON.parse(storedEmployeesData));
-    } else {
-      // デモ用に、初期データがない場合はダミーデータを保存
+    } else { // 従業員データがない場合はデモ用データを保存
       const initialData = EMPLOYEE_DEMO_DATA;
       localStorage.setItem("employees", JSON.stringify(initialData));
       setEmployees(initialData);

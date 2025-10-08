@@ -13,9 +13,10 @@ type ClockLogTableProps = {
   selectedDateString: string;
   showRoleWithColor: boolean;
   showDiffs: boolean;
-  withName: boolean;
+  withName: boolean; // 名前の列を表示するか否か
 };
 
+// 勤怠ログテーブル作成
 const ClockLogTable = ({
   groupedRecords,
   selectedDateString,
@@ -38,6 +39,8 @@ const ClockLogTable = ({
       key: "break_duration_millis",
       selectedDateString: selectedDateString,
     });
+
+  // 全体のタイムレコーダー履歴のためにID順でにソート
   const sortedGropuedRecords = groupedRecords.sort(
     (a, b) => Number(a.emp_id) - Number(b.emp_id)
   );
